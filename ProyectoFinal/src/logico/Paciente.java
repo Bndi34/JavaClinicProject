@@ -7,3 +7,4 @@ public class Paciente extends Usuario {
 //Al profe no le gusto que la clase se llamase ciente
 //Paciente suena mejor, pero nocreo que sea lo suficientemente descriptivo
 
+
