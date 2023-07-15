@@ -1,12 +1,12 @@
 
 package logico;
 
-public abstract class Ususario {
+public abstract class Usuario {
 	private String codigo;
 	private String nombre;
 	private String telefono;
 	
-	public Ususario(String codigo, String nombre, String telefono) {
+	public Usuario(String codigo, String nombre, String telefono) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;

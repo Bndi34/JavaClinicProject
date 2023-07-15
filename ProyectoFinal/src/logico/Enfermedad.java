@@ -1,11 +1,13 @@
 
 package logico;
 
+import java.util.ArrayList;
+
 public class Enfermedad {
 
 	private String codigo;
 	private String nombre;
-	private ArrayList<String>Sintomas;
+	private ArrayList<String> Sintomas;
 	//private String tipo;
 	private boolean curaEncontrada;
 	
