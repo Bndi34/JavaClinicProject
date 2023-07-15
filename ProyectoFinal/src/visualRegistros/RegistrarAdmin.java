@@ -9,16 +9,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class RegistrarSecretaria extends JDialog {
+public class RegistrarAdmin extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtNumber;
 	private JTextField txtCedula;
-	private JTextField txtName;
 	private JTextField txtPassword;
 
 	/**
@@ -26,7 +23,7 @@ public class RegistrarSecretaria extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarSecretaria dialog = new RegistrarSecretaria();
+			RegistrarAdmin dialog = new RegistrarAdmin();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -37,64 +34,32 @@ public class RegistrarSecretaria extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarSecretaria() {
-		setTitle("Registrar Secretaria");
-		setBounds(100, 100, 351, 274);
+	public RegistrarAdmin() {
+		setTitle("Registrar Administrador");
+		setBounds(100, 100, 450, 154);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblName = new JLabel("Nombre");
+			JLabel lblName = new JLabel("Usuario:");
 			lblName.setBounds(12, 13, 56, 16);
 			contentPanel.add(lblName);
 		}
 		{
-			JLabel lblCedula = new JLabel("C\u00E9dula");
-			lblCedula.setBounds(12, 42, 56, 16);
-			contentPanel.add(lblCedula);
-		}
-		{
-			JLabel lblNumber = new JLabel("Tel\u00E9fono");
-			lblNumber.setBounds(12, 71, 56, 16);
-			contentPanel.add(lblNumber);
-		}
-		{
-			JLabel lblDoctor = new JLabel("Supervisor");
-			lblDoctor.setBounds(12, 100, 75, 16);
-			contentPanel.add(lblDoctor);
-		}
-		{
-			txtNumber = new JTextField();
-			txtNumber.setBounds(97, 71, 224, 22);
-			contentPanel.add(txtNumber);
-			txtNumber.setColumns(10);
-		}
-		{
-			txtCedula = new JTextField();
-			txtCedula.setColumns(10);
-			txtCedula.setBounds(97, 42, 224, 22);
-			contentPanel.add(txtCedula);
-		}
-		{
-			txtName = new JTextField();
-			txtName.setColumns(10);
-			txtName.setBounds(97, 13, 224, 22);
-			contentPanel.add(txtName);
-		}
-		{
-			JComboBox cboxDoctor = new JComboBox();
-			cboxDoctor.setBounds(97, 97, 224, 22);
-			contentPanel.add(cboxDoctor);
-		}
-		{
-			JLabel lblPassword = new JLabel("Contrase\u00F1a");
-			lblPassword.setBounds(12, 163, 109, 16);
+			JLabel lblPassword = new JLabel("Contrase\u00F1a:");
+			lblPassword.setBounds(12, 42, 76, 16);
 			contentPanel.add(lblPassword);
 		}
 		{
+			txtCedula = new JTextField();
+			txtCedula.setBounds(100, 10, 320, 22);
+			contentPanel.add(txtCedula);
+			txtCedula.setColumns(10);
+		}
+		{
 			txtPassword = new JTextField();
-			txtPassword.setBounds(97, 160, 224, 22);
+			txtPassword.setBounds(100, 39, 320, 22);
 			contentPanel.add(txtPassword);
 			txtPassword.setColumns(10);
 		}
@@ -116,6 +81,7 @@ public class RegistrarSecretaria extends JDialog {
 				JButton btnCancel = new JButton("Cancel");
 				btnCancel.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
 						dispose();
 					}
 				});

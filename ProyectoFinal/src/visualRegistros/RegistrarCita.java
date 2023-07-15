@@ -10,23 +10,22 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class RegistrarSecretaria extends JDialog {
+public class RegistrarCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtNumber;
-	private JTextField txtCedula;
-	private JTextField txtName;
-	private JTextField txtPassword;
+	private JTextField txtCode;
+	private JTextField txtDate;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarSecretaria dialog = new RegistrarSecretaria();
+			RegistrarCita dialog = new RegistrarCita();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -37,66 +36,74 @@ public class RegistrarSecretaria extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarSecretaria() {
-		setTitle("Registrar Secretaria");
-		setBounds(100, 100, 351, 274);
+	public RegistrarCita() {
+		setTitle("Registrar Cita");
+		setBounds(100, 100, 353, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblName = new JLabel("Nombre");
-			lblName.setBounds(12, 13, 56, 16);
-			contentPanel.add(lblName);
+			JLabel lblCode = new JLabel("C\u00F3digo");
+			lblCode.setBounds(12, 13, 56, 16);
+			contentPanel.add(lblCode);
 		}
 		{
-			JLabel lblCedula = new JLabel("C\u00E9dula");
-			lblCedula.setBounds(12, 42, 56, 16);
-			contentPanel.add(lblCedula);
+			JLabel lblDate = new JLabel("Fecha");
+			lblDate.setBounds(12, 42, 56, 16);
+			contentPanel.add(lblDate);
 		}
 		{
-			JLabel lblNumber = new JLabel("Tel\u00E9fono");
-			lblNumber.setBounds(12, 71, 56, 16);
-			contentPanel.add(lblNumber);
-		}
-		{
-			JLabel lblDoctor = new JLabel("Supervisor");
-			lblDoctor.setBounds(12, 100, 75, 16);
+			JLabel lblDoctor = new JLabel("Doctor");
+			lblDoctor.setBounds(12, 90, 56, 16);
 			contentPanel.add(lblDoctor);
 		}
 		{
-			txtNumber = new JTextField();
-			txtNumber.setBounds(97, 71, 224, 22);
-			contentPanel.add(txtNumber);
-			txtNumber.setColumns(10);
+			JLabel lblPaciente = new JLabel("Paciente");
+			lblPaciente.setBounds(12, 119, 56, 16);
+			contentPanel.add(lblPaciente);
 		}
 		{
-			txtCedula = new JTextField();
-			txtCedula.setColumns(10);
-			txtCedula.setBounds(97, 42, 224, 22);
-			contentPanel.add(txtCedula);
+			JLabel lblEstado = new JLabel("Estado");
+			lblEstado.setBounds(12, 160, 56, 16);
+			contentPanel.add(lblEstado);
 		}
 		{
-			txtName = new JTextField();
-			txtName.setColumns(10);
-			txtName.setBounds(97, 13, 224, 22);
-			contentPanel.add(txtName);
+			txtCode = new JTextField();
+			txtCode.setEditable(false);
+			txtCode.setBounds(80, 10, 243, 22);
+			contentPanel.add(txtCode);
+			txtCode.setColumns(10);
+		}
+		{
+			txtDate = new JTextField();
+			txtDate.setBounds(80, 39, 243, 22);
+			contentPanel.add(txtDate);
+			txtDate.setColumns(10);
 		}
 		{
 			JComboBox cboxDoctor = new JComboBox();
-			cboxDoctor.setBounds(97, 97, 224, 22);
+			cboxDoctor.setBounds(80, 90, 243, 22);
 			contentPanel.add(cboxDoctor);
 		}
 		{
-			JLabel lblPassword = new JLabel("Contrase\u00F1a");
-			lblPassword.setBounds(12, 163, 109, 16);
-			contentPanel.add(lblPassword);
+			JComboBox cboxPaciente = new JComboBox();
+			cboxPaciente.setBounds(80, 116, 243, 22);
+			contentPanel.add(cboxPaciente);
 		}
 		{
-			txtPassword = new JTextField();
-			txtPassword.setBounds(97, 160, 224, 22);
-			contentPanel.add(txtPassword);
-			txtPassword.setColumns(10);
+			JComboBox cboxEstado = new JComboBox();
+			cboxEstado.setBounds(80, 157, 243, 22);
+			contentPanel.add(cboxEstado);
+		}
+		
+		JCheckBox chbxRetraso = new JCheckBox("");
+		chbxRetraso.setBounds(108, 184, 36, 25);
+		contentPanel.add(chbxRetraso);
+		{
+			JLabel lblNewLabel = new JLabel("Cita Retrasada");
+			lblNewLabel.setBounds(12, 189, 102, 16);
+			contentPanel.add(lblNewLabel);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -124,5 +131,4 @@ public class RegistrarSecretaria extends JDialog {
 			}
 		}
 	}
-
 }
