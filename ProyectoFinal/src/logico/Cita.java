@@ -2,11 +2,11 @@ package logico;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Cita implements Serializable{
+public class Cita implements Serializable{//
 	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String Estado;
-	private Date fechaDeConsulta;
+	private Date fechaDeConsulta; 
 	private Date atrasos;
 	private Doctor doctor;
 	private Paciente paciente;
