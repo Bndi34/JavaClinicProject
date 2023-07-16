@@ -2,6 +2,7 @@ package logico;
 
 public class Doctor extends Usuario {
 	
+	private static final long serialVersionUID = 1L;
 	private float sueldo;
 	private String areaMedica;
 	

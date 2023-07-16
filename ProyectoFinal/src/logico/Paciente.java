@@ -2,6 +2,7 @@ package logico;
 import java.util.ArrayList;
 
 public class Paciente extends Usuario {
+	private static final long serialVersionUID = 1L;
 	private String estado;
 	private boolean esPaciente;
 	private char sexo;

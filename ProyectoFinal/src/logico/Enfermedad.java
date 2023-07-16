@@ -1,14 +1,15 @@
 
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Enfermedad {
+public class Enfermedad implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String nombre;
 	private ArrayList<String> Sintomas;
-	//private String tipo;
 	private boolean curaEncontrada;
 	
 	public Enfermedad(String codigo, String nombre, ArrayList<String> sintomas, boolean curaEncontrada) {
