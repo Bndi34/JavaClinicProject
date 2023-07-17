@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -73,6 +76,7 @@ public class RegistrarEnfermedad extends JDialog {
 			txtCode = new JTextField();
 			txtCode.setBounds(80, 10, 116, 22);
 			contentPanel.add(txtCode);
+			txtCode.setText("ENF-"+String.valueOf(Hospital.getInstance().generadorEnfermedad));
 			txtCode.setColumns(10);
 		}
 		{
@@ -88,9 +92,9 @@ public class RegistrarEnfermedad extends JDialog {
 			txtNombre.setColumns(10);
 		}
 		{
-			JComboBox cboxSintomas = new JComboBox();
-			cboxSintomas.setBounds(208, 39, 130, 22);
-			contentPanel.add(cboxSintomas);
+			JComboBox cbxSintomas = new JComboBox();
+			cbxSintomas.setBounds(208, 39, 130, 22);
+			contentPanel.add(cbxSintomas);
 		}
 		{
 			JButton btnBorrarSintoma = new JButton("Borrar S\u00EDntoma");

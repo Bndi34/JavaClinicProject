@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
@@ -17,10 +20,10 @@ public class RegistrarMedico extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNumber;
 	private JTextField txtArea;
-	private JTextField txtSex;
 	private JTextField txtCedula;
 	private JTextField txtName;
 	private JTextField txtPassword;
+	private JTextField txtCode;
 
 	/**
 	 * Launch the application.
@@ -47,27 +50,22 @@ public class RegistrarMedico extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblName = new JLabel("Nombre");
-			lblName.setBounds(12, 13, 56, 16);
+			lblName.setBounds(12, 42, 56, 16);
 			contentPanel.add(lblName);
 		}
 		{
 			JLabel lblCedula = new JLabel("C\u00E9dula");
-			lblCedula.setBounds(12, 42, 56, 16);
+			lblCedula.setBounds(12, 81, 56, 16);
 			contentPanel.add(lblCedula);
 		}
 		{
-			JLabel lblSex = new JLabel("Sexo");
-			lblSex.setBounds(12, 71, 56, 16);
-			contentPanel.add(lblSex);
-		}
-		{
 			JLabel lblNumber = new JLabel("N\u00FAmero de Tel\u00E9fono");
-			lblNumber.setBounds(12, 99, 129, 16);
+			lblNumber.setBounds(12, 121, 99, 16);
 			contentPanel.add(lblNumber);
 		}
 		{
 			JLabel lblArea = new JLabel("\u00C1rea m\u00E9dica");
-			lblArea.setBounds(12, 128, 129, 16);
+			lblArea.setBounds(12, 162, 129, 16);
 			contentPanel.add(lblArea);
 		}
 		{
@@ -77,40 +75,45 @@ public class RegistrarMedico extends JDialog {
 		}
 		{
 			txtNumber = new JTextField();
-			txtNumber.setBounds(153, 96, 267, 22);
+			txtNumber.setBounds(121, 118, 267, 22);
 			contentPanel.add(txtNumber);
 			txtNumber.setColumns(10);
 		}
 		{
 			txtArea = new JTextField();
 			txtArea.setColumns(10);
-			txtArea.setBounds(153, 125, 267, 22);
+			txtArea.setBounds(121, 153, 267, 22);
 			contentPanel.add(txtArea);
-		}
-		{
-			txtSex = new JTextField();
-			txtSex.setColumns(10);
-			txtSex.setBounds(153, 68, 267, 22);
-			contentPanel.add(txtSex);
 		}
 		{
 			txtCedula = new JTextField();
 			txtCedula.setColumns(10);
-			txtCedula.setBounds(153, 39, 267, 22);
+			txtCedula.setBounds(121, 39, 267, 22);
 			contentPanel.add(txtCedula);
 		}
 		{
 			txtName = new JTextField();
 			txtName.setColumns(10);
-			txtName.setBounds(153, 10, 267, 22);
+			txtName.setBounds(121, 78, 267, 22);
 			contentPanel.add(txtName);
 		}
 		{
 			txtPassword = new JTextField();
 			txtPassword.setColumns(10);
-			txtPassword.setBounds(153, 186, 267, 22);
+			txtPassword.setBounds(121, 188, 267, 22);
 			contentPanel.add(txtPassword);
 		}
+		
+		txtCode = new JTextField();
+		txtCode.setEditable(false);
+		txtCode.setColumns(10);
+		txtCode.setBounds(121, 12, 267, 22);
+		txtCode.setText("DOC-"+String.valueOf(Hospital.getInstance().generadorUsuario));
+		contentPanel.add(txtCode);
+		
+		JLabel lblCdigo = new JLabel("C\u00F3digo");
+		lblCdigo.setBounds(12, 15, 56, 16);
+		contentPanel.add(lblCdigo);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -137,5 +140,4 @@ public class RegistrarMedico extends JDialog {
 			}
 		}
 	}
-
 }

@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -17,7 +20,7 @@ import java.awt.event.ActionEvent;
 public class RegistrarConsulta extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
+	private JTextField txtCode;
 	private JTextField textField_1;
 
 	/**
@@ -69,10 +72,12 @@ public class RegistrarConsulta extends JDialog {
 			contentPanel.add(lblEstado);
 		}
 		{
-			textField = new JTextField();
-			textField.setBounds(80, 10, 152, 22);
-			contentPanel.add(textField);
-			textField.setColumns(10);
+			txtCode = new JTextField();
+			txtCode.setEditable(false);
+			txtCode.setBounds(80, 10, 152, 22);
+			contentPanel.add(txtCode);
+			txtCode.setColumns(10);
+			txtCode.setText("CON-"+String.valueOf(Hospital.getInstance().generadorConsulta));
 		}
 		{
 			textField_1 = new JTextField();
@@ -81,19 +86,19 @@ public class RegistrarConsulta extends JDialog {
 			contentPanel.add(textField_1);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			comboBox.setBounds(80, 78, 152, 22);
-			contentPanel.add(comboBox);
+			JComboBox cbDoctor = new JComboBox();
+			cbDoctor.setBounds(80, 78, 152, 22);
+			contentPanel.add(cbDoctor);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			comboBox.setBounds(80, 107, 152, 22);
-			contentPanel.add(comboBox);
+			JComboBox cbPaciente = new JComboBox();
+			cbPaciente.setBounds(80, 107, 152, 22);
+			contentPanel.add(cbPaciente);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			comboBox.setBounds(80, 159, 152, 22);
-			contentPanel.add(comboBox);
+			JComboBox cbEstado = new JComboBox();
+			cbEstado.setBounds(80, 159, 152, 22);
+			contentPanel.add(cbEstado);
 		}
 		{
 			JCheckBox chbxRetraso = new JCheckBox("");

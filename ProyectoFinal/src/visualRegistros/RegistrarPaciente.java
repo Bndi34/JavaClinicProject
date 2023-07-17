@@ -3,10 +3,14 @@ package visualRegistros;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -19,9 +23,9 @@ public class RegistrarPaciente extends JDialog {
 	private JTextField txtPassword;
 	private JTextField txtNumber;
 	private JTextField txtDir;
-	private JTextField txtSex;
 	private JTextField txtCedula;
 	private JTextField txtName;
+	private JTextField txtCode;
 
 	/**
 	 * Launch the application.
@@ -48,17 +52,17 @@ public class RegistrarPaciente extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblName = new JLabel("Nombre");
-			lblName.setBounds(12, 13, 56, 16);
+			lblName.setBounds(12, 46, 56, 16);
 			contentPanel.add(lblName);
 		}
 		{
 			JLabel lblCedula = new JLabel("C\u00E9dula");
-			lblCedula.setBounds(12, 42, 56, 16);
+			lblCedula.setBounds(12, 82, 56, 16);
 			contentPanel.add(lblCedula);
 		}
 		{
 			JLabel lblSex = new JLabel("Sexo");
-			lblSex.setBounds(12, 71, 56, 16);
+			lblSex.setBounds(285, 82, 56, 16);
 			contentPanel.add(lblSex);
 		}
 		{
@@ -83,44 +87,55 @@ public class RegistrarPaciente extends JDialog {
 		}
 		{
 			txtPassword = new JTextField();
-			txtPassword.setBounds(142, 189, 116, 22);
+			txtPassword.setBounds(142, 187, 116, 22);
 			contentPanel.add(txtPassword);
 			txtPassword.setColumns(10);
 		}
 		{
 			txtNumber = new JTextField();
 			txtNumber.setColumns(10);
-			txtNumber.setBounds(142, 129, 116, 22);
+			txtNumber.setBounds(142, 151, 116, 22);
 			contentPanel.add(txtNumber);
 		}
 		{
 			txtDir = new JTextField();
 			txtDir.setColumns(10);
-			txtDir.setBounds(142, 100, 116, 22);
+			txtDir.setBounds(142, 115, 116, 22);
 			contentPanel.add(txtDir);
-		}
-		{
-			txtSex = new JTextField();
-			txtSex.setColumns(10);
-			txtSex.setBounds(142, 71, 116, 22);
-			contentPanel.add(txtSex);
 		}
 		{
 			txtCedula = new JTextField();
 			txtCedula.setColumns(10);
-			txtCedula.setBounds(142, 42, 116, 22);
+			txtCedula.setBounds(142, 79, 116, 22);
 			contentPanel.add(txtCedula);
 		}
 		{
 			txtName = new JTextField();
 			txtName.setColumns(10);
-			txtName.setBounds(142, 13, 116, 22);
+			txtName.setBounds(142, 43, 116, 22);
 			contentPanel.add(txtName);
 		}
 		
 		JComboBox cboxAlergia = new JComboBox();
 		cboxAlergia.setBounds(285, 39, 116, 22);
 		contentPanel.add(cboxAlergia);
+		{
+			txtCode = new JTextField();
+			txtCode.setEditable(false);
+			txtCode.setColumns(10);
+			txtCode.setBounds(142, 7, 116, 22);
+			txtCode.setText("PA-"+String.valueOf(Hospital.getInstance().generadorUsuario));
+			contentPanel.add(txtCode);
+		}
+		
+		JComboBox cbxSexo = new JComboBox();
+		cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Hombre", "Mujer"}));
+		cbxSexo.setBounds(285, 116, 116, 22);
+		contentPanel.add(cbxSexo);
+		
+		JLabel lblCdigo = new JLabel("C\u00F3digo");
+		lblCdigo.setBounds(12, 13, 56, 16);
+		contentPanel.add(lblCdigo);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -147,4 +162,29 @@ public class RegistrarPaciente extends JDialog {
 			}
 		}
 	}
+	
+	//Función para transformar lo seleccionado en cbxSex a un char
+	private char GetSex(String opc) {
+		if (opc == "Hombre") {
+			return 'H';
+		}
+		
+		if (opc == "Mujer") {
+			return 'M';
+		}
+		return ' ';
+	}
+	
+	//Función para cargar al Paciente
+	private int ColocarSexo(char opc) {
+		if (opc == 'H') {
+			return 0;
+		}
+		
+		if (opc == 'M') {
+			return 1;
+		}
+		return -1;
+	}
+	
 }

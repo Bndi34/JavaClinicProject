@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -19,6 +22,7 @@ public class RegistrarCita extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
 	private JTextField txtDate;
+	//private Date
 
 	/**
 	 * Launch the application.
@@ -72,6 +76,7 @@ public class RegistrarCita extends JDialog {
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
 			txtCode.setBounds(80, 10, 243, 22);
+			txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
 		}
@@ -82,19 +87,19 @@ public class RegistrarCita extends JDialog {
 			txtDate.setColumns(10);
 		}
 		{
-			JComboBox cboxDoctor = new JComboBox();
-			cboxDoctor.setBounds(80, 90, 243, 22);
-			contentPanel.add(cboxDoctor);
+			JComboBox cbxDoctor = new JComboBox();
+			cbxDoctor.setBounds(80, 90, 243, 22);
+			contentPanel.add(cbxDoctor);
 		}
 		{
-			JComboBox cboxPaciente = new JComboBox();
-			cboxPaciente.setBounds(80, 116, 243, 22);
-			contentPanel.add(cboxPaciente);
+			JComboBox cbxPaciente = new JComboBox();
+			cbxPaciente.setBounds(80, 116, 243, 22);
+			contentPanel.add(cbxPaciente);
 		}
 		{
-			JComboBox cboxEstado = new JComboBox();
-			cboxEstado.setBounds(80, 157, 243, 22);
-			contentPanel.add(cboxEstado);
+			JComboBox cbxEstado = new JComboBox();
+			cbxEstado.setBounds(80, 157, 243, 22);
+			contentPanel.add(cbxEstado);
 		}
 		
 		JCheckBox chbxRetraso = new JCheckBox("");

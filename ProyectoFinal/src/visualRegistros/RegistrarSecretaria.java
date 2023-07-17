@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -20,6 +23,7 @@ public class RegistrarSecretaria extends JDialog {
 	private JTextField txtCedula;
 	private JTextField txtName;
 	private JTextField txtPassword;
+	private JTextField txtCode;
 
 	/**
 	 * Launch the application.
@@ -46,45 +50,45 @@ public class RegistrarSecretaria extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblName = new JLabel("Nombre");
-			lblName.setBounds(12, 13, 56, 16);
+			lblName.setBounds(12, 46, 56, 16);
 			contentPanel.add(lblName);
 		}
 		{
 			JLabel lblCedula = new JLabel("C\u00E9dula");
-			lblCedula.setBounds(12, 42, 56, 16);
+			lblCedula.setBounds(12, 73, 56, 16);
 			contentPanel.add(lblCedula);
 		}
 		{
 			JLabel lblNumber = new JLabel("Tel\u00E9fono");
-			lblNumber.setBounds(12, 71, 56, 16);
+			lblNumber.setBounds(12, 100, 56, 16);
 			contentPanel.add(lblNumber);
 		}
 		{
 			JLabel lblDoctor = new JLabel("Supervisor");
-			lblDoctor.setBounds(12, 100, 75, 16);
+			lblDoctor.setBounds(12, 133, 75, 16);
 			contentPanel.add(lblDoctor);
 		}
 		{
 			txtNumber = new JTextField();
-			txtNumber.setBounds(97, 71, 224, 22);
+			txtNumber.setBounds(97, 97, 224, 22);
 			contentPanel.add(txtNumber);
 			txtNumber.setColumns(10);
 		}
 		{
 			txtCedula = new JTextField();
 			txtCedula.setColumns(10);
-			txtCedula.setBounds(97, 42, 224, 22);
+			txtCedula.setBounds(97, 68, 224, 22);
 			contentPanel.add(txtCedula);
 		}
 		{
 			txtName = new JTextField();
 			txtName.setColumns(10);
-			txtName.setBounds(97, 13, 224, 22);
+			txtName.setBounds(97, 39, 224, 22);
 			contentPanel.add(txtName);
 		}
 		{
 			JComboBox cboxDoctor = new JComboBox();
-			cboxDoctor.setBounds(97, 97, 224, 22);
+			cboxDoctor.setBounds(97, 130, 224, 22);
 			contentPanel.add(cboxDoctor);
 		}
 		{
@@ -97,6 +101,19 @@ public class RegistrarSecretaria extends JDialog {
 			txtPassword.setBounds(97, 160, 224, 22);
 			contentPanel.add(txtPassword);
 			txtPassword.setColumns(10);
+		}
+		{
+			txtCode = new JTextField();
+			txtCode.setEditable(false);
+			txtCode.setColumns(10);
+			txtCode.setBounds(97, 11, 224, 22);
+			txtCode.setText("SE-"+String.valueOf(Hospital.getInstance().generadorUsuario));
+			contentPanel.add(txtCode);
+		}
+		{
+			JLabel lblCdigo = new JLabel("C\u00F3digo");
+			lblCdigo.setBounds(12, 15, 56, 16);
+			contentPanel.add(lblCdigo);
 		}
 		{
 			JPanel buttonPane = new JPanel();

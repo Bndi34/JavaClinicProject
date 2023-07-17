@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -60,6 +63,7 @@ public class RegistrarVacuna extends JDialog {
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
 			txtCode.setBounds(71, 10, 116, 22);
+			txtCode.setText("VA-"+String.valueOf(Hospital.getInstance().generadorVacuna));
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
 		}
