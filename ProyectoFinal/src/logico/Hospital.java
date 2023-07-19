@@ -1,5 +1,8 @@
 package logico;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 //Hay que poner que solo se pueda de una instancia a la vez
@@ -64,6 +67,16 @@ public class Hospital {
 	public void setMisVacunas(ArrayList<Vacuna> misVacunas) {
 		this.misVacunas = misVacunas;
 	}
+	
+	/*public float porcentajeEfermedadPorPaciente(String codigoEnfermedad){
+		float porcentaje = 0;
+		for ()
+		
+		
+		return porcentaje;
+	}*/
+	
+	//public cantidad
 	
 	//Parte de insertar
 	void insertarUsuario(Usuario aux){
@@ -244,6 +257,20 @@ public class Hospital {
 		index = buscarIndexByVacuna(selected.getCodigo());
 		misVacunas.set(index, selected);
 	}
+	
+	/*public void loadUser() {
+    	File file = new File("misUsers.dat");
+    	FileInputStream f = new FileInputStream(file);
+    	ObjectInputStream oos = new ObjectInputStream(f);
+    	
+    	int size = oos.readInt();
+    	for (int i =0; i < size; i++) {
+    	Usuario aux = (aux)oos.readObject();
+    	misCuentas.add(aux);
+    	}
+    	
+    	
+	}*/
 	
 	
 	
