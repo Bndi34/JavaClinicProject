@@ -6,8 +6,8 @@ public class Doctor extends Usuario {
 	private float sueldo;
 	private String areaMedica;
 	
-	public Doctor(String codigo, String nombre, String telefono,float sueldo, String areaMedica) {
-		super(codigo, nombre, telefono);
+	public Doctor(String codigo, String nombre, String cedula, String telefono, String contrasenia, float sueldo, String areaMedica) {
+		super(codigo, nombre, cedula, contrasenia, telefono);
 		this.sueldo = sueldo;
 		this.areaMedica = areaMedica;
 	}

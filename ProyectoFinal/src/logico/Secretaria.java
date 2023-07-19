@@ -5,8 +5,8 @@ public class Secretaria extends Usuario{
 	private static final long serialVersionUID = 1L;
 	private Doctor dependiente;
 	
-	public Secretaria(String codigo, String nombre, String telefono, Doctor dependiente) {
-		super(codigo, nombre, telefono);
+	public Secretaria(String codigo, String nombre, String cedula, String telefono, String contrasenia, Doctor dependiente) {
+		super(codigo, nombre, cedula, contrasenia, telefono);
 		
 		this.dependiente = dependiente;
 	}

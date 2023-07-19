@@ -9,8 +9,9 @@ public class Paciente extends Usuario {
 	private ArrayList<String> Alergias;
 	private String direccion;
 	
-	public Paciente(String codigo, String nombre, String telefono,String estado, boolean esPaciente, char sexo, ArrayList<String> alergias, String direccion) {
-		super(direccion, direccion, direccion);
+	public Paciente(String codigo, String nombre, String cedula, String telefono, String contrasenia,  
+					String direccion, String estado, boolean esPaciente, char sexo, ArrayList<String> alergias) {
+		super(codigo, nombre, cedula, contrasenia, telefono);
 		this.estado = estado;
 		this.esPaciente = esPaciente;
 		this.sexo = sexo;
