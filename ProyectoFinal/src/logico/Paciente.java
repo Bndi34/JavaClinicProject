@@ -2,28 +2,22 @@ package logico;
 import java.util.ArrayList;
 
 public class Paciente extends Usuario {
+
 	private static final long serialVersionUID = 1L;
-	private String estado;
 	private boolean esPaciente;
 	private char sexo;
 	private ArrayList<String> Alergias;
 	private String direccion;
 	
 	public Paciente(String codigo, String nombre, String cedula, String telefono, String contrasenia,  
-					String direccion, String estado, boolean esPaciente, char sexo, ArrayList<String> alergias) {
-		super(codigo, nombre, cedula, contrasenia, telefono);
-		this.estado = estado;
+					String direccion, boolean esPaciente, char sexo, ArrayList<String> alergias) {
+		super(codigo, nombre, cedula, telefono,contrasenia);
 		this.esPaciente = esPaciente;
 		this.sexo = sexo;
 		Alergias = alergias;
 		this.direccion = direccion;
 	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+
 	public boolean isEsPaciente() {
 		return esPaciente;
 	}

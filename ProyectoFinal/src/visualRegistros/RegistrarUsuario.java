@@ -32,6 +32,7 @@ import javax.swing.SpinnerDateModel;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
@@ -39,6 +40,7 @@ import java.awt.Font;
 
 public class RegistrarUsuario extends JDialog {
 
+	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtId;
 	private JTextField txtNombre;
@@ -58,6 +60,7 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtSueldo;
 	
 	public RegistrarUsuario(String title, int mode, Usuario entrada) {
+		System.out.println("Registrar IN");
 		setResizable(false);
 		setBounds(100, 100, 475, 400);
 		this.mode = mode;
@@ -153,13 +156,17 @@ public class RegistrarUsuario extends JDialog {
 		cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Hombre", "Mujer"}));
 		panel_paciente.add(cbxSexo);
 		
+		//Falta check de ver si es secretaria
+		/*
 		JLabel lblSupervisor = new JLabel("Supervisor:");
 		lblSupervisor.setBounds(7, 23, 75, 16);
 		panel_secretaria.add(lblSupervisor);
 		
+		
 		JComboBox cbxSupervisor = new JComboBox();
 		cbxSupervisor.setBounds(62, 20, 224, 22);
 		panel_secretaria.add(cbxSupervisor);
+		*/
 		
 		panel_doctor = new JPanel();
 		panel_doctor.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -204,12 +211,13 @@ public class RegistrarUsuario extends JDialog {
 		panel_tipos.add(rdbtnPaciente);
 		rdbtnPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Paciente Seleccionado");
 				rdbtnPaciente.setSelected(true);
 				rdbtnSecretaria.setSelected(false);
 				rdbtnDoctor.setSelected(false);
 				panel_paciente.setVisible(false);
-				panel_paciente.setVisible(false);
-				panel_doctor.setVisible(true);
+				panel_paciente.setVisible(true);
+				panel_doctor.setVisible(false);
 			}
 		});
 		
@@ -222,6 +230,8 @@ public class RegistrarUsuario extends JDialog {
 		panel_tipos.add(rdbtnSecretaria);
 		rdbtnSecretaria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Secretaria Seleccionado");
+
 				rdbtnPaciente.setSelected(false);
 				rdbtnDoctor.setSelected(false);
 				rdbtnSecretaria.setSelected(true);
@@ -236,8 +246,11 @@ public class RegistrarUsuario extends JDialog {
 				rdbtnSecretaria.setSelected(false);
 				rdbtnDoctor.setSelected(true);
 				panel_paciente.setVisible(false);
-				panel_paciente.setVisible(true);
-				panel_doctor.setVisible(false);
+				panel_paciente.setVisible(false);
+				panel_doctor.setVisible(true);
+				/*
+
+				*/
 			}
 		});
 		{
@@ -249,6 +262,10 @@ public class RegistrarUsuario extends JDialog {
 				JButton btnRegister = new JButton("Registrar");
 				btnRegister.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
+						//Faltan los chequeos de que no falte info
+						//Falta chequeo de que la cedula no se repita
+						
 						String codigo = txtId.getText();
 						String nombre = txtNombre.getText();
 						String cedula = txtCedula.getText();
@@ -260,7 +277,11 @@ public class RegistrarUsuario extends JDialog {
 						Doctor dependiente = null;
 						
 						if (rdbtnPaciente.isSelected()) {
-							//aux = new Paciente();
+							System.out.println("Registrar.contraseña: " + contrasenia);
+
+							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<>());
+							System.out.println("Registrar.contraseñaInAux: " + aux.getContrasenia());
+
 						}
 						
 						if (rdbtnDoctor.isSelected()) {
@@ -290,8 +311,12 @@ public class RegistrarUsuario extends JDialog {
 				buttonPane.add(btnCancel);
 			}
 		}
-		aux = entrada;
+		//aux = entrada;
 		loadUser();
+		panel_doctor.setVisible(false);
+		panel_paciente.setVisible(true);
+
+
 	}
 	
 	private void loadUser() {

@@ -7,16 +7,26 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Hospital;
+import logico.Usuario;
+import visualRegistros.RegistrarUsuario;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import visualRegistros.RegistrarUsuario;
 
 public class Principal extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUser;
 	private JTextField txtPassword;
+	private String user;
+	private String password;
 
 	/**
 	 * Launch the application.
@@ -68,6 +78,9 @@ public class Principal extends JDialog {
 			JButton btnRegistrar = new JButton("Registrar");
 			btnRegistrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					RegistrarUsuario registro = new RegistrarUsuario("Paciente", 1, null);
+					registro.setVisible(true);
+					
 				}
 			});
 			buttonPane.add(btnRegistrar);
@@ -75,6 +88,27 @@ public class Principal extends JDialog {
 				JButton btnIniciar = new JButton("Iniciar Sesi\u00F3n");
 				btnIniciar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						user = txtUser.getText();
+						password = txtPassword.getText();
+						
+						Usuario usu = Hospital.getInstance().buscarUsuarioByCedula(user);
+						
+						try {
+							System.out.println("Usu: " + usu);
+							System.out.println("Usu password: " + usu.getContrasenia());
+							System.out.println("Recibido: " + password);
+							System.out.println(usu.getContrasenia().equalsIgnoreCase(password));
+
+							if (usu.getContrasenia().equalsIgnoreCase(password))
+							{
+								Dashboard dash = new Dashboard();
+								dash.setVisible(true);
+								setVisible(false);
+							}
+						} catch (Exception nullException) {
+							JOptionPane.showMessageDialog(null, "Debe ingresar sus datos", "Error", JOptionPane.INFORMATION_MESSAGE);
+						}
+						
 					}
 				});
 				btnIniciar.setActionCommand("OK");

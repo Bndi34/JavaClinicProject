@@ -137,6 +137,16 @@ public class Hospital {
 		return ConsultaDia;
 	}*/
 	
+	public Usuario buscarUsuarioByCedula(String cod) {
+		Usuario temp = null;
+		for (Usuario aux : misCuentas) {
+			if (aux.getCedula().equalsIgnoreCase(cod)) {
+				temp = aux;
+			}
+		}
+		return temp;
+	}
+	
 	//Buscar by code
 	public Usuario buscarUsuarioByCode(String cod) {
 		Usuario temp = null;
