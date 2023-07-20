@@ -225,7 +225,7 @@ public class RegistrarUsuario extends JDialog {
 				rdbtnPaciente.setSelected(false);
 				rdbtnDoctor.setSelected(false);
 				rdbtnSecretaria.setSelected(true);
-				panel_paciente.setVisible(true);
+				panel_secretaria.setVisible(true);
 				panel_paciente.setVisible(false);
 				panel_doctor.setVisible(false);
 			}
@@ -249,6 +249,28 @@ public class RegistrarUsuario extends JDialog {
 				JButton btnRegister = new JButton("Registrar");
 				btnRegister.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						String codigo = txtId.getText();
+						String nombre = txtNombre.getText();
+						String cedula = txtCedula.getText();
+						String telefono = txtTelefono.getText();
+						String contrasenia = txtPassword.getText();
+						String dir = "";
+						String area = txtArea.getText();
+						char genero = ' ';
+						Doctor dependiente = null;
+						
+						if (rdbtnPaciente.isSelected()) {
+							//aux = new Paciente();
+						}
+						
+						if (rdbtnDoctor.isSelected()) {
+							aux = new Doctor(codigo,nombre,cedula,telefono,contrasenia,area);
+						}
+						
+						if (rdbtnSecretaria.isSelected()) {
+							aux = new Secretaria(codigo,nombre,cedula,telefono,contrasenia,dependiente);
+						}
+						Hospital.getInstance().insertarUsuario(aux);
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 						clean();
 					}

@@ -54,7 +54,7 @@ public class RegistrarEnfermedad extends JDialog {
 		}
 		{
 			JLabel lblName = new JLabel("Nombre");
-			lblName.setBounds(12, 103, 56, 16);
+			lblName.setBounds(12, 78, 56, 16);
 			contentPanel.add(lblName);
 		}
 		{
@@ -87,7 +87,7 @@ public class RegistrarEnfermedad extends JDialog {
 		}
 		{
 			txtNombre = new JTextField();
-			txtNombre.setBounds(80, 100, 116, 22);
+			txtNombre.setBounds(80, 75, 116, 22);
 			contentPanel.add(txtNombre);
 			txtNombre.setColumns(10);
 		}

@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 //Hay que poner que solo se pueda de una instancia a la vez
 public class Hospital {
 	private ArrayList<Usuario> misCuentas;
 	private ArrayList<Consulta> misConsultas;
+	private ArrayList<Diagnostico> misDiagnosticos;
 	private ArrayList<Cita> misCitas;
 	private ArrayList<Enfermedad> enfermedadesReg;
 	private ArrayList<Vacuna> misVacunas;
@@ -24,6 +26,7 @@ public class Hospital {
 		super();
 		misCuentas = new ArrayList<Usuario>();
 		misConsultas = new ArrayList<Consulta>();
+		misDiagnosticos = new ArrayList<Diagnostico>();
 		misCitas = new ArrayList<Cita>();
 		enfermedadesReg = new ArrayList<Enfermedad>();
 		misVacunas = new ArrayList<Vacuna>();
@@ -68,41 +71,71 @@ public class Hospital {
 		this.misVacunas = misVacunas;
 	}
 	
-	/*public float porcentajeEfermedadPorPaciente(String codigoEnfermedad){
+	public float porcentajeEfermedadPorPaciente(String codigoEnfermedad){
 		float porcentaje = 0;
-		for ()
+		
+		//for ()
+		for (Usuario aux : misCuentas) {
+			if (aux instanceof Paciente) {
+				
+			}
+		}
 		
 		
 		return porcentaje;
-	}*/
-	
-	//public cantidad
+	}
 	
 	//Parte de insertar
-	void insertarUsuario(Usuario aux){
+	public void insertarUsuario(Usuario aux){
 		misCuentas.add(aux);
 		generadorUsuario++;
 	}
 	
-	void insertarConsulta(Consulta aux){
+	public void insertarConsulta(Consulta aux){
 		misConsultas.add(aux);
 		generadorConsulta++;
 	}
 	
-	void insertarCita(Cita aux){
+	public void insertarCita(Cita aux){
 		misCitas.add(aux);
 		generadorCita++;
 	}
 	
-	void insertarEnfermedad(Enfermedad aux){
+	public void insertarEnfermedad(Enfermedad aux){
 		enfermedadesReg.add(aux);
 		generadorEnfermedad++;
 	}
 	
-	void insertarVacuna(Vacuna aux){
+	public void insertarVacuna(Vacuna aux){
 		misVacunas.add(aux);
 		generadorVacuna++;
 	}
+	
+	/*public static ArrayList<Diagnostico> buscarHorasDisponiblesDiagnostico(Date day, Doctor doc) {
+		ArrayList<Diagnostico>diagnosticoDia;
+		
+		for (Diagnostico aux : misDiagnosticos) {
+			if (aux.getFecha().getDay() == day.getDay()) {
+				if (aux.getDoc().getCodigo().equalsIgnoreCase(doc.getCodigo()) ) {
+					diagnosticoDia.add(aux);
+				}
+			}
+		}
+		return diagnosticoDia;
+	}
+	
+	public static ArrayList<Consulta> buscarHorasDisponiblesConsulta(Date day, Doctor doc) {
+		ArrayList<Consulta>ConsultaDia;
+		
+		for (Consulta aux : misConsultas) {
+			if (aux.getFecha().getDay() == day.getDay()) {
+				if (aux.getDoctor().getCodigo().equalsIgnoreCase(doc.getCodigo()) ) {
+					ConsultaDia.add(aux);
+				}
+			}
+		}
+		return ConsultaDia;
+	}*/
 	
 	//Buscar by code
 	Usuario buscarUsuarioByCode(String cod) {
