@@ -109,6 +109,7 @@ public class Principal extends JDialog {
 							JOptionPane.showMessageDialog(null, "Debe ingresar sus datos", "Error", JOptionPane.INFORMATION_MESSAGE);
 						}
 						
+						
 					}
 				});
 				btnIniciar.setActionCommand("OK");
