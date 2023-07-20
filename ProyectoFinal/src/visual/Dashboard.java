@@ -105,4 +105,6 @@ public class Dashboard extends JDialog {
 		Dashboard.setBounds(30, 21, 171, 16);
 		contentPanel.add(Dashboard);
 	}
+	
+	//asd
 }

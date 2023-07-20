@@ -137,6 +137,8 @@ public class DetallesDia extends JDialog {
 				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
+				
+				//asd
 			}
 		}
 	}
