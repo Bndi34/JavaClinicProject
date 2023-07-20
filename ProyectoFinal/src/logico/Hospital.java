@@ -138,7 +138,7 @@ public class Hospital {
 	}*/
 	
 	//Buscar by code
-	Usuario buscarUsuarioByCode(String cod) {
+	public Usuario buscarUsuarioByCode(String cod) {
 		Usuario temp = null;
 		for (Usuario aux : misCuentas) {
 			if (aux.getCodigo().equalsIgnoreCase(cod)) {
@@ -149,7 +149,7 @@ public class Hospital {
 	}
 	
 	
-	Consulta buscarConsultasByCode(String cod) {
+	public Consulta buscarConsultasByCode(String cod) {
 		Consulta temp = null;
 		for (Consulta aux : misConsultas) {
 			if (aux.getCodigo().equalsIgnoreCase(cod)) {
@@ -159,7 +159,7 @@ public class Hospital {
 		return temp;
 	}
 	
-	Cita buscarCitasByCode(String cod) {
+	public Cita buscarCitasByCode(String cod) {
 		Cita temp = null;
 		for (Cita aux : misCitas) {
 			if (aux.getCodigo().equalsIgnoreCase(cod)) {
@@ -169,7 +169,7 @@ public class Hospital {
 		return temp;
 	}
 	
-	Enfermedad buscarEnfermedadesByCode(String cod) {
+	public Enfermedad buscarEnfermedadesByCode(String cod) {
 		Enfermedad temp = null;
 		for (Enfermedad aux : enfermedadesReg) {
 			if (aux.getCodigo().equalsIgnoreCase(cod)) {
@@ -179,7 +179,7 @@ public class Hospital {
 		return temp;
 	}
 	
-	Vacuna buscarVacunasByCode(String cod) {
+	public Vacuna buscarVacunasByCode(String cod) {
 		Vacuna temp = null;
 		for (Vacuna aux : misVacunas) {
 			if (aux.getCodigo().equalsIgnoreCase(cod)) {

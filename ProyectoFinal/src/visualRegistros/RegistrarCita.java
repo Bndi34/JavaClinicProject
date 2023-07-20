@@ -9,27 +9,41 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import logico.Hospital;
+import logico.Cita;
+
+import logico.Usuario;
+import logico.Doctor;
+import logico.Paciente;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
+import com.toedter.calendar.JDateChooser;
+import java.util.Date;
 
 public class RegistrarCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
-	private JTextField txtDate;
-	//private Date
+	JComboBox cbxDoctor = new JComboBox();
+	JComboBox cbxPaciente = new JComboBox();
+	JComboBox cbxHorasDisponibles = new JComboBox();
+	JDateChooser dateChooser = new JDateChooser();
+	JComboBox cbxEstado = new JComboBox();
+	private Cita cita;
+	private Date fecha;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarCita dialog = new RegistrarCita();
+			RegistrarCita dialog = new RegistrarCita("",null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -40,9 +54,9 @@ public class RegistrarCita extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarCita() {
+	public RegistrarCita(String tittle, Cita entrada) {
 		setTitle("Registrar Cita");
-		setBounds(100, 100, 353, 300);
+		setBounds(100, 100, 350, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -54,62 +68,71 @@ public class RegistrarCita extends JDialog {
 		}
 		{
 			JLabel lblDate = new JLabel("Fecha");
-			lblDate.setBounds(12, 42, 56, 16);
+			lblDate.setBounds(12, 50, 56, 16);
 			contentPanel.add(lblDate);
 		}
 		{
 			JLabel lblDoctor = new JLabel("Doctor");
-			lblDoctor.setBounds(12, 90, 56, 16);
+			lblDoctor.setBounds(12, 87, 56, 16);
 			contentPanel.add(lblDoctor);
 		}
 		{
 			JLabel lblPaciente = new JLabel("Paciente");
-			lblPaciente.setBounds(12, 119, 56, 16);
+			lblPaciente.setBounds(12, 124, 56, 16);
 			contentPanel.add(lblPaciente);
 		}
 		{
 			JLabel lblEstado = new JLabel("Estado");
-			lblEstado.setBounds(12, 160, 56, 16);
+			lblEstado.setBounds(12, 161, 56, 16);
 			contentPanel.add(lblEstado);
 		}
 		{
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
-			txtCode.setBounds(80, 10, 243, 22);
+			txtCode.setBounds(57, 10, 97, 22);
 			txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
 		}
 		{
-			txtDate = new JTextField();
-			txtDate.setBounds(80, 39, 243, 22);
-			contentPanel.add(txtDate);
-			txtDate.setColumns(10);
-		}
-		{
-			JComboBox cbxDoctor = new JComboBox();
-			cbxDoctor.setBounds(80, 90, 243, 22);
+			cbxDoctor.setBounds(57, 84, 203, 22);
 			contentPanel.add(cbxDoctor);
 		}
 		{
-			JComboBox cbxPaciente = new JComboBox();
-			cbxPaciente.setBounds(80, 116, 243, 22);
+			cbxPaciente.setBounds(57, 121, 203, 22);
 			contentPanel.add(cbxPaciente);
 		}
 		{
-			JComboBox cbxEstado = new JComboBox();
-			cbxEstado.setBounds(80, 157, 243, 22);
+			if (entrada == null) {
+				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"Seleccione...", "Pendiente"}));
+			}
+			else {
+				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"Seleccione...", "Pendiente", "Realizado", "Cancelado"}));
+			}
+			cbxEstado.setBounds(57, 158, 120, 22);
 			contentPanel.add(cbxEstado);
 		}
 		
 		JCheckBox chbxRetraso = new JCheckBox("");
-		chbxRetraso.setBounds(108, 184, 36, 25);
+		chbxRetraso.setBounds(80, 194, 36, 25);
 		contentPanel.add(chbxRetraso);
 		{
 			JLabel lblNewLabel = new JLabel("Cita Retrasada");
-			lblNewLabel.setBounds(12, 189, 102, 16);
+			lblNewLabel.setBounds(6, 198, 80, 16);
 			contentPanel.add(lblNewLabel);
 		}
+		
+		dateChooser.setBounds(57, 46, 97, 20);
+		fecha = dateChooser.getDate();
+		contentPanel.add(dateChooser);
+		
+		cbxHorasDisponibles.setMaximumRowCount(15);
+		cbxHorasDisponibles.setBounds(204, 46, 120, 22);
+		contentPanel.add(cbxHorasDisponibles);
+		
+		JLabel lblHora = new JLabel("Hora");
+		lblHora.setBounds(164, 50, 36, 16);
+		contentPanel.add(lblHora);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -118,6 +141,19 @@ public class RegistrarCita extends JDialog {
 				JButton btnOK = new JButton("OK");
 				btnOK.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						Usuario doc, paciente;
+						String estado;
+						doc = Hospital.getInstance().buscarUsuarioByCode(cbxDoctor.getSelectedItem().toString());
+						paciente = Hospital.getInstance().buscarUsuarioByCode(cbxPaciente.getSelectedItem().toString());
+						fecha = dateChooser.getDate();
+						fecha.setHours(cbxHorasDisponibles.getSelectedIndex() + 8);
+						//Acá se debería convertir el string de cbxHorasDisponibles a un int como debería hacerlo cbxHorasDisponibles.getSelectedItem().toString())
+						estado = cbxEstado.getSelectedItem().toString();
+						Cita aux = new Cita( txtCode.getText(),estado,fecha,null,((Doctor)doc), ((Paciente)paciente) );
+						Hospital.getInstance().insertarCita(aux);
+						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+					    clean();
+						 
 					}
 				});
 				btnOK.setActionCommand("OK");
@@ -135,5 +171,30 @@ public class RegistrarCita extends JDialog {
 				buttonPane.add(btnCancel);
 			}
 		}
+		loadCita();
+	}
+	
+	void loadCita(){
+		
+		int horas;
+		for (horas = 8; horas <= 20; horas++) {
+			//metodo para eliminar las horas utilizadas
+			cbxHorasDisponibles.addItem(String.valueOf(horas)+":00");
+		}
+		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
+			if (aux instanceof Doctor) {
+				cbxDoctor.addItem(aux.getCodigo());
+			}
+			
+			if (aux instanceof Paciente) {
+				cbxPaciente.addItem(aux.getCodigo());
+			}
+		}
+	}
+	void clean() {
+		cbxDoctor.setSelectedIndex(-1);
+		cbxPaciente.setSelectedIndex(-1);
+		cbxHorasDisponibles.setSelectedIndex(-1);
+		cbxEstado.setSelectedIndex(-1);
 	}
 }
