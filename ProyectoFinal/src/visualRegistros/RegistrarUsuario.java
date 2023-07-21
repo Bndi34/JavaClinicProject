@@ -50,7 +50,9 @@ public class RegistrarUsuario extends JDialog {
 	JPanel panel_secretaria;
 	JRadioButton rdbtnPaciente;
 	JRadioButton rdbtnDoctor;
+	JComboBox cbxAlergia = new JComboBox();
 	JRadioButton rdbtnSecretaria;
+	JComboBox cbxSexo = new JComboBox();
 	private JTextField txtTelefono;
 	private JTextField txtDir;
 	private Usuario aux;
@@ -58,6 +60,16 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtPassword;
 	private JTextField txtArea;
 	private JTextField txtSueldo;
+	
+	public static void main(String[] args) {
+		try {
+			RegistrarUsuario dialog = new RegistrarUsuario("",0,null);
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public RegistrarUsuario(String title, int mode, Usuario entrada) {
 		System.out.println("Registrar IN");
@@ -138,8 +150,23 @@ public class RegistrarUsuario extends JDialog {
 		lblAlergia.setBounds(222, 23, 54, 14);
 		panel_paciente.add(lblAlergia);
 		
-		JComboBox cbxAlergia = new JComboBox();
+		cbxAlergia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String selectedAlergia = cbxAlergia.getSelectedItem().toString();
+				if ( cbxAlergia.isEditable() ) {
+					System.out.println(cbxAlergia.getItemCount());
+					cbxAlergia.remove(cbxAlergia.getItemCount() - 1);
+					cbxAlergia.addItem(cbxAlergia.getSelectedItem().toString());
+					//cbxAlergia.addItem("Agregar...");
+					cbxAlergia.setEditable(false);
+				}
+				if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
+					cbxAlergia.setEditable(true);
+				}
+			}
+		});
 		cbxAlergia.setBounds(286, 23, 116, 22);
+		cbxAlergia.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Agregar..."}));
 		panel_paciente.add(cbxAlergia);
 		
 		txtDir = new JTextField();
@@ -151,7 +178,6 @@ public class RegistrarUsuario extends JDialog {
 		lblGenero.setBounds(7, 66, 54, 14);
 		panel_paciente.add(lblGenero);
 		
-		JComboBox cbxSexo = new JComboBox();
 		cbxSexo.setBounds(62, 62, 116, 22);
 		cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Hombre", "Mujer"}));
 		panel_paciente.add(cbxSexo);
@@ -273,13 +299,14 @@ public class RegistrarUsuario extends JDialog {
 						String contrasenia = txtPassword.getText();
 						String dir = "";
 						String area = txtArea.getText();
-						char genero = ' ';
+						char genero = genero(cbxSexo.getSelectedItem().toString());
+						
 						Doctor dependiente = null;
 						
 						if (rdbtnPaciente.isSelected()) {
 							System.out.println("Registrar.contraseña: " + contrasenia);
 
-							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<>());
+							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>());
 							System.out.println("Registrar.contraseñaInAux: " + aux.getContrasenia());
 
 						}
@@ -321,32 +348,33 @@ public class RegistrarUsuario extends JDialog {
 	
 	private void loadUser() {
 		if(aux != null){
-			/*txtId.setText(aux.getCodigo());
-			txtPrecioBase.setText(Float.toString(aux.getPrecioBase()));
-			txtCostoUnitario.setText(Float.toString(aux.getCostoUnitario()));
-			textRadio.setText(Float.toString(aux.getRadio()));
+			txtId.setText(aux.getCodigo());
+			txtNombre.setText(aux.getNombre());
+			txtCedula.setText(aux.getCedula());
+			txtPassword.setText(aux.getContrasenia());
+			txtTelefono.setText(aux.getTelefono());
 			
-			if (aux instanceof QueEsferico) {
-				rdbtnEsferico.setSelected(true);
-				rdbtnCilindrico.setSelected(false);
-				rdbtnCilHueco.setSelected(false);
+			if (aux instanceof Paciente){
+				setGenero( ((Paciente)aux).getSexo() );
+				txtDir.setText( ((Paciente)aux).getDireccion());
+				
+				cbxAlergia.removeAll();
+				//Considero que sería más práctico directamente conectar a la dirección de Alergias.
+				int limit = ((Paciente)aux).getAlergias().size();
+				for (int i = 0; i != limit; i++ ) {
+					cbxAlergia.addItem( ((Paciente)aux).getAlergias().get(i) );
+				}
+				cbxAlergia.addItem("Agregar...");
 			}
 			
-			if (aux instanceof QueCilindrico) {
-				rdbtnEsferico.setSelected(false);
-				rdbtnCilindrico.setSelected(true);
-				rdbtnCilHueco.setSelected(false);
-				textLongitud_1.setText(Float.toString(((QueCilindrico)aux).getLongitud()));
+			if (aux instanceof Doctor){
+				txtArea.setText( ((Doctor)aux).getAreaMedica());
 			}
 			
-			if (aux instanceof QueCilHueco) {
-				rdbtnEsferico.setSelected(false);
-				rdbtnCilindrico.setSelected(false);
-				rdbtnCilHueco.setSelected(true);
-				textLongitud.setText(Float.toString(((QueCilindrico)aux).getLongitud()));
-				txtRadioInterior.setText(Float.toString(((QueCilHueco)aux).getRadioInterior()));
+			if (aux instanceof Secretaria){
+				txtArea.setText( ((Secretaria)aux).getDependiente().getCodigo() );
 			}
-		*/}
+		}
 	
 	}
 	
@@ -360,5 +388,28 @@ public class RegistrarUsuario extends JDialog {
 		txtDir.setText("");
 		txtArea.setText("");
 		txtSueldo.setText("");
+	}
+	
+	
+	private char genero(String opc) {
+		if (opc == "Hombre") {
+			return 'H';
+		}
+		
+		if (opc == "Mujer") {
+			return 'M';
+		}
+		return ' ';
+	}
+	
+	private void setGenero(char opc) {
+		cbxSexo.setSelectedIndex(-1);
+		if (opc == 'H') {
+			cbxSexo.setSelectedIndex(1);
+		}
+		
+		if (opc == 'M') {
+			cbxSexo.setSelectedIndex(2);
+		}
 	}
 }
