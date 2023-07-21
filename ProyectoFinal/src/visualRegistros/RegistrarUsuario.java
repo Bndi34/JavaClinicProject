@@ -59,7 +59,7 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtCedula;
 	private JTextField txtPassword;
 	private JTextField txtArea;
-	private JTextField txtSueldo;
+	private JComboBox cbxSupervisor;
 	
 	public static void main(String[] args) {
 		try {
@@ -72,6 +72,7 @@ public class RegistrarUsuario extends JDialog {
 	}
 	
 	public RegistrarUsuario(String title, int mode, Usuario entrada) {
+		
 		System.out.println("Registrar IN");
 		setResizable(false);
 		setBounds(100, 100, 475, 400);
@@ -93,7 +94,7 @@ public class RegistrarUsuario extends JDialog {
 		panel.add(lblId);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(22, 63, 48, 14);
+		lblNombre.setBounds(12, 63, 60, 14);
 		panel.add(lblNombre);
 		
 		JLabel lblTelefono = new JLabel("Tel\u00E9fono:");
@@ -114,7 +115,7 @@ public class RegistrarUsuario extends JDialog {
 		
 		txtTelefono = new JTextField();
 		txtTelefono.setColumns(10);
-		txtTelefono.setBounds(290, 60, 118, 21);
+		txtTelefono.setBounds(317, 60, 91, 21);
 		panel.add(txtTelefono);
 		
 		JLabel lblCedula = new JLabel("C\u00E9dula:");
@@ -132,7 +133,7 @@ public class RegistrarUsuario extends JDialog {
 		
 		txtPassword = new JTextField();
 		txtPassword.setColumns(10);
-		txtPassword.setBounds(290, 99, 118, 21);
+		txtPassword.setBounds(317, 99, 91, 21);
 		panel.add(txtPassword);
 		
 		panel_paciente = new JPanel();
@@ -171,28 +172,16 @@ public class RegistrarUsuario extends JDialog {
 		
 		txtDir = new JTextField();
 		txtDir.setColumns(10);
-		txtDir.setBounds(62, 20, 140, 21);
+		txtDir.setBounds(80, 20, 122, 21);
 		panel_paciente.add(txtDir);
 		
 		JLabel lblGenero = new JLabel("G\u00E9nero:");
 		lblGenero.setBounds(7, 66, 54, 14);
 		panel_paciente.add(lblGenero);
 		
-		cbxSexo.setBounds(62, 62, 116, 22);
+		cbxSexo.setBounds(80, 62, 116, 22);
 		cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Hombre", "Mujer"}));
-		panel_paciente.add(cbxSexo);
-		
-		//Falta check de ver si es secretaria
-		/*
-		JLabel lblSupervisor = new JLabel("Supervisor:");
-		lblSupervisor.setBounds(7, 23, 75, 16);
-		panel_secretaria.add(lblSupervisor);
-		
-		
-		JComboBox cbxSupervisor = new JComboBox();
-		cbxSupervisor.setBounds(62, 20, 224, 22);
-		panel_secretaria.add(cbxSupervisor);
-		*/
+		panel_paciente.add(cbxSexo);		
 		
 		panel_doctor = new JPanel();
 		panel_doctor.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -201,22 +190,13 @@ public class RegistrarUsuario extends JDialog {
 		panel_doctor.setLayout(null);
 		
 		JLabel lblAreaMedica = new JLabel("Area M\u00E9dica:");
-		lblAreaMedica.setBounds(7, 23, 75, 14);
+		lblAreaMedica.setBounds(7, 23, 103, 14);
 		panel_doctor.add(lblAreaMedica);
 		
 		txtArea = new JTextField();
 		txtArea.setColumns(10);
-		txtArea.setBounds(62, 20, 140, 21);
+		txtArea.setBounds(86, 20, 116, 21);
 		panel_doctor.add(txtArea);
-		
-		JLabel lblSueldo = new JLabel("Sueldo:");
-		lblSueldo.setBounds(222, 23, 54, 14);
-		panel_doctor.add(lblSueldo);
-		
-		txtSueldo = new JTextField();
-		txtSueldo.setColumns(10);
-		txtSueldo.setBounds(270, 20, 140, 21);
-		panel_doctor.add(txtSueldo);
 		
 		
 		panel_secretaria = new JPanel();
@@ -224,6 +204,17 @@ public class RegistrarUsuario extends JDialog {
 		panel_secretaria.setBounds(10, 219, 439, 104);
 		contentPanel.add(panel_secretaria);
 		panel_secretaria.setLayout(null);
+		
+		
+		JLabel lblSupervisor = new JLabel("Supervisor:");
+		lblSupervisor.setBounds(7, 23, 75, 16);
+		panel_secretaria.add(lblSupervisor);
+		
+		
+		cbxSupervisor = new JComboBox();
+		cbxSupervisor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		cbxSupervisor.setBounds(86, 20, 200, 22);
+		panel_secretaria.add(cbxSupervisor);
 		
 		JPanel panel_tipos = new JPanel();
 		panel_tipos.setBorder(new TitledBorder(null, "Tipo de Usuario", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -244,6 +235,8 @@ public class RegistrarUsuario extends JDialog {
 				panel_paciente.setVisible(false);
 				panel_paciente.setVisible(true);
 				panel_doctor.setVisible(false);
+				cbxSupervisor.setVisible(false);
+
 			}
 		});
 		
@@ -264,6 +257,8 @@ public class RegistrarUsuario extends JDialog {
 				panel_secretaria.setVisible(true);
 				panel_paciente.setVisible(false);
 				panel_doctor.setVisible(false);
+				cbxSupervisor.setVisible(true);
+				loadSupervisores();
 			}
 		});
 		rdbtnDoctor.addActionListener(new ActionListener() {
@@ -274,6 +269,8 @@ public class RegistrarUsuario extends JDialog {
 				panel_paciente.setVisible(false);
 				panel_paciente.setVisible(false);
 				panel_doctor.setVisible(true);
+				cbxSupervisor.setVisible(false);
+
 				/*
 
 				*/
@@ -297,7 +294,7 @@ public class RegistrarUsuario extends JDialog {
 						String cedula = txtCedula.getText();
 						String telefono = txtTelefono.getText();
 						String contrasenia = txtPassword.getText();
-						String dir = "";
+						String dir = txtDir.getText();
 						String area = txtArea.getText();
 						char genero = genero(cbxSexo.getSelectedItem().toString());
 						
@@ -311,16 +308,38 @@ public class RegistrarUsuario extends JDialog {
 
 						}
 						
-						if (rdbtnDoctor.isSelected()) {
+						else if (rdbtnDoctor.isSelected()) {
 							aux = new Doctor(codigo,nombre,cedula,telefono,contrasenia,area);
 						}
 						
-						if (rdbtnSecretaria.isSelected()) {
+						else if (rdbtnSecretaria.isSelected()) {
+							/*
+							if (cbxSupervisor.getSelectedIndex() > 0)
+							{
+								String codeDependiente = "USR-" + cbxSupervisor.getSelectedIndex();
+								int indexDependiente = Hospital.getInstance().buscarIndexByUsuario(codeDependiente);
+								
+								//Esto tira error porque dice que no puede poner en un doctor lo que haya en un usuario
+								//porque podria ser tanto secretaria como paciente, entonces no deja
+									dependiente = Hospital.getInstance().getMisCuentas().get(indexDependiente);
+							}
+							*/
+							
 							aux = new Secretaria(codigo,nombre,cedula,telefono,contrasenia,dependiente);
 						}
-						Hospital.getInstance().insertarUsuario(aux);
-						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
-						clean();
+						
+						if (!hayEspacioVacio())
+						{
+							Hospital.getInstance().insertarUsuario(aux);
+							JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+							clean();
+						}
+						else 
+						{
+							JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+						}
+						
 					}
 				});
 				btnRegister.setActionCommand("OK");
@@ -339,7 +358,7 @@ public class RegistrarUsuario extends JDialog {
 			}
 		}
 		//aux = entrada;
-		loadUser();
+		//loadUser();
 		panel_doctor.setVisible(false);
 		panel_paciente.setVisible(true);
 
@@ -387,7 +406,6 @@ public class RegistrarUsuario extends JDialog {
 		
 		txtDir.setText("");
 		txtArea.setText("");
-		txtSueldo.setText("");
 	}
 	
 	
@@ -410,6 +428,84 @@ public class RegistrarUsuario extends JDialog {
 		
 		if (opc == 'M') {
 			cbxSexo.setSelectedIndex(2);
+		}
+	}
+	
+	/*
+	Funcion que revisa todos los campos a llenar
+	Retorna falso si encuentra alguno vacío
+	Retorna verdadero si todos estan llenos
+	
+	Esto probablemente funcionaria como un ciclo si se consigue una forma
+	de cambiar de donde se consigue la info segun cada ciclo
+	
+	ciclo 1: temp = txtNombre
+	ciclo 2: temp = txtCedula
+	etc
+	*/
+	private boolean hayEspacioVacio()
+	{
+		String temp;
+		
+		temp = txtNombre.getText();
+		if (temp == null || temp.equals(""))
+		{
+			return true;
+		}
+		temp = txtCedula.getText();
+		if (temp == null || temp.equals(""))
+		{
+			return true;
+		}
+		temp = txtPassword.getText();
+		if (temp == null || temp.equals(""))
+		{
+			return true;
+		}		
+		temp = txtTelefono.getText();
+		if (temp == null || temp.equals(""))
+		{
+			return true;
+		}
+		
+		if (rdbtnPaciente.isSelected())
+		{
+			temp = txtDir.getText();
+			if (temp == null || temp.equals(""))
+			{
+				return true;
+			}
+			if (cbxSexo.getSelectedIndex() <= 0)
+			{
+				return true;
+			}
+			
+		}
+		
+		else if (rdbtnDoctor.isSelected())
+		{
+			temp = txtArea.getText();
+			if (temp == null || temp.equals(""))
+			{
+				return true;
+			}
+		}
+
+		
+		return false;
+	}
+	
+	private void loadSupervisores()
+	{
+		cbxSupervisor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+
+		
+		for (Usuario temp : Hospital.getInstance().getMisCuentas())
+		{
+			if (temp instanceof Doctor)
+			{
+				cbxSupervisor.addItem(temp.getNombre());
+			}
 		}
 	}
 }

@@ -6,7 +6,7 @@ public class Secretaria extends Usuario{
 	private Doctor dependiente;
 	
 	public Secretaria(String codigo, String nombre, String cedula, String telefono, String contrasenia, Doctor dependiente) {
-		super(codigo, nombre, cedula, contrasenia, telefono);
+		super(codigo, nombre, cedula, telefono, contrasenia);
 		
 		this.dependiente = dependiente;
 	}

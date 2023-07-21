@@ -6,7 +6,7 @@ public class Doctor extends Usuario {
 	private String areaMedica;
 	
 	public Doctor(String codigo, String nombre, String cedula, String telefono, String contrasenia, String areaMedica) {
-		super(codigo, nombre, cedula, contrasenia, telefono);
+		super(codigo, nombre, cedula, telefono ,contrasenia);
 		this.areaMedica = areaMedica;
 	}
 
