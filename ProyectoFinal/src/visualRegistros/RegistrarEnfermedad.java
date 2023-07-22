@@ -211,6 +211,7 @@ public class RegistrarEnfermedad extends JDialog {
 		if ( cargado ) {
 			
 			File file = new File("misSintomas.dat" );
+
 			if( file.exists()) {    		
 				FileInputStream f = new FileInputStream(file);
 				ObjectInputStream oos = new ObjectInputStream(f);
