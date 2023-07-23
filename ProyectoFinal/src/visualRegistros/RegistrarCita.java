@@ -153,7 +153,6 @@ public class RegistrarCita extends JDialog {
 						Hospital.getInstance().insertarCita(aux);
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 					    clean();
-						 
 					}
 				});
 				btnOK.setActionCommand("OK");

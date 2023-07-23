@@ -212,7 +212,7 @@ public class RegistrarEnfermedad extends JDialog {
 			
 			File file = new File("misSintomas.dat" );
 
-			if( file.exists()) {    		
+			if( file.exists()) {		
 				FileInputStream f = new FileInputStream(file);
 				ObjectInputStream oos = new ObjectInputStream(f);
 				
@@ -224,7 +224,7 @@ public class RegistrarEnfermedad extends JDialog {
 				}
 				oos.close();
 				AgregarAlergiaCbxSintomas();
-			}
+			}  
 		}
 		else {
 			AgregarAlergiaCbxSintomas();
