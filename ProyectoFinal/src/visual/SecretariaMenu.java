@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Doctor;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
@@ -23,7 +26,7 @@ public class SecretariaMenu extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			SecretariaMenu dialog = new SecretariaMenu();
+			SecretariaMenu dialog = new SecretariaMenu("N/A", null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -34,7 +37,7 @@ public class SecretariaMenu extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public SecretariaMenu() {
+	public SecretariaMenu(String codigo, Doctor supervisor) {
 		setTitle("Listados");
 		setBounds(100, 100, 370, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -50,6 +53,7 @@ public class SecretariaMenu extends JDialog {
 			JLabel lblDoctor = new JLabel("Supervisor:");
 			lblDoctor.setBounds(12, 42, 113, 16);
 			contentPanel.add(lblDoctor);
+
 		}
 		{
 			txtUserCode = new JTextField();
@@ -57,6 +61,8 @@ public class SecretariaMenu extends JDialog {
 			txtUserCode.setBounds(137, 10, 193, 22);
 			contentPanel.add(txtUserCode);
 			txtUserCode.setColumns(10);
+			
+			txtUserCode.setText(codigo);
 		}
 		{
 			txtDoctorName = new JTextField();
@@ -64,6 +70,14 @@ public class SecretariaMenu extends JDialog {
 			txtDoctorName.setBounds(137, 39, 193, 22);
 			contentPanel.add(txtDoctorName);
 			txtDoctorName.setColumns(10);
+			
+			
+			try {
+				txtDoctorName.setText(supervisor.getNombre());
+				
+			} catch (NullPointerException e) {
+				txtDoctorName.setText("N/A");
+			}
 		}
 		
 		JButton btnAccounts = new JButton("Lista de Cuentas");

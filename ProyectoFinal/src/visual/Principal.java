@@ -8,7 +8,11 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.javafx.image.impl.IntArgb;
+
+import logico.Admin;
 import logico.Hospital;
+import logico.Secretaria;
 import logico.Usuario;
 import visualRegistros.RegistrarUsuario;
 
@@ -45,6 +49,12 @@ public class Principal extends JDialog {
 	 * Create the dialog.
 	 */
 	public Principal() {
+		
+		//Pendiente sistema para revisar que haya algun admin registrado.
+		//si no hay, se crea el admin admin
+		Admin aux = new Admin("admin", "admin");
+		Hospital.getInstance().getMisAdmins().add(aux);
+		
 		setTitle("Centro M\u00E9dico");
 		setBounds(100, 100, 363, 189);
 		getContentPane().setLayout(new BorderLayout());
@@ -91,21 +101,42 @@ public class Principal extends JDialog {
 						user = txtUser.getText();
 						password = txtPassword.getText();
 						
-						Usuario usu = Hospital.getInstance().buscarUsuarioByCedula(user);
-						
 						try {
-							System.out.println("Usu: " + usu);
-							System.out.println("Usu password: " + usu.getContrasenia());
-							System.out.println("Recibido: " + password);
-							System.out.println(usu.getContrasenia().equalsIgnoreCase(password));
-
+						
+							Admin adm = Hospital.getInstance().buscarAdminByUser(user);
+							
+							if (adm != null)
+								if (adm.getContrasenia().equalsIgnoreCase(password))
+								{
+								SecretariaMenu secrMenu = new SecretariaMenu(user, null);
+								secrMenu.setVisible(true);
+								dispose();
+								}
+							
+							Usuario usu = Hospital.getInstance().buscarUsuarioByCedula(user);
+							
 							if (usu.getContrasenia().equalsIgnoreCase(password))
 							{
-								Dashboard dash = new Dashboard();
-								dash.setVisible(true);
-								setVisible(false);
+								if (!(usu instanceof Secretaria))
+								{
+									Dashboard dash = new Dashboard();
+									dash.setVisible(true);
+									dispose();
+								}
+								else {
+									
+									System.out.println(((Secretaria) usu).getDependiente());
+									SecretariaMenu secrMenu = new SecretariaMenu(usu.getCodigo(), ((Secretaria) usu).getDependiente());
+									secrMenu.setVisible(true);
+									dispose();
+					
+								}
+									
 							}
+							
+							
 						} catch (Exception nullException) {
+							
 							JOptionPane.showMessageDialog(null, "Debe ingresar sus datos", "Error", JOptionPane.INFORMATION_MESSAGE);
 						}
 						

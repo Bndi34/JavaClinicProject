@@ -8,6 +8,8 @@ import java.util.Date;
 
 //Hay que poner que solo se pueda de una instancia a la vez
 public class Hospital {
+	
+	private ArrayList<Admin> misAdmins;
 	private ArrayList<Usuario> misCuentas;
 	private ArrayList<Consulta> misConsultas;
 	private ArrayList<Diagnostico> misDiagnosticos;
@@ -24,6 +26,8 @@ public class Hospital {
 	
 	public Hospital() {
 		super();
+		
+		misAdmins = new ArrayList<Admin>();
 		misCuentas = new ArrayList<Usuario>();
 		misConsultas = new ArrayList<Consulta>();
 		misDiagnosticos = new ArrayList<Diagnostico>();
@@ -136,6 +140,17 @@ public class Hospital {
 		}
 		return ConsultaDia;
 	}*/
+	
+	public Admin buscarAdminByUser(String user)
+	{
+		Admin temp = null;
+		for (Admin aux : misAdmins) {
+			if (aux.getUsuario().equalsIgnoreCase(user)) {
+				temp = aux;
+			}
+		}
+		return temp;
+	}
 	
 	public Usuario buscarUsuarioByCedula(String cod) {
 		Usuario temp = null;
@@ -299,6 +314,22 @@ public class Hospital {
 		int index = -1;
 		index = buscarIndexByVacuna(selected.getCodigo());
 		misVacunas.set(index, selected);
+	}
+
+	public ArrayList<Admin> getMisAdmins() {
+		return misAdmins;
+	}
+
+	public void setMisAdmins(ArrayList<Admin> misAdmins) {
+		this.misAdmins = misAdmins;
+	}
+
+	public ArrayList<Diagnostico> getMisDiagnosticos() {
+		return misDiagnosticos;
+	}
+
+	public void setMisDiagnosticos(ArrayList<Diagnostico> misDiagnosticos) {
+		this.misDiagnosticos = misDiagnosticos;
 	}
 	
 	/*public void loadUser() {

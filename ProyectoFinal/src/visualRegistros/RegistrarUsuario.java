@@ -60,6 +60,7 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtPassword;
 	private JTextField txtArea;
 	private JComboBox cbxSupervisor;
+	private JButton btnBorrarAlergia;
 	
 	public static void main(String[] args) {
 		try {
@@ -72,6 +73,7 @@ public class RegistrarUsuario extends JDialog {
 	}
 	
 	public RegistrarUsuario(String title, int mode, Usuario entrada) {
+		setModal(true);
 		
 		System.out.println("Registrar IN");
 		setResizable(false);
@@ -147,26 +149,36 @@ public class RegistrarUsuario extends JDialog {
 		lblDir.setBounds(7, 23, 61, 14);
 		panel_paciente.add(lblDir);
 		
-		JLabel lblAlergia = new JLabel("Alergias:");
-		lblAlergia.setBounds(222, 23, 54, 14);
+		JLabel lblAlergia = new JLabel("Alergias Conocidas:");
+		lblAlergia.setBounds(222, 23, 122, 14);
 		panel_paciente.add(lblAlergia);
 		
 		cbxAlergia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selectedAlergia = cbxAlergia.getSelectedItem().toString();
 				if ( cbxAlergia.isEditable() ) {
-					System.out.println(cbxAlergia.getItemCount());
-					cbxAlergia.remove(cbxAlergia.getItemCount() - 1);
+					
+					System.out.println("Alergia Registrado");
+					
+					
 					cbxAlergia.addItem(cbxAlergia.getSelectedItem().toString());
-					//cbxAlergia.addItem("Agregar...");
+					System.out.println(cbxAlergia.getSelectedItem().toString());
+					System.out.println(cbxAlergia.getItemAt(cbxAlergia.getItemCount() - 2));
+					cbxAlergia.removeItemAt(cbxAlergia.getItemCount() - 2);
+					cbxAlergia.addItem("Agregar...");
+					btnBorrarAlergia.setText("Borrar");
 					cbxAlergia.setEditable(false);
+			
 				}
 				if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
+					btnBorrarAlergia.setText("Ok");
 					cbxAlergia.setEditable(true);
+					cbxAlergia.setSelectedItem("");
+					
 				}
 			}
 		});
-		cbxAlergia.setBounds(286, 23, 116, 22);
+		cbxAlergia.setBounds(222, 62, 122, 22);
 		cbxAlergia.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Agregar..."}));
 		panel_paciente.add(cbxAlergia);
 		
@@ -182,6 +194,33 @@ public class RegistrarUsuario extends JDialog {
 		cbxSexo.setBounds(80, 62, 116, 22);
 		cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Hombre", "Mujer"}));
 		panel_paciente.add(cbxSexo);		
+		
+		btnBorrarAlergia = new JButton("Borrar");
+		btnBorrarAlergia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (btnBorrarAlergia.getText() == "Borrar")
+				{
+					if (cbxAlergia.getSelectedItem().toString() != "<Seleccione>" && cbxAlergia.getSelectedItem().toString() != "Agregar...")
+					{
+						cbxAlergia.removeItemAt(cbxAlergia.getSelectedIndex());
+					}
+				}
+				else 
+				{
+					System.out.println("Boton OK pushed");
+					
+					
+					cbxAlergia.addItem(cbxAlergia.getSelectedItem().toString());					
+					cbxAlergia.removeItemAt(cbxAlergia.getItemCount() - 2);
+					cbxAlergia.addItem("Agregar...");
+					btnBorrarAlergia.setText("Borrar");
+				}
+
+
+			}
+		});
+		btnBorrarAlergia.setBounds(356, 61, 83, 25);
+		panel_paciente.add(btnBorrarAlergia);
 		
 		panel_doctor = new JPanel();
 		panel_doctor.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -215,6 +254,8 @@ public class RegistrarUsuario extends JDialog {
 		cbxSupervisor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
 		cbxSupervisor.setBounds(86, 20, 200, 22);
 		panel_secretaria.add(cbxSupervisor);
+		cbxSupervisor.setVisible(false);
+
 		
 		JPanel panel_tipos = new JPanel();
 		panel_tipos.setBorder(new TitledBorder(null, "Tipo de Usuario", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -313,17 +354,13 @@ public class RegistrarUsuario extends JDialog {
 						}
 						
 						else if (rdbtnSecretaria.isSelected()) {
-							/*
+							
 							if (cbxSupervisor.getSelectedIndex() > 0)
 							{
 								String codeDependiente = "USR-" + cbxSupervisor.getSelectedIndex();
-								int indexDependiente = Hospital.getInstance().buscarIndexByUsuario(codeDependiente);
-								
-								//Esto tira error porque dice que no puede poner en un doctor lo que haya en un usuario
-								//porque podria ser tanto secretaria como paciente, entonces no deja
-									dependiente = Hospital.getInstance().getMisCuentas().get(indexDependiente);
+							
+								dependiente = ((Doctor) Hospital.getInstance().buscarUsuarioByCode(codeDependiente));
 							}
-							*/
 							
 							aux = new Secretaria(codigo,nombre,cedula,telefono,contrasenia,dependiente);
 						}
@@ -339,7 +376,7 @@ public class RegistrarUsuario extends JDialog {
 							JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Información", JOptionPane.INFORMATION_MESSAGE);
 
 						}
-						
+						dispose();
 					}
 				});
 				btnRegister.setActionCommand("OK");
