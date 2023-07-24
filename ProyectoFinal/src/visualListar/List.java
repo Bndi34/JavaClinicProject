@@ -46,7 +46,7 @@ public class List extends JDialog {
 	 * Create the dialog.
 	 * @param fed 
 	 */
-	public List(String type) {
+	public List(final String type) {
 		
 		 
 		if (type == "admin")
@@ -131,43 +131,38 @@ public class List extends JDialog {
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					switch (type)
-					{
-					case "admin":
+
+					if (type.equalsIgnoreCase("admin")) {	
+
 						RegistrarAdmin modAdmin = new RegistrarAdmin();
 						modAdmin.setModal(true);
 						modAdmin.setLocationRelativeTo(null);
 						modAdmin.setVisible(true);
 						
-						break;
+					}
 
-					case "cuenta":
-						
+					if (type.equalsIgnoreCase("cuenta")) {	
 						RegistrarUsuario modUser = new RegistrarUsuario(type, Hospital.getInstance().getMisCuentas().get(table.getSelectedRow()));
 						modUser.setModal(true);
 						modUser.setLocationRelativeTo(null);
-						modUser.setVisible(true);
-						
-						break;
-
-					case "cita":
-						
+						modUser.setVisible(true);	
+					}
+					
+					if (type.equalsIgnoreCase("cita")) {	
 						RegistrarCita modCita = new RegistrarCita(type, Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
 						modCita.setModal(true);
 						modCita.setLocationRelativeTo(null);
 						modCita.setVisible(true);
-						
-						break;
-					case "consulta":
-						
+					}
+					
+					if (type.equalsIgnoreCase("consulta")) {	
 						RegistrarConsulta modConsulta = new RegistrarConsulta();
 						modConsulta.setModal(true);
 						modConsulta.setLocationRelativeTo(null);
 						modConsulta.setVisible(true);
-						
-						break;
-					case "enfermedad":
-						
+					}
+					
+					if (type.equalsIgnoreCase("enfermedad")) {	
 						RegistrarEnfermedad modEnfermedad;
 						try {
 							modEnfermedad = new RegistrarEnfermedad();
@@ -181,16 +176,13 @@ public class List extends JDialog {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
-						
-						break;
-					case "vacuna":
+					}
+					
+					if (type.equalsIgnoreCase("vacuna")) {	
 						RegistrarVacuna modVacuna = new RegistrarVacuna();
 						modVacuna.setModal(true);
 						modVacuna.setLocationRelativeTo(null);
 						modVacuna.setVisible(true);
-						
-						break;
 					}
 					
 						
@@ -243,17 +235,16 @@ public class List extends JDialog {
 	private void loadSportMans(String selection) {
 		tableModel.setRowCount(0);
 		fila = new Object[tableModel.getColumnCount()];
-		switch (selection) {
 		
-		case "admin":
+		if (selection.equalsIgnoreCase("admin")) {
 			for (Admin aux : Hospital.getInstance().getMisAdmins()) 
 			{
 				fila[0] = aux.getUsuario();
 				
 				tableModel.addRow(fila);
 			}
-			break;
-		case "cuenta":
+		}
+		if (selection.equalsIgnoreCase("cuenta")) {
 			for (Usuario aux : Hospital.getInstance().getMisCuentas()) 
 			{
 				fila[0] = aux.getCodigo();
@@ -263,9 +254,8 @@ public class List extends JDialog {
 	
 				tableModel.addRow(fila);
 			}
-			
-		break;
-		case "paciente":
+		}
+		if (selection.equalsIgnoreCase("paciente")) {
 			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
 				if(aux instanceof Paciente){
 					fila[0] = aux.getCodigo();
@@ -276,8 +266,8 @@ public class List extends JDialog {
 					tableModel.addRow(fila);
 				}
 			}
-			break;	
-		case "doctor":
+		}
+		if (selection.equalsIgnoreCase("doctor")) {
 			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
 				if(aux instanceof Doctor){
 					fila[0] = aux.getCodigo();
@@ -288,15 +278,16 @@ public class List extends JDialog {
 					tableModel.addRow(fila);
 				}
 			}
-			break;	
-		case "secretaria":
+		}
+
+		if (selection.equalsIgnoreCase("secretaria")) {
 			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
 				if(aux instanceof Secretaria){
 					fila[0] = aux.getCodigo();
 					fila[1] = aux.getNombre();
 					fila[2] = aux.getCedula();
 					fila[3] = aux.getTelefono();
-		
+					
 					tableModel.addRow(fila);
 				}
 			}

@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
@@ -16,11 +17,13 @@ import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JCalendar;
+import java.awt.Color;
+import javax.swing.JScrollPane;
 
-public class Dashboard extends JDialog {
+public class Dashboard extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable EspacioParaCalendario;
 
 	/**
 	 * Launch the application.
@@ -44,32 +47,6 @@ public class Dashboard extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		{
-			EspacioParaCalendario = new JTable();
-			EspacioParaCalendario.setBounds(29, 116, 484, 300);
-			contentPanel.add(EspacioParaCalendario);
-		}
-		
-		JButton btnDetallesDia = new JButton("Detalles");
-		btnDetallesDia.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnDetallesDia.setBounds(558, 391, 138, 25);
-		contentPanel.add(btnDetallesDia);
-		
-		ScrollPane scrollDetallesDia = new ScrollPane();
-		scrollDetallesDia.setBounds(558, 116, 138, 269);
-		contentPanel.add(scrollDetallesDia);
-		
-		ScrollPane scrollHistorialMedico = new ScrollPane();
-		scrollHistorialMedico.setBounds(774, 148, 138, 237);
-		contentPanel.add(scrollHistorialMedico);
-		
-		JComboBox cboxHistorialMedico = new JComboBox();
-		cboxHistorialMedico.setModel(new DefaultComboBoxModel(new String[] {"<Paciente>"}));
-		cboxHistorialMedico.setBounds(774, 116, 138, 22);
-		contentPanel.add(cboxHistorialMedico);
 		
 		JMenu mnUser = new JMenu("<User>");
 		mnUser.setBounds(787, 13, 125, 24);
@@ -80,14 +57,6 @@ public class Dashboard extends JDialog {
 		
 		JMenuItem mntmUserLogOut = new JMenuItem("Cerrar Sesi\u00F3n");
 		mnUser.add(mntmUserLogOut);
-		
-		JButton btnDetallesHistorialMedico = new JButton("Detalles");
-		btnDetallesHistorialMedico.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnDetallesHistorialMedico.setBounds(774, 391, 138, 25);
-		contentPanel.add(btnDetallesHistorialMedico);
 		
 		JLabel lblCalendario = new JLabel("Calendario");
 		lblCalendario.setBounds(30, 87, 82, 16);
@@ -104,7 +73,53 @@ public class Dashboard extends JDialog {
 		JLabel Dashboard = new JLabel("DASHBOARD");
 		Dashboard.setBounds(30, 21, 171, 16);
 		contentPanel.add(Dashboard);
+		
+		JPanel panel_calendar = new JPanel();
+		panel_calendar.setBackground(Color.LIGHT_GRAY);
+		panel_calendar.setBounds(29, 116, 484, 300);
+		contentPanel.add(panel_calendar);
+		panel_calendar.setLayout(null);
+		
+		JCalendar calendar = new JCalendar();
+		calendar.setBounds(10, 11, 464, 278);
+		panel_calendar.add(calendar);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(523, 116, 445, 300);
+		contentPanel.add(panel);
+		panel.setLayout(null);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(10, 11, 159, 246);
+		panel.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JScrollPane scrllDetallesDia = new JScrollPane();
+		scrllDetallesDia.setBounds(0, 0, 159, 246);
+		panel_1.add(scrllDetallesDia);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(240, 40, 158, 221);
+		panel.add(panel_2);
+		panel_2.setLayout(null);
+		
+		JScrollPane scrllHistorialMedico = new JScrollPane();
+		scrllHistorialMedico.setBounds(240, 11, 158, 257);
+		panel_2.add(scrllHistorialMedico);
+		
+		JComboBox cboxHistorialMedico = new JComboBox();
+		cboxHistorialMedico.setBounds(240, 7, 138, 22);
+		panel.add(cboxHistorialMedico);
+		cboxHistorialMedico.setModel(new DefaultComboBoxModel(new String[] {"<Paciente>"}));
+		
+		JButton btnDetallesDia = new JButton("Detalles...");
+		btnDetallesDia.setBounds(36, 266, 89, 23);
+		panel.add(btnDetallesDia);
+		
+		JButton btnDetallesHistorialMedico = new JButton("Detalles...");
+		btnDetallesHistorialMedico.setBounds(277, 266, 89, 23);
+		panel.add(btnDetallesHistorialMedico);
+		
+
 	}
-	
-	//asd
 }
