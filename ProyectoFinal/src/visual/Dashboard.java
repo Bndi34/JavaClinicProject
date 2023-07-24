@@ -16,10 +16,19 @@ import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JCalendar;
+
+import visualRegistros.RegistrarCita;
+import visualRegistros.RegistrarConsulta;
+import visualRegistros.RegistrarEnfermedad;
+import visualRegistros.RegistrarUsuario;
+import visualRegistros.RegistrarVacuna;
+
 import java.awt.Color;
 import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
 
 public class Dashboard extends JFrame {
 
@@ -119,6 +128,114 @@ public class Dashboard extends JFrame {
 		JButton btnDetallesHistorialMedico = new JButton("Detalles...");
 		btnDetallesHistorialMedico.setBounds(277, 266, 89, 23);
 		panel.add(btnDetallesHistorialMedico);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnUsuario = new JMenu("Usuarios");
+		menuBar.add(mnUsuario);
+		
+		JMenuItem mntmRegistrarUsuario = new JMenuItem("Registrar");
+		mntmRegistrarUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistrarUsuario regUs = new RegistrarUsuario("Registrar Usuario",null);
+				regUs.setModal(true);
+				regUs.setVisible(true);
+			}
+		});
+		mnUsuario.add(mntmRegistrarUsuario);
+		
+		JMenuItem mntmListaUsuario = new JMenuItem("Lista");
+		mnUsuario.add(mntmListaUsuario);
+		
+		JMenu mnVacuna = new JMenu("Vacuna");
+		menuBar.add(mnVacuna);
+		
+		JMenuItem mntmRegistrarVacuna = new JMenuItem("Registrar");
+		mntmRegistrarVacuna.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistrarVacuna regVac = new RegistrarVacuna(); //("Registrar Usuario",null);
+				regVac.setModal(true);
+				regVac.setVisible(true);
+			}
+		});
+		mnVacuna.add(mntmRegistrarVacuna);
+		
+		JMenuItem mntmListarVacuna = new JMenuItem("Listar");
+		mnVacuna.add(mntmListarVacuna);
+		
+		JMenu mnEnfermedad = new JMenu("Enfermedad");
+		menuBar.add(mnEnfermedad);
+		
+		JMenuItem mntmRegistrarEnfermedad = new JMenuItem("Registrar");
+		mntmRegistrarEnfermedad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistrarEnfermedad regEnf;
+				try {
+					regEnf = new RegistrarEnfermedad();
+					regEnf.setModal(true);
+					regEnf.setVisible(true);
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} //("Registrar Usuario",null);
+			}
+		});
+		mnEnfermedad.add(mntmRegistrarEnfermedad);
+		
+		JMenuItem mntmListarEnfermedad = new JMenuItem("Listar");
+		mnEnfermedad.add(mntmListarEnfermedad);
+		
+		JMenu mnDiagnostico = new JMenu("Diagn\u00F3stico");
+		menuBar.add(mnDiagnostico);
+		
+		JMenuItem mntmRegistrarDiagnostico = new JMenuItem("Registrar");
+		mntmRegistrarDiagnostico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				/*RegistrarDiagnostico regVac = new RegistrarVacuna(); //("Registrar Usuario",null);
+				regVac.setModal(true);
+				regVac.setVisible(true);*/
+			}
+		});
+		mnDiagnostico.add(mntmRegistrarDiagnostico);
+		
+		JMenuItem mntmListarDiagnostico = new JMenuItem("Listar");
+		mnDiagnostico.add(mntmListarDiagnostico);
+		
+		JMenu mnConsulta = new JMenu("Consulta");
+		menuBar.add(mnConsulta);
+		
+		JMenuItem mntmRegistrarConsulta = new JMenuItem("Registrar");
+		mntmRegistrarConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistrarConsulta regCon = new RegistrarConsulta(); //("Registrar Usuario",null);
+				regCon.setModal(true);
+				regCon.setVisible(true);
+			}
+		});
+		mnConsulta.add(mntmRegistrarConsulta);
+		
+		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Listar");
+		mnConsulta.add(mntmNewMenuItem_5);
+		
+		JMenu mnCita = new JMenu("Cita");
+		menuBar.add(mnCita);
+		
+		JMenuItem mntmRegistrarCita = new JMenuItem("Registrar");
+		mntmRegistrarCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistrarCita regCit = new RegistrarCita("Registrar Cita",null); //("Registrar Usuario",null);
+				regCit.setModal(true);
+				regCit.setVisible(true);
+			}
+		});
+		mnCita.add(mntmRegistrarCita);
+		
+		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Listar");
+		mnCita.add(mntmNewMenuItem_7);
 		
 
 	}

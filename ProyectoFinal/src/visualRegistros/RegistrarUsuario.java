@@ -61,7 +61,7 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtArea;
 	private JComboBox cbxSupervisor;
 	private JButton btnBorrarAlergia;
-	private ArrayList<String> SupervisorCedula = new ArrayList<>();
+	private ArrayList<String> SupervisorCedula;
 	
 	public static void main(String[] args) {
 		try {
@@ -74,6 +74,7 @@ public class RegistrarUsuario extends JDialog {
 	}
 	
 	public RegistrarUsuario(String title, Usuario entrada) {
+		SupervisorCedula = new ArrayList<String>();
 		setModal(true);
 		
 		System.out.println("Registrar IN");

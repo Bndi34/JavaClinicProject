@@ -10,7 +10,8 @@ import javax.swing.border.EmptyBorder;
 
 import logico.Hospital;
 import logico.Cita;
-
+import logico.Consulta;
+import logico.Diagnostico;
 import logico.Usuario;
 import logico.Doctor;
 import logico.Paciente;
@@ -24,7 +25,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import com.toedter.calendar.JDateChooser;
+
+import java.util.ArrayList;
 import java.util.Date;
+
 
 public class RegistrarCita extends JDialog {
 
@@ -35,6 +39,7 @@ public class RegistrarCita extends JDialog {
 	JComboBox cbxHorasDisponibles = new JComboBox();
 	JDateChooser dateChooser = new JDateChooser();
 	JComboBox cbxEstado = new JComboBox();
+	private Doctor doc;
 	private Cita cita;
 	private Date fecha;
 
@@ -55,6 +60,7 @@ public class RegistrarCita extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistrarCita(String tittle, Cita entrada) {
+		doc = null;
 		setTitle("Registrar Cita");
 		setBounds(100, 100, 350, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -95,6 +101,14 @@ public class RegistrarCita extends JDialog {
 			txtCode.setColumns(10);
 		}
 		{
+			cbxDoctor.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (doc != null) {
+						setHorasDisponibles();
+						cbxHorasDisponibles.setEnabled(true);
+					}
+				}
+			});
 			cbxDoctor.setBounds(57, 84, 203, 22);
 			contentPanel.add(cbxDoctor);
 		}
@@ -125,6 +139,7 @@ public class RegistrarCita extends JDialog {
 		dateChooser.setBounds(57, 46, 97, 20);
 		fecha = dateChooser.getDate();
 		contentPanel.add(dateChooser);
+		cbxHorasDisponibles.setEnabled(false);
 		
 		cbxHorasDisponibles.setMaximumRowCount(15);
 		cbxHorasDisponibles.setBounds(204, 46, 120, 22);
@@ -175,11 +190,9 @@ public class RegistrarCita extends JDialog {
 	
 	void loadCita(){
 		
-		int horas;
-		for (horas = 8; horas <= 20; horas++) {
-			//metodo para eliminar las horas utilizadas
-			cbxHorasDisponibles.addItem(String.valueOf(horas)+":00");
-		}
+	}
+	
+	void setDoctoryPaciente() {
 		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
 			if (aux instanceof Doctor) {
 				cbxDoctor.addItem(aux.getCodigo());
@@ -187,6 +200,30 @@ public class RegistrarCita extends JDialog {
 			
 			if (aux instanceof Paciente) {
 				cbxPaciente.addItem(aux.getCodigo());
+			}
+		}
+	}
+	
+	void setHorasDisponibles() {
+		ArrayList<Consulta>ConsultaDia = null;
+		ArrayList<Diagnostico>diagnosticoDia = null;
+		ConsultaDia = Hospital.getInstance().buscarHorasDisponiblesConsulta(fecha, doc);
+		diagnosticoDia = Hospital.getInstance().buscarHorasDisponiblesDiagnostico(fecha, doc);
+		//eliminar horas ocupadas
+		
+		boolean validador = false;
+		for (int horas = 8; horas <= 20; horas++) {
+			validador = false;
+			if (ConsultaDia != null) {
+				for (Consulta aux : ConsultaDia ) {
+					if (aux.getFecha().getHours() == horas ) {
+						validador = true;
+					}
+				}
+			}
+			
+			if (!validador) {
+				cbxHorasDisponibles.addItem(String.valueOf(horas)+":00");
 			}
 		}
 	}

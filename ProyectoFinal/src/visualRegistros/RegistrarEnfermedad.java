@@ -64,10 +64,6 @@ public class RegistrarEnfermedad extends JDialog {
 		SintomasSinElegir = new ArrayList<String>();
 		SintomasElegido = new ArrayList<String>();
 		modelElegido = new DefaultListModel<String>();
-		
-		SintomasElegido.add("Sida");
-		SintomasElegido.add("VIH");
-		SintomasElegido.add("Gripe");
 
 		setTitle("Registar Enfermedad");
 		setBounds(100, 100, 381, 251);

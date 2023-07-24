@@ -14,9 +14,9 @@ public class Hospital {
 	
 	private ArrayList<Admin> misAdmins;
 	private ArrayList<Usuario> misCuentas;
-	private ArrayList<Consulta> misConsultas;
-	private ArrayList<Diagnostico> misDiagnosticos;
-	private ArrayList<Cita> misCitas;
+	private static ArrayList<Consulta> misConsultas;
+	private static ArrayList<Diagnostico> misDiagnosticos;
+	private static ArrayList<Cita> misCitas;
 	private ArrayList<Enfermedad> enfermedadesReg;
 	private ArrayList<Vacuna> misVacunas;
 	private static Hospital hospi = null;
@@ -118,8 +118,9 @@ public class Hospital {
 		generadorVacuna++;
 	}
 	
-	/*public static ArrayList<Diagnostico> buscarHorasDisponiblesDiagnostico(Date day, Doctor doc) {
+	public static ArrayList<Diagnostico> buscarHorasDisponiblesDiagnostico(Date day, Doctor doc) {
 		ArrayList<Diagnostico>diagnosticoDia;
+		diagnosticoDia = null;
 		
 		for (Diagnostico aux : misDiagnosticos) {
 			if (aux.getFecha().getDay() == day.getDay()) {
@@ -133,6 +134,7 @@ public class Hospital {
 	
 	public static ArrayList<Consulta> buscarHorasDisponiblesConsulta(Date day, Doctor doc) {
 		ArrayList<Consulta>ConsultaDia;
+		ConsultaDia = null;
 		
 		for (Consulta aux : misConsultas) {
 			if (aux.getFecha().getDay() == day.getDay()) {
@@ -142,7 +144,7 @@ public class Hospital {
 			}
 		}
 		return ConsultaDia;
-	}*/
+	}
 	
 	public Admin buscarAdminByUser(String user)
 	{
