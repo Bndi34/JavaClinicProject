@@ -8,7 +8,10 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+
 import logico.Doctor;
+import visualListar.ListarCuenta;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -83,6 +86,9 @@ public class SecretariaMenu extends JDialog {
 		JButton btnAccounts = new JButton("Lista de Cuentas");
 		btnAccounts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ListarCuenta listaCuentas = new ListarCuenta("cuentas");
+				listaCuentas.setVisible(true);
+				listaCuentas.setModal(true);
 			}
 		});
 		btnAccounts.setBounds(12, 81, 153, 25);

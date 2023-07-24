@@ -88,7 +88,7 @@ public class Principal extends JDialog {
 			JButton btnRegistrar = new JButton("Registrar");
 			btnRegistrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					RegistrarUsuario registro = new RegistrarUsuario("Paciente", 1, null);
+					RegistrarUsuario registro = new RegistrarUsuario("Paciente", null);
 					registro.setVisible(true);
 					
 				}

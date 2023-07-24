@@ -61,10 +61,11 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtArea;
 	private JComboBox cbxSupervisor;
 	private JButton btnBorrarAlergia;
+	private ArrayList<String> SupervisorCedula = new ArrayList<>();
 	
 	public static void main(String[] args) {
 		try {
-			RegistrarUsuario dialog = new RegistrarUsuario("",0,null);
+			RegistrarUsuario dialog = new RegistrarUsuario("",null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -72,7 +73,7 @@ public class RegistrarUsuario extends JDialog {
 		}
 	}
 	
-	public RegistrarUsuario(String title, int mode, Usuario entrada) {
+	public RegistrarUsuario(String title, Usuario entrada) {
 		setModal(true);
 		
 		System.out.println("Registrar IN");
@@ -327,8 +328,6 @@ public class RegistrarUsuario extends JDialog {
 				btnRegister.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						//Faltan los chequeos de que no falte info
-						//Falta chequeo de que la cedula no se repita
 						
 						String codigo = txtId.getText();
 						String nombre = txtNombre.getText();
@@ -357,9 +356,9 @@ public class RegistrarUsuario extends JDialog {
 							
 							if (cbxSupervisor.getSelectedIndex() > 0)
 							{
-								String codeDependiente = "USR-" + cbxSupervisor.getSelectedIndex();
-							
-								dependiente = ((Doctor) Hospital.getInstance().buscarUsuarioByCode(codeDependiente));
+								String codeDependiente = SupervisorCedula.get(cbxSupervisor.getSelectedIndex() - 1);
+								
+								dependiente = ((Doctor) Hospital.getInstance().buscarUsuarioByCedula(codeDependiente));
 							}
 							
 							aux = new Secretaria(codigo,nombre,cedula,telefono,contrasenia,dependiente);
@@ -367,16 +366,26 @@ public class RegistrarUsuario extends JDialog {
 						
 						if (!hayEspacioVacio())
 						{
-							Hospital.getInstance().insertarUsuario(aux);
-							JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
-							clean();
+							if (Hospital.getInstance().buscarUsuarioByCedula(cedula) == null)
+							{
+								Hospital.getInstance().insertarUsuario(aux);
+								JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+								clean();
+								dispose();
+
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "Esta Cédula ya se encuentra en el sistema", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+								
+							}
+							
 						}
 						else 
 						{
-							JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Información", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Alerta", JOptionPane.INFORMATION_MESSAGE);
 
 						}
-						dispose();
 					}
 				});
 				btnRegister.setActionCommand("OK");
@@ -536,12 +545,12 @@ public class RegistrarUsuario extends JDialog {
 	{
 		cbxSupervisor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
 
-		
 		for (Usuario temp : Hospital.getInstance().getMisCuentas())
 		{
 			if (temp instanceof Doctor)
 			{
 				cbxSupervisor.addItem(temp.getNombre());
+				SupervisorCedula.add(temp.getCedula());
 			}
 		}
 	}
