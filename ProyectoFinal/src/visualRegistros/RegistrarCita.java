@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 import logico.Hospital;
 import logico.Cita;
 import logico.Consulta;
-import logico.Diagnostico;
 import logico.Usuario;
 import logico.Doctor;
 import logico.Paciente;
@@ -206,9 +205,9 @@ public class RegistrarCita extends JDialog {
 	
 	void setHorasDisponibles() {
 		ArrayList<Consulta>ConsultaDia = null;
-		ArrayList<Diagnostico>diagnosticoDia = null;
-		ConsultaDia = Hospital.getInstance().buscarHorasDisponiblesConsulta(fecha, doc);
-		diagnosticoDia = Hospital.getInstance().buscarHorasDisponiblesDiagnostico(fecha, doc);
+		ArrayList<Cita>CitaDia = null;
+		ConsultaDia = Hospital.getInstance().buscarHorasDisponiblesConsultas(fecha, doc);
+		CitaDia = Hospital.getInstance().buscarHorasDisponiblesCitas(fecha, doc);
 		//eliminar horas ocupadas
 		
 		boolean validador = false;

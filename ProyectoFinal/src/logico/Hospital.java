@@ -15,7 +15,6 @@ public class Hospital {
 	private ArrayList<Admin> misAdmins;
 	private ArrayList<Usuario> misCuentas;
 	private static ArrayList<Consulta> misConsultas;
-	private static ArrayList<Diagnostico> misDiagnosticos;
 	private static ArrayList<Cita> misCitas;
 	private ArrayList<Enfermedad> enfermedadesReg;
 	private ArrayList<Vacuna> misVacunas;
@@ -33,7 +32,6 @@ public class Hospital {
 		misAdmins = new ArrayList<Admin>();
 		misCuentas = new ArrayList<Usuario>();
 		misConsultas = new ArrayList<Consulta>();
-		misDiagnosticos = new ArrayList<Diagnostico>();
 		misCitas = new ArrayList<Cita>();
 		enfermedadesReg = new ArrayList<Enfermedad>();
 		misVacunas = new ArrayList<Vacuna>();
@@ -118,21 +116,21 @@ public class Hospital {
 		generadorVacuna++;
 	}
 	
-	public static ArrayList<Diagnostico> buscarHorasDisponiblesDiagnostico(Date day, Doctor doc) {
-		ArrayList<Diagnostico>diagnosticoDia;
-		diagnosticoDia = null;
+	public static ArrayList<Cita> buscarHorasDisponiblesCitas(Date day, Doctor doc) {
+		ArrayList<Cita>citaDia;
+		citaDia = null;
 		
-		for (Diagnostico aux : misDiagnosticos) {
-			if (aux.getFecha().getDay() == day.getDay()) {
-				if (aux.getDoc().getCodigo().equalsIgnoreCase(doc.getCodigo()) ) {
-					diagnosticoDia.add(aux);
+		for (Cita aux : misCitas) {
+			if (aux.getFechaDeConsulta().getDay() == day.getDay()) {
+				if (aux.getDoctor().getCodigo().equalsIgnoreCase(doc.getCodigo()) ) {
+					citaDia.add(aux);
 				}
 			}
 		}
-		return diagnosticoDia;
+		return citaDia;
 	}
 	
-	public static ArrayList<Consulta> buscarHorasDisponiblesConsulta(Date day, Doctor doc) {
+	public static ArrayList<Consulta> buscarHorasDisponiblesConsultas(Date day, Doctor doc) {
 		ArrayList<Consulta>ConsultaDia;
 		ConsultaDia = null;
 		
@@ -327,14 +325,6 @@ public class Hospital {
 
 	public void setMisAdmins(ArrayList<Admin> misAdmins) {
 		this.misAdmins = misAdmins;
-	}
-
-	public ArrayList<Diagnostico> getMisDiagnosticos() {
-		return misDiagnosticos;
-	}
-
-	public void setMisDiagnosticos(ArrayList<Diagnostico> misDiagnosticos) {
-		this.misDiagnosticos = misDiagnosticos;
 	}
 	
 	//Leer ficheros

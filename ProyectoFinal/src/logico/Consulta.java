@@ -1,5 +1,6 @@
 package logico;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Consulta implements Serializable {
@@ -9,17 +10,17 @@ public class Consulta implements Serializable {
 	private Date fecha;
 	private Paciente paciente;
 	private Doctor doctor;
-	private Diagnostico diagnostico;
+	private ArrayList<String>sintomas;
 	
 	public Consulta(String codigo, String estado, Date fecha, Paciente paciente, Doctor doctor,
-			Diagnostico diagnostico) {
+			ArrayList<String>sintomas) {
 		super();
 		this.codigo = codigo;
 		this.estado = estado;
 		this.fecha = fecha;
 		this.paciente = paciente;
 		this.doctor = doctor;
-		this.diagnostico = diagnostico;
+		this.sintomas = sintomas;
 	}
 	
 
@@ -63,12 +64,12 @@ public class Consulta implements Serializable {
 		this.doctor = doctor;
 	}
 
-	public Diagnostico getDiagnostico() {
-		return diagnostico;
+	public ArrayList<String> getDiagnostico() {
+		return sintomas;
 	}
 
-	public void setDiagnostico(Diagnostico diagnostico) {
-		this.diagnostico = diagnostico;
+	public void setDiagnostico(ArrayList<String> diagnostico) {
+		this.sintomas = sintomas;
 	}
 }
 
