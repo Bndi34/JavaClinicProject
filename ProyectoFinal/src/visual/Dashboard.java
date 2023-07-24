@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JCalendar;
 
+import logico.Admin;
+import logico.Secretaria;
+import logico.Usuario;
 import visualRegistros.RegistrarCita;
 import visualRegistros.RegistrarConsulta;
 import visualRegistros.RegistrarEnfermedad;
@@ -27,6 +30,8 @@ import visualRegistros.RegistrarUsuario;
 import visualRegistros.RegistrarVacuna;
 
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 
@@ -34,6 +39,8 @@ public class Dashboard extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
 
+	private Dimension dim = null;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -51,11 +58,41 @@ public class Dashboard extends JFrame {
 	 * Create the dialog.
 	 */
 	public Dashboard() {
-		setBounds(100, 100, 994, 490);
+		
+		Login login = new Login();
+		login.setVisible(true);
+		
+		
+		
+		Usuario cuenta = login.getUsuario();
+		
+		if (cuenta instanceof Secretaria || login.isAdmin())
+		{
+			
+			SecretariaMenu secrMenu;
+			if (login.isAdmin())
+			{
+				Admin admin = login.getAdmin();
+				secrMenu = new SecretariaMenu(admin.getUsuario(), null);
+
+			}
+			else {
+					secrMenu = new SecretariaMenu(cuenta.getCodigo(), ((Secretaria) cuenta).getDependiente());
+			}
+			secrMenu.setVisible(true);
+			dispose();
+		}
+		
+		dim = getToolkit().getScreenSize();
+		setBounds(100, 100, 1094, 690);
+		setSize(dim.width, dim.height-40);
+		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
+
 		
 		JMenu mnUser = new JMenu("<User>");
 		mnUser.setBounds(787, 13, 125, 24);

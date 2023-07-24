@@ -24,20 +24,23 @@ import java.awt.event.ActionEvent;
 
 import visualRegistros.RegistrarUsuario;
 
-public class Principal extends JDialog {
+public class Login extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUser;
 	private JTextField txtPassword;
 	private String user;
 	private String password;
+	private Usuario usu = null;
+	private Admin adm = null;
+	private boolean AdminCheck = false;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			Principal dialog = new Principal();
+			Login dialog = new Login();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -48,7 +51,9 @@ public class Principal extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Principal() {
+	public Login() {
+		setModal(true);
+		setAlwaysOnTop(true);
 		
 		//Pendiente sistema para revisar que haya algun admin registrado.
 		//si no hay, se crea el admin admin
@@ -105,32 +110,21 @@ public class Principal extends JDialog {
 						
 							Admin adm = Hospital.getInstance().buscarAdminByUser(user);
 							
-							if (adm != null)
-								if (adm.getContrasenia().equalsIgnoreCase(password))
-								{
-								SecretariaMenu secrMenu = new SecretariaMenu(user, null);
-								secrMenu.setVisible(true);
-								dispose();
-								}
+							if (adm != null && adm.getContrasenia().equalsIgnoreCase(password))
+							{
+								AdminCheck = true;
+								setVisible(false);
+
+							}
+
 							
-							Usuario usu = Hospital.getInstance().buscarUsuarioByCedula(user);
+							usu = Hospital.getInstance().buscarUsuarioByCedula(user);
 							
 							if (usu.getContrasenia().equalsIgnoreCase(password))
 							{
-								if (!(usu instanceof Secretaria))
-								{
-									Dashboard dash = new Dashboard();
-									dash.setVisible(true);
-									dispose();
-								}
-								else {
-									
-									System.out.println(((Secretaria) usu).getDependiente());
-									SecretariaMenu secrMenu = new SecretariaMenu(usu.getCodigo(), ((Secretaria) usu).getDependiente());
-									secrMenu.setVisible(true);
-									dispose();
-					
-								}
+								
+								AdminCheck = false;
+								setVisible(false);								
 									
 							}
 							
@@ -158,5 +152,20 @@ public class Principal extends JDialog {
 				buttonPane.add(btnCerrar);
 			}
 		}
+	}
+	
+	public boolean isAdmin()
+	{
+		return this.AdminCheck;
+	}
+	
+	public Usuario getUsuario ()
+	{
+		return this.usu;
+	}
+	
+	public Admin getAdmin()
+	{
+		return this.adm;
 	}
 }

@@ -330,4 +330,18 @@ public class ListarCompromiso extends JDialog {
 			btnModificar.setEnabled(false);
 		}*/
 	}
+	
+	private String[] setColumns(String type)
+	{
+		if (type == "consulta")
+		{
+			String[] columnNames = {"Usuario"};
+			return columnNames;
+		}
+		else 
+		{
+			String[] columnNames = {"Código", "Nombre", "Cédula","Teléfono", "Tipo de Cuenta"};
+			return columnNames;
+		}
+	}
 }

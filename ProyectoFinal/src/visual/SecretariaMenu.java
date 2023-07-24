@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 import logico.Doctor;
+import visualListar.ListarCompromiso;
 import visualListar.ListarCuenta;
 
 import javax.swing.JLabel;
@@ -42,7 +43,7 @@ public class SecretariaMenu extends JDialog {
 	 */
 	public SecretariaMenu(String codigo, Doctor supervisor) {
 		setTitle("Listados");
-		setBounds(100, 100, 370, 300);
+		setBounds(100, 100, 570, 415);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -61,7 +62,7 @@ public class SecretariaMenu extends JDialog {
 		{
 			txtUserCode = new JTextField();
 			txtUserCode.setEditable(false);
-			txtUserCode.setBounds(137, 10, 193, 22);
+			txtUserCode.setBounds(137, 10, 388, 22);
 			contentPanel.add(txtUserCode);
 			txtUserCode.setColumns(10);
 			
@@ -70,7 +71,7 @@ public class SecretariaMenu extends JDialog {
 		{
 			txtDoctorName = new JTextField();
 			txtDoctorName.setEditable(false);
-			txtDoctorName.setBounds(137, 39, 193, 22);
+			txtDoctorName.setBounds(137, 39, 388, 22);
 			contentPanel.add(txtDoctorName);
 			txtDoctorName.setColumns(10);
 			
@@ -91,15 +92,20 @@ public class SecretariaMenu extends JDialog {
 				listaCuentas.setModal(true);
 			}
 		});
-		btnAccounts.setBounds(12, 81, 153, 25);
+		btnAccounts.setBounds(22, 74, 218, 67);
 		contentPanel.add(btnAccounts);
 		
 		JButton btnConsultas = new JButton("Lista de Consultas");
 		btnConsultas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/*
+				ListarCompromiso ListConsult = new ListarCompromiso("consulta");
+				ListConsult.setVisible(true);
+				ListConsult.setModal(true);
+				*/
 			}
 		});
-		btnConsultas.setBounds(12, 119, 153, 25);
+		btnConsultas.setBounds(22, 154, 218, 60);
 		contentPanel.add(btnConsultas);
 		
 		JButton btnCitas = new JButton("Lista de Citas");
@@ -107,7 +113,7 @@ public class SecretariaMenu extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnCitas.setBounds(12, 157, 153, 25);
+		btnCitas.setBounds(22, 227, 218, 67);
 		contentPanel.add(btnCitas);
 		
 		JButton btnEnfermedades = new JButton("Enfermedades");
@@ -115,7 +121,7 @@ public class SecretariaMenu extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnEnfermedades.setBounds(177, 81, 153, 25);
+		btnEnfermedades.setBounds(305, 74, 218, 67);
 		contentPanel.add(btnEnfermedades);
 		
 		JButton btnVacunas = new JButton("Lista de Vacunas");
@@ -123,7 +129,7 @@ public class SecretariaMenu extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnVacunas.setBounds(177, 119, 153, 25);
+		btnVacunas.setBounds(305, 154, 221, 60);
 		contentPanel.add(btnVacunas);
 		{
 			JPanel buttonPane = new JPanel();

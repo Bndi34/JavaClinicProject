@@ -40,6 +40,7 @@ public class ListarCuenta extends JDialog {
 	String mode = "<Todos>";
 	Usuario selected = null;
 	JComboBox cbxQuesoType;
+	private JButton btnRegistrar;
 	
 
 
@@ -214,10 +215,15 @@ public class ListarCuenta extends JDialog {
 						dispose();
 					}
 				});
+				
+				btnRegistrar = new JButton("Nuevo");
+				buttonPane.add(btnRegistrar);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
+		loadSportMans(type);
+
 	}
 
 
@@ -310,7 +316,7 @@ public class ListarCuenta extends JDialog {
 		}
 		else 
 		{
-			String[] columnNames = {"Código", "Nombre", "Teléfono"};
+			String[] columnNames = {"Código", "Nombre", "Cédula","Teléfono", "Tipo de Cuenta"};
 			return columnNames;
 		}
 	}
