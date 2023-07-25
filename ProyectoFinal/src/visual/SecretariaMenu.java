@@ -87,7 +87,7 @@ public class SecretariaMenu extends JDialog {
 		JButton btnAccounts = new JButton("Lista de Cuentas");
 		btnAccounts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListarCuenta listaCuentas = new ListarCuenta("cuentas");
+				ListarCuenta listaCuentas = new ListarCuenta("cuenta");
 				listaCuentas.setVisible(true);
 				listaCuentas.setModal(true);
 			}

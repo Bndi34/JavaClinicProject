@@ -53,7 +53,6 @@ public class Login extends JDialog {
 	 */
 	public Login() {
 		setModal(true);
-		setAlwaysOnTop(true);
 		
 		//Pendiente sistema para revisar que haya algun admin registrado.
 		//si no hay, se crea el admin admin
@@ -61,28 +60,28 @@ public class Login extends JDialog {
 		Hospital.getInstance().getMisAdmins().add(aux);
 		
 		setTitle("Centro M\u00E9dico");
-		setBounds(100, 100, 363, 189);
+		setBounds(100, 100, 467, 245);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			JLabel lblUser = new JLabel("C\u00E9dula");
-			lblUser.setBounds(12, 23, 56, 16);
+			lblUser.setBounds(12, 69, 56, 16);
 			contentPanel.add(lblUser);
 		}
 		
 		JLabel lblPassword = new JLabel("Contrase\u00F1a");
-		lblPassword.setBounds(12, 52, 99, 16);
+		lblPassword.setBounds(12, 134, 99, 16);
 		contentPanel.add(lblPassword);
 		
 		txtUser = new JTextField();
-		txtUser.setBounds(90, 20, 221, 22);
+		txtUser.setBounds(90, 66, 333, 22);
 		contentPanel.add(txtUser);
 		txtUser.setColumns(10);
 		
 		txtPassword = new JTextField();
-		txtPassword.setBounds(90, 49, 221, 22);
+		txtPassword.setBounds(90, 131, 333, 22);
 		contentPanel.add(txtPassword);
 		txtPassword.setColumns(10);
 		{
@@ -110,12 +109,13 @@ public class Login extends JDialog {
 						
 							Admin adm = Hospital.getInstance().buscarAdminByUser(user);
 							
-							if (adm != null && adm.getContrasenia().equalsIgnoreCase(password))
-							{
-								AdminCheck = true;
-								setVisible(false);
-
-							}
+							if (adm != null)
+								if (adm.getContrasenia().equalsIgnoreCase(password))
+								{
+								SecretariaMenu secrMenu = new SecretariaMenu(user, null);
+								secrMenu.setVisible(true);
+								dispose();
+								}
 
 							
 							usu = Hospital.getInstance().buscarUsuarioByCedula(user);
@@ -123,13 +123,23 @@ public class Login extends JDialog {
 							if (usu.getContrasenia().equalsIgnoreCase(password))
 							{
 								
-								AdminCheck = false;
-								setVisible(false);								
+									Dashboard dash = new Dashboard(usu);
+									dash.setVisible(true);
+									dispose();
+							}
+								else {
+
+									System.out.println(((Secretaria) usu).getDependiente());
+									SecretariaMenu secrMenu = new SecretariaMenu(usu.getCodigo(), ((Secretaria) usu).getDependiente());
+									secrMenu.setVisible(true);
+									dispose();
+
+								}							
 									
 							}
 							
 							
-						} catch (Exception nullException) {
+						 catch (Exception nullException) {
 							
 							JOptionPane.showMessageDialog(null, "Debe ingresar sus datos", "Error", JOptionPane.INFORMATION_MESSAGE);
 						}

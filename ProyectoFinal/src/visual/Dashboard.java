@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
+
 import java.awt.ScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.JMenu;
@@ -46,7 +48,7 @@ public class Dashboard extends JFrame {
 	 */
 	public static void main(String[] args) {
 		try {
-			Dashboard dialog = new Dashboard();
+			Dashboard dialog = new Dashboard(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -57,31 +59,7 @@ public class Dashboard extends JFrame {
 	/**
 	 * Create the dialog.
 	 */
-	public Dashboard() {
-		
-		Login login = new Login();
-		login.setVisible(true);
-		
-		
-		
-		Usuario cuenta = login.getUsuario();
-		
-		if (cuenta instanceof Secretaria || login.isAdmin())
-		{
-			
-			SecretariaMenu secrMenu;
-			if (login.isAdmin())
-			{
-				Admin admin = login.getAdmin();
-				secrMenu = new SecretariaMenu(admin.getUsuario(), null);
-
-			}
-			else {
-					secrMenu = new SecretariaMenu(cuenta.getCodigo(), ((Secretaria) cuenta).getDependiente());
-			}
-			secrMenu.setVisible(true);
-			dispose();
-		}
+	public Dashboard(Usuario Cuenta) {
 		
 		dim = getToolkit().getScreenSize();
 		setBounds(100, 100, 1094, 690);
@@ -93,8 +71,12 @@ public class Dashboard extends JFrame {
 		contentPanel.setLayout(null);
 		setLocationRelativeTo(null);
 
-		
 		JMenu mnUser = new JMenu("<User>");
+		try {
+			mnUser.setText(Cuenta.getNombre());
+		} catch (NullPointerException e) {
+			mnUser.setText("Error");
+		}
 		mnUser.setBounds(787, 13, 125, 24);
 		contentPanel.add(mnUser);
 		
@@ -105,15 +87,15 @@ public class Dashboard extends JFrame {
 		mnUser.add(mntmUserLogOut);
 		
 		JLabel lblCalendario = new JLabel("Calendario");
-		lblCalendario.setBounds(30, 87, 82, 16);
+		lblCalendario.setBounds(30, 425, 82, 16);
 		contentPanel.add(lblCalendario);
 		
 		JLabel lblDetallesDelDia = new JLabel("Detalles");
-		lblDetallesDelDia.setBounds(558, 87, 56, 16);
+		lblDetallesDelDia.setBounds(837, 440, 56, 16);
 		contentPanel.add(lblDetallesDelDia);
 		
 		JLabel lblHistorialMedico = new JLabel("Historial Medico");
-		lblHistorialMedico.setBounds(778, 87, 56, 16);
+		lblHistorialMedico.setBounds(1067, 440, 112, 16);
 		contentPanel.add(lblHistorialMedico);
 		
 		JLabel Dashboard = new JLabel("DASHBOARD");
@@ -122,16 +104,16 @@ public class Dashboard extends JFrame {
 		
 		JPanel panel_calendar = new JPanel();
 		panel_calendar.setBackground(Color.LIGHT_GRAY);
-		panel_calendar.setBounds(29, 116, 484, 300);
+		panel_calendar.setBounds(30, 460, 707, 467);
 		contentPanel.add(panel_calendar);
 		panel_calendar.setLayout(null);
 		
 		JCalendar calendar = new JCalendar();
-		calendar.setBounds(10, 11, 464, 278);
+		calendar.setBounds(10, 11, 685, 443);
 		panel_calendar.add(calendar);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(523, 116, 445, 300);
+		panel.setBounds(816, 469, 445, 458);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
@@ -141,11 +123,11 @@ public class Dashboard extends JFrame {
 		panel_1.setLayout(null);
 		
 		JScrollPane scrllDetallesDia = new JScrollPane();
-		scrllDetallesDia.setBounds(0, 0, 159, 246);
+		scrllDetallesDia.setBounds(0, 0, 159, 400);
 		panel_1.add(scrllDetallesDia);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(240, 40, 158, 221);
+		panel_2.setBounds(240, 40, 158, 360);
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -159,11 +141,11 @@ public class Dashboard extends JFrame {
 		cboxHistorialMedico.setModel(new DefaultComboBoxModel(new String[] {"<Paciente>"}));
 		
 		JButton btnDetallesDia = new JButton("Detalles...");
-		btnDetallesDia.setBounds(36, 266, 89, 23);
+		btnDetallesDia.setBounds(37, 422, 89, 23);
 		panel.add(btnDetallesDia);
 		
 		JButton btnDetallesHistorialMedico = new JButton("Detalles...");
-		btnDetallesHistorialMedico.setBounds(277, 266, 89, 23);
+		btnDetallesHistorialMedico.setBounds(278, 422, 89, 23);
 		panel.add(btnDetallesHistorialMedico);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -274,6 +256,41 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Listar");
 		mnCita.add(mntmNewMenuItem_7);
 		
+		//openLogIn();
 
+	}
+	
+	private void openLogIn()
+	{
+		Login login = new Login();
+		login.setVisible(true);
+		
+		Usuario cuenta = null;
+		
+		cuenta = login.getUsuario();
+		System.out.println(cuenta);
+
+		try {
+			
+			if (cuenta instanceof Secretaria || login.isAdmin())
+			{
+				
+				SecretariaMenu secrMenu;
+				if (login.isAdmin())
+				{
+					Admin admin = login.getAdmin();
+					secrMenu = new SecretariaMenu(admin.getUsuario(), null);
+
+				}
+				else {
+						secrMenu = new SecretariaMenu(cuenta.getCodigo(), ((Secretaria) cuenta).getDependiente());
+				}
+				secrMenu.setVisible(true);
+			}
+			
+			
+		} catch (NullPointerException e) {
+			setVisible(false);
+		}
 	}
 }

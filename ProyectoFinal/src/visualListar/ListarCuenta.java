@@ -48,7 +48,7 @@ public class ListarCuenta extends JDialog {
 	 * Create the dialog.
 	 * @param fed 
 	 */
-	public ListarCuenta(final String type) {
+	public ListarCuenta(String type) {
 		
 		 String[] columnNames = setColumns(type);
 		

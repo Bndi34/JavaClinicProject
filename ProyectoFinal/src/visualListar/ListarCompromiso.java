@@ -19,6 +19,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import org.ietf.jgss.Oid;
+
 import logico.*;
 import visualRegistros.*;
 
@@ -48,19 +50,8 @@ public class ListarCompromiso extends JDialog {
 	 * @param fed 
 	 */
 	public ListarCompromiso(String type) {
-		
-		 
-		if (type == "admin")
-		{
-			columnNames[0] = "Usuario";
-		}
-		else 
-		{
-			columnNames[0] = "Código";
-			columnNames[1] = "Nombre";
-			columnNames[2] = "Teléfono";
-		}
-		
+
+		setColumns(type);
 		
 		setTitle("Listado de " + type + "s");
 		setBounds(100, 100, 650, 376);
@@ -109,20 +100,12 @@ public class ListarCompromiso extends JDialog {
 				switch (cbxQuesoType.getSelectedIndex())
 				{
 				case 0:
-					loadSportMans("cuenta");
+					loadSportMans("consulta");
 					break;
 				case 1:
-					loadSportMans("admin");
+					loadSportMans("cita");
 					break;
-				case 2:
-					loadSportMans("paciente");
-					break;
-				case 3:
-					loadSportMans("doctor");
-					break;
-				case 4:
-					loadSportMans("secretaria");
-					break;
+				
 					
 				}
 				/*int selection = cbxQuesoType.getSelectedIndex();
@@ -130,7 +113,7 @@ public class ListarCompromiso extends JDialog {
 				*/
 			}
 		});
-		cbxQuesoType.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "Administradores", "Pacientes", "Doctores", "Secretarias"}));
+		cbxQuesoType.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "Consultas", "Citas"}));
 		cbxQuesoType.setBounds(127, 26, 157, 20);
 		panel.add(cbxQuesoType);
 		{
@@ -142,69 +125,7 @@ public class ListarCompromiso extends JDialog {
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					switch (type)
-					{
-					case "admin":
-						RegistrarAdmin modAdmin = new RegistrarAdmin();
-						modAdmin.setModal(true);
-						modAdmin.setLocationRelativeTo(null);
-						modAdmin.setVisible(true);
-						
-						break;
-
-					case "cuenta":
-						
-						RegistrarUsuario modUser = new RegistrarUsuario(type, Hospital.getInstance().getMisCuentas().get(table.getSelectedRow()));
-						modUser.setModal(true);
-						modUser.setLocationRelativeTo(null);
-						modUser.setVisible(true);
-						
-						break;
-
-					case "cita":
-						
-						RegistrarCita modCita = new RegistrarCita(type, Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
-						modCita.setModal(true);
-						modCita.setLocationRelativeTo(null);
-						modCita.setVisible(true);
-						
-						break;
-					case "consulta":
-						
-						RegistrarConsulta modConsulta = new RegistrarConsulta();
-						modConsulta.setModal(true);
-						modConsulta.setLocationRelativeTo(null);
-						modConsulta.setVisible(true);
-						
-						break;
-					case "enfermedad":
-						
-						RegistrarEnfermedad modEnfermedad;
-						try {
-							modEnfermedad = new RegistrarEnfermedad();
-							modEnfermedad.setModal(true);
-							modEnfermedad.setLocationRelativeTo(null);
-							modEnfermedad.setVisible(true);
-						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
-						
-						break;
-					case "vacuna":
-						RegistrarVacuna modVacuna = new RegistrarVacuna();
-						modVacuna.setModal(true);
-						modVacuna.setLocationRelativeTo(null);
-						modVacuna.setVisible(true);
-						
-						break;
-					}
-					
-						
+					modificarCompromiso(type);
 					
 				}
 			});
@@ -254,66 +175,35 @@ public class ListarCompromiso extends JDialog {
 	private void loadSportMans(String selection) {
 		tableModel.setRowCount(0);
 		fila = new Object[tableModel.getColumnCount()];
+		
 		switch (selection) {
-		
-		case "admin":
-			for (Admin aux : Hospital.getInstance().getMisAdmins()) 
-			{
-				fila[0] = aux.getUsuario();
-				
-				tableModel.addRow(fila);
-			}
-			break;
-		case "cuenta":
-			for (Usuario aux : Hospital.getInstance().getMisCuentas()) 
-			{
-				fila[0] = aux.getCodigo();
-				fila[1] = aux.getNombre();
-				fila[2] = aux.getCedula();
-				fila[3] = aux.getTelefono();
-	
-				tableModel.addRow(fila);
-			}
-			
-		break;
-		case "paciente":
-			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
-				if(aux instanceof Paciente){
-					fila[0] = aux.getCodigo();
-					fila[1] = aux.getNombre();
-					fila[2] = aux.getCedula();
-					fila[3] = aux.getTelefono();
-		
-					tableModel.addRow(fila);
-				}
-			}
-			break;	
-		case "doctor":
-			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
-				if(aux instanceof Doctor){
-					fila[0] = aux.getCodigo();
-					fila[1] = aux.getNombre();
-					fila[2] = aux.getCedula();
-					fila[3] = aux.getTelefono();
-		
-					tableModel.addRow(fila);
-				}
-			}
-			break;	
-		case "secretaria":
-			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
-				if(aux instanceof Secretaria){
-					fila[0] = aux.getCodigo();
-					fila[1] = aux.getNombre();
-					fila[2] = aux.getCedula();
-					fila[3] = aux.getTelefono();
-		
-					tableModel.addRow(fila);
-				}
-			}
-			break;	
-		
+		case "consulta":
+		for (Consulta aux : Hospital.getInstance().getMisConsultas())
+		{
+			fila[0] = aux.getCodigo();
+			fila[1] = aux.getFecha();
+			fila[2] = aux.getEstado();
+			fila[3] = aux.getPaciente().getNombre();
+			fila[4] = aux.getDoctor().getNombre();
+			fila[5] = aux.getDiagnostico();
 		}
+		
+		break;
+	case "cita":
+		
+		for (Cita aux : Hospital.getInstance().getMisCitas())
+		{
+			fila[0] = aux.getCodigo();
+			fila[1] = aux.getFechaDeConsulta();
+			fila[2] = aux.getEstado();
+			fila[3] = aux.getPaciente().getNombre();
+			fila[4] = aux.getDoctor().getNombre();
+			fila[5] = "N/A";
+		}
+		
+		break;
+	}
+
 		
 		
 		table.setModel(tableModel);
@@ -333,15 +223,35 @@ public class ListarCompromiso extends JDialog {
 	
 	private String[] setColumns(String type)
 	{
-		if (type == "consulta")
-		{
-			String[] columnNames = {"Usuario"};
+			String[] columnNames = {"Código", "Fecha", "Estado","Paciente", "Doctor", "Sintomas"};
 			return columnNames;
-		}
-		else 
+		
+	}
+	
+	private void modificarCompromiso(String type)
+	{
+
+		switch (type)
 		{
-			String[] columnNames = {"Código", "Nombre", "Cédula","Teléfono", "Tipo de Cuenta"};
-			return columnNames;
+
+		case "cita":
+			
+			RegistrarCita modCita = new RegistrarCita(type, Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
+			modCita.setModal(true);
+			modCita.setLocationRelativeTo(null);
+			modCita.setVisible(true);
+			
+			break;
+		case "consulta":
+			
+			RegistrarConsulta modConsulta = new RegistrarConsulta();
+			modConsulta.setModal(true);
+			modConsulta.setLocationRelativeTo(null);
+			modConsulta.setVisible(true);
+			
+			break;
+		
 		}
+		
 	}
 }
