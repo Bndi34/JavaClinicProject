@@ -64,6 +64,8 @@ public class RegistrarEnfermedad extends JDialog {
 		SintomasSinElegir = new ArrayList<String>();
 		SintomasElegido = new ArrayList<String>();
 		modelElegido = new DefaultListModel<String>();
+		
+		SintomasElegido.add("auch");
 
 		setTitle("Registar Enfermedad");
 		setBounds(100, 100, 381, 251);
@@ -173,6 +175,15 @@ public class RegistrarEnfermedad extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						Enfermedad aux = new Enfermedad(txtCode.getText(), txtNombre.getText(), SintomasElegido,false );
 						Hospital.getInstance().insertarEnfermedad(aux);
+						try {
+							Hospital.save();
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 					    clean();
 					}

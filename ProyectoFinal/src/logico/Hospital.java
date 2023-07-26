@@ -2,22 +2,26 @@ package logico;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 //Hay que poner que solo se pueda de una instancia a la vez
-public class Hospital {
+public class Hospital implements Serializable{
 	
+	private static final long serialVersionUID = 5219225790495881149L;
 	private ArrayList<Admin> misAdmins;
 	private ArrayList<Usuario> misCuentas;
 	private static ArrayList<Consulta> misConsultas;
 	private static ArrayList<Cita> misCitas;
 	private ArrayList<Enfermedad> enfermedadesReg;
 	private ArrayList<Vacuna> misVacunas;
+	private ArrayList<String>sintomasRegistrados;
 	private static Hospital hospi = null;
 	
 	public static int generadorUsuario = 1;
@@ -35,6 +39,7 @@ public class Hospital {
 		misCitas = new ArrayList<Cita>();
 		enfermedadesReg = new ArrayList<Enfermedad>();
 		misVacunas = new ArrayList<Vacuna>();
+		sintomasRegistrados = new ArrayList<String>();
 		
 	}
 	
@@ -90,6 +95,14 @@ public class Hospital {
 		return porcentaje;
 	}
 	
+	public ArrayList<String> getSintomasRegistrados() {
+		return sintomasRegistrados;
+	}
+
+	public void setSintomasRegistrados(ArrayList<String> sintomasRegistrados) {
+		this.sintomasRegistrados = sintomasRegistrados;
+	}
+
 	//Parte de insertar
 	public void insertarUsuario(Usuario aux){
 		misCuentas.add(aux);
@@ -327,139 +340,30 @@ public class Hospital {
 		this.misAdmins = misAdmins;
 	}
 	
-	//Leer ficheros
-	public void loadUser() throws IOException, ClassNotFoundException{
-		File file = new File("misUsers.dat");
-	   	if( file.exists()) {
-	    	FileInputStream f = new FileInputStream(file);
-	    	ObjectInputStream oos = new ObjectInputStream(f);
-	    	
-	    	generadorUsuario = oos.readInt();
-	    	for (int i =0; i < generadorUsuario; i++) {
-		    	Usuario temp = (Usuario)oos.readObject();
-		    	misCuentas.add(temp);
-	    	}
-	    	oos.close();
-    	}
+	public static void load() throws IOException, ClassNotFoundException {
+		Hospital.getInstance();
+		File file = new File("main.dat");
+		file.createNewFile(); 
+		FileInputStream f = new FileInputStream(file);
+		ObjectInputStream oos = new ObjectInputStream(f);
+		Hospital temp = (Hospital) oos.readObject();
+		hospi = temp;
+		generadorEnfermedad = hospi.getEnfermedadesReg().size() + 1;
+		generadorUsuario = hospi.getMisCuentas().size()+1;
+		generadorConsulta = hospi.getMisConsultas().size()+1;
+		generadorCita = hospi.getMisCitas().size()+1;
+		generadorVacuna = hospi.getMisVacunas().size()+1;
+		oos.close();
+		
 	}
 	
-	public void loadConsulta() throws IOException, ClassNotFoundException{
-    	File file = new File("misConsultas.dat");
-    	if( file.exists()) {
-	    	FileInputStream f = new FileInputStream(file);
-	    	ObjectInputStream oos = new ObjectInputStream(f);
-	    	
-	    	generadorConsulta = oos.readInt();
-	    	for (int i =0; i < generadorConsulta; i++) {
-	    		Consulta temp = (Consulta)oos.readObject();
-		    	misConsultas.add(temp);
-	    	}
-	    	oos.close();
-    	}
-    }
-	
-	public void loadCita() throws IOException, ClassNotFoundException{
-    	File file = new File("misCitas.dat");
-    	if( file.exists()) {
-	    	FileInputStream f = new FileInputStream(file);
-	    	ObjectInputStream oos = new ObjectInputStream(f);
-	    	
-	    	generadorCita = oos.readInt();
-	    	for (int i =0; i < generadorCita; i++) {
-	    		Cita temp = (Cita)oos.readObject();
-		    	misCitas.add(temp);
-	    	}
-	    	oos.close();
-    	}
-    }
-	
-	public void loadeEfermedad() throws IOException, ClassNotFoundException{
-    	File file = new File("misEfermedades.dat");
-    	if( file.exists()) {
-	    	FileInputStream f = new FileInputStream(file);
-	    	ObjectInputStream oos = new ObjectInputStream(f);
-	    	
-	    	generadorEnfermedad = oos.readInt();
-	    	for (int i =0; i < generadorEnfermedad; i++) {
-	    		Enfermedad temp = (Enfermedad)oos.readObject();
-	    		enfermedadesReg.add(temp);
-	    	}
-	    	oos.close();
-    	}
-    }
-	
-	public void loadeVacuna() throws IOException, ClassNotFoundException{
-    	File file = new File("misVacunas.dat");
-    	if( file.exists()) {
-	    	FileInputStream f = new FileInputStream(file);
-	    	ObjectInputStream oos = new ObjectInputStream(f);
-	    	
-	    	generadorVacuna = oos.readInt();
-	    	for (int i =0; i < generadorVacuna; i++) {
-	    		Vacuna temp = (Vacuna)oos.readObject();
-	    		misVacunas.add(temp);
-	    	}
-	    	oos.close();
-    	}
-    	
-    }
-	
-	//Guardar en ficheros
-	public void saveUsers() throws IOException, ClassNotFoundException{
-    	File file = new File("misCuentas.dat");
+	public static void save() throws IOException, ClassNotFoundException {
+    	File file = new File("main.dat");
+    	file.createNewFile();
     	FileOutputStream f = new FileOutputStream(file);
     	ObjectOutputStream oos = new ObjectOutputStream(f);
- 		oos.writeInt(misCuentas.size());
- 		for (Usuario usr : misCuentas) {
-				oos.writeObject(usr);
-		}
- 		oos.close();
-	}
-	
-	public void saveConsultas() throws IOException, ClassNotFoundException{
-    	File file = new File("misConsultas.dat");
-    	FileOutputStream f = new FileOutputStream(file);
-    	ObjectOutputStream oos = new ObjectOutputStream(f);
- 		oos.writeInt(misConsultas.size());
- 		for (Consulta consu : misConsultas) {
-				oos.writeObject(consu);
-		}
- 		oos.close();
+    	oos.writeObject(hospi);
+    	oos.close();
 	}
 
-	public void saveCitas() throws IOException, ClassNotFoundException{
-    	File file = new File("misCitas.dat");
-    	FileOutputStream f = new FileOutputStream(file);
-    	ObjectOutputStream oos = new ObjectOutputStream(f);
- 		oos.writeInt(misCitas.size());
- 		for (Cita cita : misCitas) {
-				oos.writeObject(cita);
-		}
- 		oos.close();
-	}
-
-	public void saveEnfermedades() throws IOException, ClassNotFoundException{
-    	File file = new File("misEfermedades.dat");
-    	FileOutputStream f = new FileOutputStream(file);
-    	ObjectOutputStream oos = new ObjectOutputStream(f);
- 		oos.writeInt(enfermedadesReg.size());
- 		for (Enfermedad enf : enfermedadesReg) {
-				oos.writeObject(enf);
-		}
- 		oos.close();
-	}
-
-	public void saveVacunas() throws IOException, ClassNotFoundException{
-    	File file = new File("misVacunas.dat");
-    	FileOutputStream f = new FileOutputStream(file);
-    	ObjectOutputStream oos = new ObjectOutputStream(f);
- 		oos.writeInt(enfermedadesReg.size());
- 		for (Vacuna vac : misVacunas) {
-				oos.writeObject(vac);
-		}
- 		oos.close();
-	}
-	
-	
-	
 }

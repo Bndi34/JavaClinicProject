@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import com.toedter.calendar.JDateChooser;
@@ -165,6 +166,15 @@ public class RegistrarCita extends JDialog {
 						estado = cbxEstado.getSelectedItem().toString();
 						Cita aux = new Cita( txtCode.getText(),estado,fecha,null,((Doctor)doc), ((Paciente)paciente) );
 						Hospital.getInstance().insertarCita(aux);
+						try {
+							Hospital.save();
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 					    clean();
 					}

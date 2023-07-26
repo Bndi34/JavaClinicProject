@@ -30,6 +30,7 @@ import logico.Secretaria;
 import javax.swing.SpinnerDateModel;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -370,6 +371,15 @@ public class RegistrarUsuario extends JDialog {
 							if (Hospital.getInstance().buscarUsuarioByCedula(cedula) == null)
 							{
 								Hospital.getInstance().insertarUsuario(aux);
+								try {
+									Hospital.save();
+								} catch (ClassNotFoundException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 								JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 								clean();
 								dispose();

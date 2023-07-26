@@ -64,7 +64,7 @@ public class Consulta implements Serializable {
 		this.doctor = doctor;
 	}
 
-	public ArrayList<String> getDiagnostico() {
+	public ArrayList<String> getSintomas() {
 		return sintomas;
 	}
 
