@@ -34,11 +34,11 @@ public class RegistrarCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
-	JComboBox cbxDoctor = new JComboBox();
-	JComboBox cbxPaciente = new JComboBox();
-	JComboBox cbxHorasDisponibles = new JComboBox();
-	JDateChooser dateChooser = new JDateChooser();
-	JComboBox cbxEstado = new JComboBox();
+	private JComboBox cbxDoctor = new JComboBox();
+	private JComboBox cbxPaciente = new JComboBox();
+	private JComboBox cbxHorasDisponibles = new JComboBox();
+	private JDateChooser dateChooser = new JDateChooser();
+	private JComboBox cbxEstado = new JComboBox();
 	private Doctor doc;
 	private Cita cita;
 	private Date fecha;
@@ -62,7 +62,7 @@ public class RegistrarCita extends JDialog {
 	public RegistrarCita(String tittle, Cita entrada) {
 		doc = null;
 		setTitle("Registrar Cita");
-		setBounds(100, 100, 350, 300);
+		setBounds(100, 100, 432, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -95,7 +95,7 @@ public class RegistrarCita extends JDialog {
 		{
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
-			txtCode.setBounds(57, 10, 97, 22);
+			txtCode.setBounds(67, 10, 97, 22);
 			txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
@@ -109,21 +109,21 @@ public class RegistrarCita extends JDialog {
 					}
 				}
 			});
-			cbxDoctor.setBounds(57, 84, 203, 22);
+			cbxDoctor.setBounds(67, 84, 154, 22);
 			contentPanel.add(cbxDoctor);
 		}
 		{
-			cbxPaciente.setBounds(57, 121, 203, 22);
+			cbxPaciente.setBounds(67, 121, 154, 22);
 			contentPanel.add(cbxPaciente);
 		}
 		{
 			if (entrada == null) {
-				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"Seleccione...", "Pendiente"}));
+				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pendiente"}));
 			}
 			else {
-				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"Seleccione...", "Pendiente", "Realizado", "Cancelado"}));
+				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pendiente", "Realizado", "Cancelado"}));
 			}
-			cbxEstado.setBounds(57, 158, 120, 22);
+			cbxEstado.setBounds(67, 158, 154, 22);
 			contentPanel.add(cbxEstado);
 		}
 		
@@ -136,17 +136,17 @@ public class RegistrarCita extends JDialog {
 			contentPanel.add(lblNewLabel);
 		}
 		
-		dateChooser.setBounds(57, 46, 97, 20);
+		dateChooser.setBounds(67, 46, 154, 20);
 		fecha = dateChooser.getDate();
 		contentPanel.add(dateChooser);
 		cbxHorasDisponibles.setEnabled(false);
 		
 		cbxHorasDisponibles.setMaximumRowCount(15);
-		cbxHorasDisponibles.setBounds(204, 46, 120, 22);
+		cbxHorasDisponibles.setBounds(286, 47, 120, 22);
 		contentPanel.add(cbxHorasDisponibles);
 		
 		JLabel lblHora = new JLabel("Hora");
-		lblHora.setBounds(164, 50, 36, 16);
+		lblHora.setBounds(240, 50, 36, 16);
 		contentPanel.add(lblHora);
 		{
 			JPanel buttonPane = new JPanel();
@@ -202,6 +202,8 @@ public class RegistrarCita extends JDialog {
 	}
 	
 	void setDoctoryPaciente() {
+		cbxDoctor.addItem("<Seleccione>");
+		cbxPaciente.addItem("<Seleccione>");
 		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
 			if (aux instanceof Doctor) {
 				cbxDoctor.addItem(aux.getCodigo());
@@ -237,6 +239,7 @@ public class RegistrarCita extends JDialog {
 		}
 	}
 	void clean() {
+		txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
 		cbxDoctor.setSelectedIndex(-1);
 		cbxPaciente.setSelectedIndex(-1);
 		cbxHorasDisponibles.setSelectedIndex(-1);

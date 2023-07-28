@@ -35,8 +35,8 @@ public class RegistrarEnfermedad extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
 	private JTextField txtNombre;
-	JList listSeleccionada = new JList();
-	JComboBox cbxSintomas = new JComboBox();
+	private JList listSeleccionada = new JList();
+	private JComboBox cbxSintomas = new JComboBox();
 	private DefaultListModel<String> modelElegido;
 	private ArrayList<String>SintomasElegido;
 	private ArrayList<String>SintomasSinElegir;

@@ -3,33 +3,57 @@ package visualRegistros;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import logico.Cita;
+import logico.Consulta;
+import logico.Doctor;
 import logico.Hospital;
+import logico.Paciente;
+import logico.Usuario;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class RegistrarConsulta extends JDialog {
 
+	private JComboBox cbxDoctor = new JComboBox();
+	private JComboBox cbxPaciente = new JComboBox();
+	private JComboBox cbxEstado = new JComboBox();
+	private JComboBox cbxHorasDisponibles = new JComboBox();
+	private JDateChooser dateChooser = new JDateChooser();
+	private JComboBox cbxSintoma = new JComboBox();
+	
+	private ArrayList<String>sintomas;
+	private Doctor doctor;
+	private Paciente paciente;
+	private Cita cita;
+	private Date fecha;
+	
 	private final JPanel contentPanel = new JPanel();
+	
 	private JTextField txtCode;
-	private JTextField textField_1;
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarConsulta dialog = new RegistrarConsulta();
+			RegistrarConsulta dialog = new RegistrarConsulta(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -40,9 +64,10 @@ public class RegistrarConsulta extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarConsulta() {
+	public RegistrarConsulta(Consulta entrada) {
+		sintomas = new ArrayList<String>();
 		setTitle("Registrar Consulta");
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 550, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -64,7 +89,7 @@ public class RegistrarConsulta extends JDialog {
 		}
 		{
 			JLabel lblPaciente = new JLabel("Paciente");
-			lblPaciente.setBounds(12, 110, 56, 16);
+			lblPaciente.setBounds(12, 121, 56, 16);
 			contentPanel.add(lblPaciente);
 		}
 		{
@@ -75,57 +100,66 @@ public class RegistrarConsulta extends JDialog {
 		{
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
-			txtCode.setBounds(80, 10, 152, 22);
+			txtCode.setBounds(70, 10, 152, 22);
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
 			txtCode.setText("CON-"+String.valueOf(Hospital.getInstance().generadorConsulta));
 		}
 		{
-			textField_1 = new JTextField();
-			textField_1.setColumns(10);
-			textField_1.setBounds(80, 39, 152, 22);
-			contentPanel.add(textField_1);
+			cbxDoctor.setBounds(70, 119, 152, 22);
+			contentPanel.add(cbxDoctor);
 		}
 		{
-			JComboBox cbDoctor = new JComboBox();
-			cbDoctor.setBounds(80, 78, 152, 22);
-			contentPanel.add(cbDoctor);
+			cbxPaciente.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String selectedcbx = cbxPaciente.getSelectedItem().toString();
+					if ( selectedcbx.equalsIgnoreCase("Agregar...") ) {
+					}
+				}
+			});
+			cbxPaciente.setBounds(70, 82, 152, 22);
+			contentPanel.add(cbxPaciente);
 		}
 		{
-			JComboBox cbPaciente = new JComboBox();
-			cbPaciente.setBounds(80, 107, 152, 22);
-			contentPanel.add(cbPaciente);
-		}
-		{
-			JComboBox cbEstado = new JComboBox();
-			cbEstado.setBounds(80, 159, 152, 22);
-			contentPanel.add(cbEstado);
+			cbxEstado.setBounds(70, 156, 152, 22);
+			contentPanel.add(cbxEstado);
+			
+			if (entrada == null) {
+				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"Seleccione...", "Pendiente"}));
+			}
+			else {
+				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"Seleccione...", "Pendiente", "Realizado", "Cancelado"}));
+			}
 		}
 		{
 			JCheckBox chbxRetraso = new JCheckBox("");
-			chbxRetraso.setBounds(130, 184, 34, 25);
+			chbxRetraso.setBounds(129, 188, 34, 25);
 			contentPanel.add(chbxRetraso);
 		}
 		{
-			JLabel lblSintomas = new JLabel("Sintomas");
-			lblSintomas.setBounds(244, 13, 56, 16);
+			JLabel lblSintomas = new JLabel("Sintomas:");
+			lblSintomas.setBounds(293, 81, 56, 16);
 			contentPanel.add(lblSintomas);
 		}
 		{
-			JComboBox cboxSintoma = new JComboBox();
-			cboxSintoma.setBounds(244, 39, 176, 22);
-			contentPanel.add(cboxSintoma);
+			
+			cbxSintoma.setBounds(359, 78, 152, 22);
+			contentPanel.add(cbxSintoma);
+			
 		}
 		{
 			JButton btnBorrarSintoma = new JButton("Borrar Sintoma Elegido");
-			btnBorrarSintoma.setBounds(244, 77, 176, 25);
+			btnBorrarSintoma.setBounds(320, 158, 176, 25);
 			contentPanel.add(btnBorrarSintoma);
 		}
 		{
 			JLabel lblRetraso = new JLabel("Consulta Retrasada");
-			lblRetraso.setBounds(12, 189, 130, 16);
+			lblRetraso.setBounds(12, 193, 130, 16);
 			contentPanel.add(lblRetraso);
 		}
+		
+		dateChooser.setBounds(70, 47, 154, 20);
+		contentPanel.add(dateChooser);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -134,8 +168,19 @@ public class RegistrarConsulta extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						String estado = cbxEstado.getSelectedItem().toString();
+						int indf = cbxDoctor.getSelectedItem().toString().indexOf(":");
+						//System.out.println(cbxDoctor.getSelectedItem().toString().substring(0, indf-1));
+						doctor = (Doctor) Hospital.getInstance().buscarUsuarioByCode(cbxDoctor.getSelectedItem().toString().substring(0, indf-1));
 						
-						//registrar????
+						indf = cbxPaciente.getSelectedItem().toString().indexOf(":");
+						paciente = (Paciente) Hospital.getInstance().buscarUsuarioByCode(cbxPaciente.getSelectedItem().toString().substring(0, indf-1));
+						fecha = dateChooser.getDate();
+						
+						Consulta aux = new Consulta(txtCode.getText(),estado,fecha,(Paciente) paciente,(Doctor) doctor ,sintomas);
+						Hospital.getInstance().insertarConsulta(aux); 
+						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+					    clean();
 						
 						try {
 							Hospital.save();
@@ -163,6 +208,38 @@ public class RegistrarConsulta extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		 setDoctoryPaciente();
 	}
-
+	
+	void setDoctoryPaciente() {
+		cbxDoctor.addItem("<Seleccione>");
+		cbxPaciente.addItem("<Seleccione>");
+		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
+			String temp = aux.getCodigo()+" : "+aux.getNombre();
+			if (aux instanceof Doctor) {
+				cbxDoctor.addItem(temp);
+			}
+			
+			if (aux instanceof Paciente) {
+				cbxPaciente.addItem(temp);
+			}
+		}
+		
+		cbxDoctor.addItem("Agregar...");
+		cbxPaciente.addItem("Agregar...");
+	}
+	void setSintomas() {
+		for (String aux : Hospital.getInstance().getSintomasRegistrados() ) {
+			cbxSintoma.addItem(aux);
+		}
+	}
+	void clean() {
+		cbxDoctor.setSelectedIndex(-1);
+		cbxPaciente.setSelectedIndex(-1);
+		cbxHorasDisponibles.setSelectedIndex(-1);
+		cbxEstado.setSelectedIndex(-1);
+		dateChooser.getDefaultLocale();
+		sintomas = new ArrayList<String>();
+	}
+	
 }
