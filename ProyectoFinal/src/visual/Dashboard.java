@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import com.toedter.calendar.JCalendar;
 
 import logico.Admin;
+import logico.Hospital;
 import logico.Secretaria;
 import logico.Usuario;
 import visualRegistros.RegistrarCita;
@@ -70,7 +71,7 @@ public class Dashboard extends JFrame {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		setLocationRelativeTo(null);
-
+		
 		JMenu mnUser = new JMenu("<User>");
 		try {
 			mnUser.setText(Cuenta.getNombre());
@@ -87,7 +88,7 @@ public class Dashboard extends JFrame {
 		mnUser.add(mntmUserLogOut);
 		
 		JLabel lblCalendario = new JLabel("Calendario");
-		lblCalendario.setBounds(30, 425, 82, 16);
+		lblCalendario.setBounds(22, 119, 82, 16);
 		contentPanel.add(lblCalendario);
 		
 		JLabel lblDetallesDelDia = new JLabel("Detalles");
@@ -104,7 +105,7 @@ public class Dashboard extends JFrame {
 		
 		JPanel panel_calendar = new JPanel();
 		panel_calendar.setBackground(Color.LIGHT_GRAY);
-		panel_calendar.setBounds(30, 460, 707, 467);
+		panel_calendar.setBounds(22, 159, 707, 467);
 		contentPanel.add(panel_calendar);
 		panel_calendar.setLayout(null);
 		
@@ -230,7 +231,7 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmRegistrarConsulta = new JMenuItem("Registrar");
 		mntmRegistrarConsulta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarConsulta regCon = new RegistrarConsulta(); //("Registrar Usuario",null);
+				RegistrarConsulta regCon = new RegistrarConsulta(null);
 				regCon.setModal(true);
 				regCon.setVisible(true);
 			}
@@ -279,13 +280,14 @@ public class Dashboard extends JFrame {
 				if (login.isAdmin())
 				{
 					Admin admin = login.getAdmin();
-					secrMenu = new SecretariaMenu(admin.getUsuario(), null);
+					//secrMenu = new SecretariaMenu(admin.getUsuario(), null);
+					//what is this?
 
 				}
 				else {
 						secrMenu = new SecretariaMenu(cuenta.getCodigo(), ((Secretaria) cuenta).getDependiente());
 				}
-				secrMenu.setVisible(true);
+				//secrMenu.setVisible(true);
 			}
 			
 			

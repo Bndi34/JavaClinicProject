@@ -1,28 +1,11 @@
 package logico;
 
-public class Admin {
+public class Admin  extends Usuario {
 
-	public Admin(String usuario, String contrasenia) {
-		super();
-		this.usuario = usuario;
-		this.contrasenia = contrasenia;
+	public Admin(String codigo, String nombre, String cedula,String telefono, String contrasenia) {
+		super(codigo, nombre, cedula, telefono, contrasenia);
 	}
 	
-	private String usuario;
-	private String contrasenia;
-	
-	public String getUsuario() {
-		return usuario;
-	}
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-	public String getContrasenia() {
-		return contrasenia;
-	}
-	public void setContrasenia(String contrasenia) {
-		this.contrasenia = contrasenia;
-	}
 	
 	
 }

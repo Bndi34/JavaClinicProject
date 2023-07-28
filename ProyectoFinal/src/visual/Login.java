@@ -14,12 +14,14 @@ import logico.Admin;
 import logico.Hospital;
 import logico.Secretaria;
 import logico.Usuario;
+import visualRegistros.RegistrarEnfermedad;
 import visualRegistros.RegistrarUsuario;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 import visualRegistros.RegistrarUsuario;
@@ -52,12 +54,21 @@ public class Login extends JDialog {
 	 * Create the dialog.
 	 */
 	public Login() {
-		setModal(true);
 		
+		setModal(true);
+		try {
+			Hospital.load();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		//Pendiente sistema para revisar que haya algun admin registrado.
 		//si no hay, se crea el admin admin
-		Admin aux = new Admin("admin", "admin");
-		Hospital.getInstance().getMisAdmins().add(aux);
+		Usuario aux = new Admin("USR-0","admin","admin" ,"NA","admin");
+		Hospital.getInstance().getMisCuentas().add(aux);
 		
 		setTitle("Centro M\u00E9dico");
 		setBounds(100, 100, 467, 245);
@@ -92,8 +103,14 @@ public class Login extends JDialog {
 			JButton btnRegistrar = new JButton("Registrar");
 			btnRegistrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+
+					RegistrarUsuario regUs = new RegistrarUsuario("Registrar Usuario",null);
+					regUs.setModal(true);
+					regUs.setVisible(true);
+					/*
 					RegistrarUsuario registro = new RegistrarUsuario("Paciente", null);
-					registro.setVisible(true);
+					registro.setModal(true);
+					registro.setVisible(true);*/
 					
 				}
 			});
@@ -102,12 +119,14 @@ public class Login extends JDialog {
 				JButton btnIniciar = new JButton("Iniciar Sesi\u00F3n");
 				btnIniciar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
+						
 						user = txtUser.getText();
 						password = txtPassword.getText();
 						
 						try {
 						
-							Admin adm = Hospital.getInstance().buscarAdminByUser(user);
+							Admin adm = (Admin) Hospital.getInstance().buscarUsuarioByCode("USR-0");  //buscarAdminByUser(user);
 							
 							if (adm != null)
 								if (adm.getContrasenia().equalsIgnoreCase(password))

@@ -15,13 +15,13 @@ import java.util.Date;
 public class Hospital implements Serializable{
 	
 	private static final long serialVersionUID = 5219225790495881149L;
-	private ArrayList<Admin> misAdmins;
 	private ArrayList<Usuario> misCuentas;
 	private static ArrayList<Consulta> misConsultas;
 	private static ArrayList<Cita> misCitas;
 	private ArrayList<Enfermedad> enfermedadesReg;
 	private ArrayList<Vacuna> misVacunas;
 	private ArrayList<String>sintomasRegistrados;
+	private ArrayList<String>alergiasRegistradas;
 	private static Hospital hospi = null;
 	
 	public static int generadorUsuario = 1;
@@ -33,13 +33,13 @@ public class Hospital implements Serializable{
 	public Hospital() {
 		super();
 		
-		misAdmins = new ArrayList<Admin>();
 		misCuentas = new ArrayList<Usuario>();
 		misConsultas = new ArrayList<Consulta>();
 		misCitas = new ArrayList<Cita>();
 		enfermedadesReg = new ArrayList<Enfermedad>();
 		misVacunas = new ArrayList<Vacuna>();
 		sintomasRegistrados = new ArrayList<String>();
+		alergiasRegistradas = new ArrayList<String>();
 		
 	}
 	
@@ -102,6 +102,14 @@ public class Hospital implements Serializable{
 	public void setSintomasRegistrados(ArrayList<String> sintomasRegistrados) {
 		this.sintomasRegistrados = sintomasRegistrados;
 	}
+	
+	public ArrayList<String> getAlergiasRegistradas() {
+		return alergiasRegistradas;
+	}
+
+	public void setAlergiasRegistradas(ArrayList<String> alergiasRegistrados) {
+		this.alergiasRegistradas = alergiasRegistrados;
+	}
 
 	//Parte de insertar
 	public void insertarUsuario(Usuario aux){
@@ -157,16 +165,16 @@ public class Hospital implements Serializable{
 		return ConsultaDia;
 	}
 	
-	public Admin buscarAdminByUser(String user)
+	/*public Admin buscarAdminByUser(String user)
 	{
 		Admin temp = null;
 		for (Admin aux : misAdmins) {
-			if (aux.getUsuario().equalsIgnoreCase(user)) {
+			if (aux.getNombre().equalsIgnoreCase(user)) {
 				temp = aux;
 			}
 		}
 		return temp;
-	}
+	}*/
 	
 	public Usuario buscarUsuarioByCedula(String cod) {
 		Usuario temp = null;
@@ -331,18 +339,10 @@ public class Hospital implements Serializable{
 		index = buscarIndexByVacuna(selected.getCodigo());
 		misVacunas.set(index, selected);
 	}
-
-	public ArrayList<Admin> getMisAdmins() {
-		return misAdmins;
-	}
-
-	public void setMisAdmins(ArrayList<Admin> misAdmins) {
-		this.misAdmins = misAdmins;
-	}
 	
 	public static void load() throws IOException, ClassNotFoundException {
 		Hospital.getInstance();
-		File file = new File("main.dat");
+		File file = new File("main.dat");	
 		file.createNewFile(); 
 		FileInputStream f = new FileInputStream(file);
 		ObjectInputStream oos = new ObjectInputStream(f);
@@ -358,6 +358,7 @@ public class Hospital implements Serializable{
 	}
 	
 	public static void save() throws IOException, ClassNotFoundException {
+		getInstance();
     	File file = new File("main.dat");
     	file.createNewFile();
     	FileOutputStream f = new FileOutputStream(file);
