@@ -23,9 +23,13 @@ import java.awt.event.ActionEvent;
 import com.toedter.calendar.JCalendar;
 
 import logico.Admin;
+import logico.Doctor;
 import logico.Hospital;
+import logico.Paciente;
 import logico.Secretaria;
 import logico.Usuario;
+import visualListar.ListarCompromiso;
+import visualListar.ListarCuenta;
 import visualRegistros.RegistrarCita;
 import visualRegistros.RegistrarConsulta;
 import visualRegistros.RegistrarEnfermedad;
@@ -37,12 +41,17 @@ import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
+import java.awt.Font;
+import javax.swing.JTextField;
+import java.awt.Dialog.ModalExclusionType;
 
 public class Dashboard extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
-
+	private JMenu mnUser;
+	
 	private Dimension dim = null;
+	private JTextField txtSupervisor;
 	
 	/**
 	 * Launch the application.
@@ -61,46 +70,37 @@ public class Dashboard extends JFrame {
 	 * Create the dialog.
 	 */
 	public Dashboard(Usuario Cuenta) {
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
+		setTitle("Centro M\u00E9dico");
 		
-		dim = getToolkit().getScreenSize();
-		setBounds(100, 100, 1094, 690);
-		setSize(dim.width, dim.height-40);
+		setBounds(100, 100, 1270, 690);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		setLocationRelativeTo(null);
-		
-		JMenu mnUser = new JMenu("<User>");
 		try {
-			mnUser.setText(Cuenta.getNombre());
 		} catch (NullPointerException e) {
 			mnUser.setText("Error");
 		}
-		mnUser.setBounds(787, 13, 125, 24);
-		contentPanel.add(mnUser);
-		
-		JMenuItem mntmUserConfig = new JMenuItem("Configuraci\u00F3n");
-		mnUser.add(mntmUserConfig);
-		
-		JMenuItem mntmUserLogOut = new JMenuItem("Cerrar Sesi\u00F3n");
-		mnUser.add(mntmUserLogOut);
 		
 		JLabel lblCalendario = new JLabel("Calendario");
 		lblCalendario.setBounds(22, 119, 82, 16);
 		contentPanel.add(lblCalendario);
 		
-		JLabel lblDetallesDelDia = new JLabel("Detalles");
-		lblDetallesDelDia.setBounds(837, 440, 56, 16);
+		JLabel lblDetallesDelDia = new JLabel("Horario del D\u00EDa");
+		lblDetallesDelDia.setBounds(762, 129, 102, 16);
 		contentPanel.add(lblDetallesDelDia);
 		
 		JLabel lblHistorialMedico = new JLabel("Historial Medico");
-		lblHistorialMedico.setBounds(1067, 440, 112, 16);
+		lblHistorialMedico.setBounds(992, 129, 112, 16);
 		contentPanel.add(lblHistorialMedico);
 		
 		JLabel Dashboard = new JLabel("DASHBOARD");
-		Dashboard.setBounds(30, 21, 171, 16);
+		Dashboard.setFont(new Font("Impact", Font.PLAIN, 33));
+		Dashboard.setBounds(22, 13, 217, 54);
 		contentPanel.add(Dashboard);
 		
 		JPanel panel_calendar = new JPanel();
@@ -114,7 +114,7 @@ public class Dashboard extends JFrame {
 		panel_calendar.add(calendar);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(816, 469, 445, 458);
+		panel.setBounds(741, 158, 445, 458);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
@@ -149,6 +149,25 @@ public class Dashboard extends JFrame {
 		btnDetallesHistorialMedico.setBounds(278, 422, 89, 23);
 		panel.add(btnDetallesHistorialMedico);
 		
+		try {
+			if (Cuenta instanceof Secretaria)
+		{
+			txtSupervisor = new JTextField();
+			txtSupervisor.setText(((Secretaria) Cuenta).getDependiente().getNombre());
+			txtSupervisor.setEditable(false);
+			txtSupervisor.setBounds(1127, 50, 116, 22);
+			contentPanel.add(txtSupervisor);
+			txtSupervisor.setColumns(10);
+			
+			JLabel lblSupervisor = new JLabel("Supervisor");
+			lblSupervisor.setBounds(1041, 51, 74, 16);
+			contentPanel.add(lblSupervisor);
+		}
+		} catch (NullPointerException e) {
+			txtSupervisor.setVisible(false);
+		}
+		
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -158,7 +177,17 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmRegistrarUsuario = new JMenuItem("Registrar");
 		mntmRegistrarUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarUsuario regUs = new RegistrarUsuario("Registrar Usuario",null);
+				RegistrarUsuario regUs;
+				
+				if (Cuenta instanceof Admin)
+				{
+					regUs = new RegistrarUsuario("Registrar Usuario",null, true);
+				}
+				else 
+				{
+					regUs = new RegistrarUsuario("Registrar Usuario",null, false);
+				}
+				
 				regUs.setModal(true);
 				regUs.setVisible(true);
 			}
@@ -166,6 +195,14 @@ public class Dashboard extends JFrame {
 		mnUsuario.add(mntmRegistrarUsuario);
 		
 		JMenuItem mntmListaUsuario = new JMenuItem("Lista");
+		mntmListaUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarCuenta listaCuentas = new ListarCuenta("cuenta", true, Cuenta.getCodigo());
+				
+				listaCuentas.setVisible(true);
+				listaCuentas.setModal(true);
+			}
+		});
 		mnUsuario.add(mntmListaUsuario);
 		
 		JMenu mnVacuna = new JMenu("Vacuna");
@@ -209,22 +246,6 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmListarEnfermedad = new JMenuItem("Listar");
 		mnEnfermedad.add(mntmListarEnfermedad);
 		
-		JMenu mnDiagnostico = new JMenu("Diagn\u00F3stico");
-		menuBar.add(mnDiagnostico);
-		
-		JMenuItem mntmRegistrarDiagnostico = new JMenuItem("Registrar");
-		mntmRegistrarDiagnostico.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				/*RegistrarDiagnostico regVac = new RegistrarVacuna(); //("Registrar Usuario",null);
-				regVac.setModal(true);
-				regVac.setVisible(true);*/
-			}
-		});
-		mnDiagnostico.add(mntmRegistrarDiagnostico);
-		
-		JMenuItem mntmListarDiagnostico = new JMenuItem("Listar");
-		mnDiagnostico.add(mntmListarDiagnostico);
-		
 		JMenu mnConsulta = new JMenu("Consulta");
 		menuBar.add(mnConsulta);
 		
@@ -238,8 +259,15 @@ public class Dashboard extends JFrame {
 		});
 		mnConsulta.add(mntmRegistrarConsulta);
 		
-		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Listar");
-		mnConsulta.add(mntmNewMenuItem_5);
+		JMenuItem mntmListarConsulta = new JMenuItem("Listar");
+		mntmListarConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarCompromiso listCons = new ListarCompromiso("consulta");
+				listCons.setVisible(true);
+				
+			}
+		});
+		mnConsulta.add(mntmListarConsulta);
 		
 		JMenu mnCita = new JMenu("Cita");
 		menuBar.add(mnCita);
@@ -254,9 +282,44 @@ public class Dashboard extends JFrame {
 		});
 		mnCita.add(mntmRegistrarCita);
 		
-		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Listar");
-		mnCita.add(mntmNewMenuItem_7);
+		JMenuItem mntmListarCita = new JMenuItem("Listar");
+		mnCita.add(mntmListarCita);
 		
+		JMenu mnEstadisticas = new JMenu("Estad\u00EDsticas");
+		menuBar.add(mnEstadisticas);
+		
+		JMenuItem mntmAbrirEstadisticas = new JMenuItem("Abrir men\u00FA de Estad\u00EDsticas");
+		mnEstadisticas.add(mntmAbrirEstadisticas);
+		
+		mnUser = new JMenu("<User>");
+		menuBar.add(mnUser);
+		mnUser.setText(Cuenta.getNombre());
+		
+		JMenuItem mntmUserConfig = new JMenuItem("Configuraci\u00F3n");
+		mnUser.add(mntmUserConfig);
+		
+		JMenuItem mntmUserLogOut = new JMenuItem("Cerrar Sesi\u00F3n");
+		mntmUserLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				Login aLogin = new Login();
+				aLogin.setVisible(true);
+				
+				
+				dispose();
+			}
+		});
+		mnUser.add(mntmUserLogOut);
+		
+		if (Cuenta instanceof Doctor || Cuenta instanceof Paciente)
+		{
+			mnUsuario.setEnabled(false);
+			mnVacuna.setEnabled(false);
+			mnConsulta.setEnabled(false);
+			mnEnfermedad.setEnabled(false);
+			mnCita.setEnabled(false);
+		}
 		//openLogIn();
 
 	}

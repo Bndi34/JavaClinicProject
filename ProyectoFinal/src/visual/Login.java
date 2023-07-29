@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 import visualRegistros.RegistrarUsuario;
+import java.awt.Dialog.ModalityType;
 
 public class Login extends JDialog {
 
@@ -54,21 +55,27 @@ public class Login extends JDialog {
 	 * Create the dialog.
 	 */
 	public Login() {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		setModal(true);
 		try {
 			Hospital.load();
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
 		//Pendiente sistema para revisar que haya algun admin registrado.
 		//si no hay, se crea el admin admin
-		Usuario aux = new Admin("USR-0","admin","admin" ,"NA","admin");
-		Hospital.getInstance().getMisCuentas().add(aux);
+		
+		if (!Hospital.getInstance().adminFound())
+		{
+			Usuario aux = new Admin("USR-0","admin","admin" ,"N/A","admin");
+			Hospital.getInstance().getMisCuentas().add(aux);
+		}
+		
 		
 		setTitle("Centro M\u00E9dico");
 		setBounds(100, 100, 467, 245);
@@ -104,7 +111,7 @@ public class Login extends JDialog {
 			btnRegistrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 
-					RegistrarUsuario regUs = new RegistrarUsuario("Registrar Usuario",null);
+					RegistrarUsuario regUs = new RegistrarUsuario("Registrar Usuario",null, false);
 					regUs.setModal(true);
 					regUs.setVisible(true);
 					/*
@@ -125,7 +132,7 @@ public class Login extends JDialog {
 						password = txtPassword.getText();
 						
 						try {
-						
+							/*
 							Admin adm = (Admin) Hospital.getInstance().buscarUsuarioByCode("USR-0");  //buscarAdminByUser(user);
 							
 							if (adm != null)
@@ -135,7 +142,7 @@ public class Login extends JDialog {
 								secrMenu.setVisible(true);
 								dispose();
 								}
-
+							*/
 							
 							usu = Hospital.getInstance().buscarUsuarioByCedula(user);
 							
@@ -145,15 +152,16 @@ public class Login extends JDialog {
 									Dashboard dash = new Dashboard(usu);
 									dash.setVisible(true);
 									dispose();
+
 							}
-								else {
+							/*else {
 
 									System.out.println(((Secretaria) usu).getDependiente());
 									SecretariaMenu secrMenu = new SecretariaMenu(usu.getCodigo(), ((Secretaria) usu).getDependiente());
 									secrMenu.setVisible(true);
 									dispose();
 
-								}							
+							}		*/					
 									
 							}
 							

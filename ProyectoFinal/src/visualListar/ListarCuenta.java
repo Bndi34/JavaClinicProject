@@ -48,7 +48,8 @@ public class ListarCuenta extends JDialog {
 	 * Create the dialog.
 	 * @param fed 
 	 */
-	public ListarCuenta(String type) {
+	public ListarCuenta(String type, boolean adminCheck, String codigoCuentaActual) {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		 String[] columnNames = setColumns(type);
 		
@@ -80,6 +81,8 @@ public class ListarCuenta extends JDialog {
 					btnModificar.setEnabled(true);
 					btnDetalles.setEnabled(true);
 					mode = cbxQuesoType.getSelectedItem().toString();
+					System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
+
 				}
 			}
 		});
@@ -88,7 +91,7 @@ public class ListarCuenta extends JDialog {
 		loadSportMans(type);
 		scrollPane.setViewportView(table);
 		
-		JLabel lblTipoDePublicacin = new JLabel("Tipo de Publicaci\u00F3n:");
+		JLabel lblTipoDePublicacin = new JLabel("Tipo de Cuenta:");
 		lblTipoDePublicacin.setBounds(10, 29, 116, 14);
 		panel.add(lblTipoDePublicacin);
 		
@@ -143,12 +146,12 @@ public class ListarCuenta extends JDialog {
 					}
 
 					if (type.equalsIgnoreCase("cuenta")) {	
-						RegistrarUsuario modUser = new RegistrarUsuario(type, Hospital.getInstance().getMisCuentas().get(table.getSelectedRow()));
+						RegistrarUsuario modUser = new RegistrarUsuario(type, Hospital.getInstance().getMisCuentas().get(table.getSelectedRow()), false);
 						modUser.setModal(true);
 						modUser.setLocationRelativeTo(null);
 						modUser.setVisible(true);	
 					}
-					
+					/*
 					if (type.equalsIgnoreCase("cita")) {	
 						RegistrarCita modCita = new RegistrarCita(type, Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
 						modCita.setModal(true);
@@ -177,11 +180,17 @@ public class ListarCuenta extends JDialog {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-					}
+					}*/
+					loadSportMans(type);
 				}
 			});
 			
 			btnDetalles = new JButton("Detalles");
+			btnDetalles.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
 			btnDetalles.setEnabled(false);
 			buttonPane.add(btnDetalles);
 			btnModificar.setEnabled(false);
@@ -190,17 +199,25 @@ public class ListarCuenta extends JDialog {
 				btnEliminar = new JButton("Eliminar");
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						/*SportMan aux = fed.getSportManByCode(code);
-					  int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar al Deportista: " + aux.getName(), null, JOptionPane.YES_NO_OPTION);
+						
+	
+					  int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta cuenta?", null, JOptionPane.YES_NO_OPTION);
 						    if (delete == JOptionPane.YES_OPTION)
-						    {
-						       
-						    	fed.deleteSportMan(code);
-								loadSportMans();
+						    {						    	
+								Usuario aux = Hospital.getInstance().buscarUsuarioByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+								if (aux.getCodigo() != codigoCuentaActual)
+								{
+									Hospital.getInstance().getMisCuentas().remove(aux);
+
+									loadSportMans(type);
+								}
+								else
+								{
+									JOptionPane.showMessageDialog(null, "No puede borrar su propia cuenta", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+								}
+								
 						    }
 						
-						
-						*/
 					}
 				});
 				btnEliminar.setEnabled(false);
@@ -209,7 +226,7 @@ public class ListarCuenta extends JDialog {
 				getRootPane().setDefaultButton(btnEliminar);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Cerrar");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
@@ -217,6 +234,15 @@ public class ListarCuenta extends JDialog {
 				});
 				
 				btnRegistrar = new JButton("Nuevo");
+				btnRegistrar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						RegistrarUsuario regisUser = new RegistrarUsuario("cuenta", null, adminCheck);
+						regisUser.setVisible(true);
+						regisUser.setModal(true);
+						
+						loadSportMans(type);
+					}
+				});
 				buttonPane.add(btnRegistrar);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
@@ -233,31 +259,56 @@ public class ListarCuenta extends JDialog {
 		fila = new Object[tableModel.getColumnCount()];
 
 		if (selection.equalsIgnoreCase("admin")) {
-			for (Admin aux : Hospital.getInstance().getMisAdmins()) 
+			for (Usuario aux : Hospital.getInstance().getMisCuentas()) 
 			{
-				fila[0] = aux.getUsuario();
-				
-				tableModel.addRow(fila);
+				if (aux instanceof Admin)
+				{
+					fila[0] = aux.getCodigo();
+					fila[1] = aux.getNombre();
+					fila[2] = aux.getCedula();
+					fila[3] = aux.getTelefono();
+					fila[4] = "Admin";
+		
+					tableModel.addRow(fila);
+				}
 			}
 		}
-		if (selection.equalsIgnoreCase("cuenta")) {
+		else if (selection.equalsIgnoreCase("cuenta")) {
 			for (Usuario aux : Hospital.getInstance().getMisCuentas()) 
 			{
 				fila[0] = aux.getCodigo();
 				fila[1] = aux.getNombre();
 				fila[2] = aux.getCedula();
 				fila[3] = aux.getTelefono();
-	
+				
+				if (aux instanceof Paciente) 
+				{
+					fila[4] = "Paciente";
+				}
+				else if (aux instanceof Doctor) 
+				{
+					fila[4] = "Doctor";
+				}
+				else if (aux instanceof Secretaria) 
+				{
+					fila[4] = "Secretaria";
+				}
+				else if (aux instanceof Admin)
+				{
+					fila[4] = "Admin";
+				}
+				
 				tableModel.addRow(fila);
 			}
 		}
-		if (selection.equalsIgnoreCase("paciente")) {
+		else if (selection.equalsIgnoreCase("paciente")) {
 			for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
 				if(aux instanceof Paciente){
 					fila[0] = aux.getCodigo();
 					fila[1] = aux.getNombre();
 					fila[2] = aux.getCedula();
 					fila[3] = aux.getTelefono();
+					fila[4] = "Paciente";
 		
 					tableModel.addRow(fila);
 				}
@@ -271,6 +322,7 @@ public class ListarCuenta extends JDialog {
 					fila[1] = aux.getNombre();
 					fila[2] = aux.getCedula();
 					fila[3] = aux.getTelefono();
+					fila[4] = "Doctor";
 		
 					tableModel.addRow(fila);
 				}
@@ -283,6 +335,7 @@ public class ListarCuenta extends JDialog {
 					fila[1] = aux.getNombre();
 					fila[2] = aux.getCedula();
 					fila[3] = aux.getTelefono();
+					fila[4] = "Secretaria";
 		
 					tableModel.addRow(fila);
 				}

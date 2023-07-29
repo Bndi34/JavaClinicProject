@@ -1,5 +1,6 @@
 package logico;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -113,6 +114,7 @@ public class Hospital implements Serializable{
 
 	//Parte de insertar
 	public void insertarUsuario(Usuario aux){
+		
 		misCuentas.add(aux);
 		generadorUsuario++;
 	}
@@ -163,6 +165,16 @@ public class Hospital implements Serializable{
 			}
 		}
 		return ConsultaDia;
+	}
+	
+	public boolean adminFound()
+	{
+		for (Usuario aux : misCuentas) {
+			if (aux instanceof Admin) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/*public Admin buscarAdminByUser(String user)
@@ -344,16 +356,20 @@ public class Hospital implements Serializable{
 		Hospital.getInstance();
 		File file = new File("main.dat");	
 		file.createNewFile(); 
-		FileInputStream f = new FileInputStream(file);
-		ObjectInputStream oos = new ObjectInputStream(f);
-		Hospital temp = (Hospital) oos.readObject();
-		hospi = temp;
-		generadorEnfermedad = hospi.getEnfermedadesReg().size() + 1;
-		generadorUsuario = hospi.getMisCuentas().size()+1;
-		generadorConsulta = hospi.getMisConsultas().size()+1;
-		generadorCita = hospi.getMisCitas().size()+1;
-		generadorVacuna = hospi.getMisVacunas().size()+1;
-		oos.close();
+		try {		
+			
+			FileInputStream f = new FileInputStream(file);
+			ObjectInputStream oos = new ObjectInputStream(f);
+			Hospital temp = (Hospital) oos.readObject();
+			hospi = temp;
+			generadorEnfermedad = hospi.getEnfermedadesReg().size() + 1;
+			generadorUsuario = hospi.getMisCuentas().size()+1;
+			generadorConsulta = hospi.getMisConsultas().size()+1;
+			generadorCita = hospi.getMisCitas().size()+1;
+			generadorVacuna = hospi.getMisVacunas().size()+1;
+			oos.close();
+		} catch (EOFException e) {
+		}	
 		
 	}
 	

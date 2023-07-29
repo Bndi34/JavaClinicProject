@@ -24,6 +24,7 @@ import logico.Usuario;
 import logico.Hospital;
 
 import logico.Paciente;
+import logico.Admin;
 import logico.Doctor;
 import logico.Secretaria;
 
@@ -46,27 +47,35 @@ public class RegistrarUsuario extends JDialog {
 	private JTextField txtId;
 	private JTextField txtNombre;
 	int mode;
-	JPanel panel_paciente;
-	JPanel panel_doctor;
-	JPanel panel_secretaria;
-	JRadioButton rdbtnPaciente;
-	JRadioButton rdbtnDoctor;
-	JComboBox cbxAlergia = new JComboBox();
-	JRadioButton rdbtnSecretaria;
-	JComboBox cbxSexo = new JComboBox();
+	private JPanel panel_paciente;
+	private JPanel panel_doctor;
+	private JPanel panel_secretaria;
+	
+	private JRadioButton rdbtnPaciente;
+	private JRadioButton rdbtnDoctor;
+	private JRadioButton rdbtnSecretaria;
+	private JRadioButton rdbtnAdmin;
+	
+	private JComboBox cbxAlergia = new JComboBox();
+	private JComboBox cbxSexo = new JComboBox();
+	private JComboBox cbxSupervisor;
+
+	private Usuario aux;
+	
 	private JTextField txtTelefono;
 	private JTextField txtDir;
-	private Usuario aux;
 	private JTextField txtCedula;
 	private JTextField txtPassword;
 	private JTextField txtArea;
-	private JComboBox cbxSupervisor;
+	
+	
 	private JButton btnBorrarAlergia;
+	
 	private ArrayList<String> SupervisorCedula;
 	
 	public static void main(String[] args) {
 		try {
-			RegistrarUsuario dialog = new RegistrarUsuario("",null);
+			RegistrarUsuario dialog = new RegistrarUsuario("",null, true);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -74,14 +83,14 @@ public class RegistrarUsuario extends JDialog {
 		}
 	}
 	
-	public RegistrarUsuario(String title, Usuario entrada) {
+	public RegistrarUsuario(String title, Usuario entrada, boolean adminCheck) {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		SupervisorCedula = new ArrayList<String>();
 		setModal(true);
 		
 		System.out.println("Registrar IN");
 		setResizable(false);
 		setBounds(100, 100, 475, 400);
-		this.mode = mode;
 		setTitle(title);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -230,6 +239,7 @@ public class RegistrarUsuario extends JDialog {
 		panel_doctor.setBounds(10, 219, 439, 104);
 		contentPanel.add(panel_doctor);
 		panel_doctor.setLayout(null);
+		panel_doctor.setVisible(false);
 		
 		JLabel lblAreaMedica = new JLabel("Area M\u00E9dica:");
 		lblAreaMedica.setBounds(7, 23, 103, 14);
@@ -246,6 +256,7 @@ public class RegistrarUsuario extends JDialog {
 		panel_secretaria.setBounds(10, 219, 439, 104);
 		contentPanel.add(panel_secretaria);
 		panel_secretaria.setLayout(null);
+		panel_secretaria.setVisible(false);
 		
 		
 		JLabel lblSupervisor = new JLabel("Supervisor:");
@@ -254,10 +265,10 @@ public class RegistrarUsuario extends JDialog {
 		
 		
 		cbxSupervisor = new JComboBox();
+		cbxSupervisor.setEnabled(false);
 		cbxSupervisor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
 		cbxSupervisor.setBounds(86, 20, 200, 22);
 		panel_secretaria.add(cbxSupervisor);
-		cbxSupervisor.setVisible(false);
 
 		
 		JPanel panel_tipos = new JPanel();
@@ -270,27 +281,57 @@ public class RegistrarUsuario extends JDialog {
 		rdbtnPaciente.setSelected(true);
 		rdbtnPaciente.setBounds(17, 18, 88, 23);
 		panel_tipos.add(rdbtnPaciente);
+		
+		
+		rdbtnDoctor = new JRadioButton("Doctor");
+		rdbtnDoctor.setBounds(109, 18, 88, 23);
+		panel_tipos.add(rdbtnDoctor);
+		
+		rdbtnSecretaria = new JRadioButton("Secretaria");
+		rdbtnSecretaria.setBounds(201, 18, 88, 23);
+		panel_tipos.add(rdbtnSecretaria);
+		
+		rdbtnAdmin = new JRadioButton("Admin");
+		
+		rdbtnAdmin.setBounds(343, 18, 88, 23);
+		panel_tipos.add(rdbtnAdmin);
+		rdbtnAdmin.setVisible(false);
+		
+		rdbtnAdmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				rdbtnPaciente.setSelected(false);
+				rdbtnSecretaria.setSelected(false);
+				rdbtnDoctor.setSelected(false);
+				rdbtnAdmin.setSelected(true);
+				
+				panel_paciente.setVisible(false);
+				panel_paciente.setVisible(false);
+				panel_doctor.setVisible(false);
+				
+				cbxSupervisor.setEnabled(false);
+
+			}
+		});
+	
 		rdbtnPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Paciente Seleccionado");
 				rdbtnPaciente.setSelected(true);
 				rdbtnSecretaria.setSelected(false);
 				rdbtnDoctor.setSelected(false);
+				rdbtnAdmin.setSelected(false);
+				
 				panel_paciente.setVisible(false);
 				panel_paciente.setVisible(true);
 				panel_doctor.setVisible(false);
-				cbxSupervisor.setVisible(false);
+				
+				cbxSupervisor.setEnabled(false);
+
 
 			}
 		});
 		
-		rdbtnDoctor = new JRadioButton("Doctor");
-		rdbtnDoctor.setBounds(162, 18, 88, 23);
-		panel_tipos.add(rdbtnDoctor);
-		
-		rdbtnSecretaria = new JRadioButton("Secretaria");
-		rdbtnSecretaria.setBounds(330, 18, 88, 23);
-		panel_tipos.add(rdbtnSecretaria);
 		rdbtnSecretaria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Secretaria Seleccionado");
@@ -298,10 +339,12 @@ public class RegistrarUsuario extends JDialog {
 				rdbtnPaciente.setSelected(false);
 				rdbtnDoctor.setSelected(false);
 				rdbtnSecretaria.setSelected(true);
+				rdbtnAdmin.setSelected(false);
+				
 				panel_secretaria.setVisible(true);
 				panel_paciente.setVisible(false);
 				panel_doctor.setVisible(false);
-				cbxSupervisor.setVisible(true);
+				cbxSupervisor.setEnabled(true);
 				loadSupervisores();
 			}
 		});
@@ -310,10 +353,13 @@ public class RegistrarUsuario extends JDialog {
 				rdbtnPaciente.setSelected(false);
 				rdbtnSecretaria.setSelected(false);
 				rdbtnDoctor.setSelected(true);
+				rdbtnAdmin.setSelected(false);
+				
 				panel_paciente.setVisible(false);
 				panel_paciente.setVisible(false);
 				panel_doctor.setVisible(true);
-				cbxSupervisor.setVisible(false);
+
+				cbxSupervisor.setEnabled(false);
 
 				/*
 
@@ -343,19 +389,13 @@ public class RegistrarUsuario extends JDialog {
 						Doctor dependiente = null;
 						
 						if (rdbtnPaciente.isSelected()) {
-							System.out.println("Registrar.contraseña: " + contrasenia);
 
 							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>());
-							System.out.println("Registrar.contraseñaInAux: " + aux.getContrasenia());
-
 						}
-						
 						else if (rdbtnDoctor.isSelected()) {
 							aux = new Doctor(codigo,nombre,cedula,telefono,contrasenia,area);
 						}
-						
 						else if (rdbtnSecretaria.isSelected()) {
-							
 							if (cbxSupervisor.getSelectedIndex() > 0)
 							{
 								String codeDependiente = SupervisorCedula.get(cbxSupervisor.getSelectedIndex() - 1);
@@ -365,12 +405,30 @@ public class RegistrarUsuario extends JDialog {
 							
 							aux = new Secretaria(codigo,nombre,cedula,telefono,contrasenia,dependiente);
 						}
+						else if (rdbtnAdmin.isSelected())
+						{
+							aux = new Admin(codigo, nombre, cedula, telefono, contrasenia);
+						}
 						
 						if (!hayEspacioVacio())
 						{
-							if (Hospital.getInstance().buscarUsuarioByCedula(cedula) == null)
+							System.out.println(aux);
+							if (Hospital.getInstance().buscarUsuarioByCedula(cedula) == null || entrada != null)
 							{
-								Hospital.getInstance().insertarUsuario(aux);
+								if (entrada == null)
+								{	
+									System.out.println("IngresarGood");
+									Hospital.getInstance().insertarUsuario(aux);
+									JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+								}
+								else
+								{
+									System.out.println("ModificarGood");
+									JOptionPane.showMessageDialog(null, "Modificacion satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
+									Hospital.getInstance().modificarUsuario(aux);
+								}
+									
 								try {
 									Hospital.save();
 								} catch (ClassNotFoundException e1) {
@@ -380,7 +438,7 @@ public class RegistrarUsuario extends JDialog {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+								
 								clean();
 								dispose();
 
@@ -414,16 +472,49 @@ public class RegistrarUsuario extends JDialog {
 				buttonPane.add(btnCancel);
 			}
 		}
-		//aux = entrada;
-		//loadUser();
+		aux = entrada;
+		System.out.println(aux);
+		System.out.println(entrada);
+
+		if (adminCheck)
+		{
+			rdbtnAdmin.setVisible(true);
+		}
+		
+		if (!adminCheck && entrada == null)
+		{
+			rdbtnDoctor.setVisible(false);
+			rdbtnSecretaria.setVisible(false);
+			
+			panel_paciente.setVisible(true);
+			panel_doctor.setVisible(false);
+			panel_secretaria.setVisible(false);
+		}
+		else if (entrada != null)
+		{
+			rdbtnPaciente.setVisible(true);
+			rdbtnDoctor.setVisible(true);
+			rdbtnSecretaria.setVisible(true);
+			
+			rdbtnPaciente.setEnabled(false);
+			rdbtnDoctor.setEnabled(false);
+			rdbtnSecretaria.setEnabled(false);
+		}
+		else if (entrada == null)
+		{
+			panel_paciente.setVisible(true);
+		}
+		
+		loadUser();
+		/*
 		panel_doctor.setVisible(false);
 		panel_paciente.setVisible(true);
-
+*/
 
 	}
 	
 	private void loadUser() {
-		if(aux != null){
+		try {
 			txtId.setText(aux.getCodigo());
 			txtNombre.setText(aux.getNombre());
 			txtCedula.setText(aux.getCedula());
@@ -431,26 +522,66 @@ public class RegistrarUsuario extends JDialog {
 			txtTelefono.setText(aux.getTelefono());
 			
 			if (aux instanceof Paciente){
+				
+				rdbtnPaciente.setSelected(true);
+				rdbtnDoctor.setSelected(false);
+				rdbtnSecretaria.setSelected(false);
+				
+				panel_paciente.setVisible(true);
+				panel_doctor.setVisible(false);
+				panel_secretaria.setVisible(false);
+				
 				setGenero( ((Paciente)aux).getSexo() );
 				txtDir.setText( ((Paciente)aux).getDireccion());
 				
+				
+				cbxAlergia.setModel(new DefaultComboBoxModel(((Paciente) aux).getAlergias().toArray(new String[0])));
+
+				/*
 				cbxAlergia.removeAll();
 				//Considero que sería más práctico directamente conectar a la dirección de Alergias.
 				int limit = ((Paciente)aux).getAlergias().size();
 				for (int i = 0; i != limit; i++ ) {
 					cbxAlergia.addItem( ((Paciente)aux).getAlergias().get(i) );
-				}
+				}*/
+				
 				cbxAlergia.addItem("Agregar...");
 			}
 			
-			if (aux instanceof Doctor){
+			else if (aux instanceof Doctor){
+
+				rdbtnPaciente.setSelected(false);
+				rdbtnDoctor.setSelected(true);
+				rdbtnSecretaria.setSelected(false);
+				
+				panel_paciente.setVisible(false);
+				panel_doctor.setVisible(true);
+				panel_secretaria.setVisible(false);
+
+				
 				txtArea.setText( ((Doctor)aux).getAreaMedica());
 			}
 			
-			if (aux instanceof Secretaria){
+			else if (aux instanceof Secretaria){
+				
+				rdbtnPaciente.setSelected(false);
+				rdbtnDoctor.setSelected(false);
+				rdbtnSecretaria.setSelected(true);
+				
+				
+				panel_paciente.setVisible(false);
+				panel_doctor.setVisible(false);
+				panel_secretaria.setVisible(true);
+
 				txtArea.setText( ((Secretaria)aux).getDependiente().getCodigo() );
 			}
+			
+			
+
+		} catch (NullPointerException e) {
+
 		}
+					
 	
 	}
 	

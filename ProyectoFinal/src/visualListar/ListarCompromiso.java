@@ -50,6 +50,7 @@ public class ListarCompromiso extends JDialog {
 	 * @param fed 
 	 */
 	public ListarCompromiso(String type) {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		setColumns(type);
 		
@@ -185,7 +186,6 @@ public class ListarCompromiso extends JDialog {
 			fila[2] = aux.getEstado();
 			fila[3] = aux.getPaciente().getNombre();
 			fila[4] = aux.getDoctor().getNombre();
-			fila[5] = aux.getDiagnostico();
 		}
 		
 		break;
@@ -210,6 +210,7 @@ public class ListarCompromiso extends JDialog {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getTableHeader().setReorderingAllowed(false);
 		TableColumnModel columnModel = table.getColumnModel();
+		/*
 		columnModel.getColumn(0).setPreferredWidth(60);
 		columnModel.getColumn(1).setPreferredWidth(180);
 		columnModel.getColumn(2).setPreferredWidth(150);
@@ -244,7 +245,7 @@ public class ListarCompromiso extends JDialog {
 			break;
 		case "consulta":
 			
-			RegistrarConsulta modConsulta = new RegistrarConsulta();
+			RegistrarConsulta modConsulta = new RegistrarConsulta(Hospital.getInstance().getMisConsultas().get(table.getSelectedRow()));
 			modConsulta.setModal(true);
 			modConsulta.setLocationRelativeTo(null);
 			modConsulta.setVisible(true);
