@@ -15,6 +15,7 @@ import logico.Doctor;
 import logico.Hospital;
 import logico.Paciente;
 import logico.Usuario;
+import logico.Vacuna;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +31,8 @@ import com.toedter.calendar.JDateChooser;
 
 public class RegistrarConsulta extends JDialog {
 
+	private final JPanel contentPanel = new JPanel();
+	private JTextField txtCode;
 	private JComboBox cbxDoctor = new JComboBox();
 	private JComboBox cbxPaciente = new JComboBox();
 	private JComboBox cbxEstado = new JComboBox();
@@ -38,14 +41,12 @@ public class RegistrarConsulta extends JDialog {
 	private JComboBox cbxSintoma = new JComboBox();
 	
 	private ArrayList<String>sintomas;
+	private ArrayList<Vacuna>vacunasColocadas;
 	private Doctor doctor;
 	private Paciente paciente;
 	private Cita cita;
 	private Date fecha;
 	
-	private final JPanel contentPanel = new JPanel();
-	
-	private JTextField txtCode;
 	
 
 	/**
@@ -177,7 +178,7 @@ public class RegistrarConsulta extends JDialog {
 						paciente = (Paciente) Hospital.getInstance().buscarUsuarioByCode(cbxPaciente.getSelectedItem().toString().substring(0, indf-1));
 						fecha = dateChooser.getDate();
 						
-						Consulta aux = new Consulta(txtCode.getText(),estado,fecha,(Paciente) paciente,(Doctor) doctor ,sintomas);
+						Consulta aux = new Consulta(txtCode.getText(),estado,fecha,(Paciente) paciente,(Doctor) doctor ,sintomas,vacunasColocadas);
 						Hospital.getInstance().insertarConsulta(aux); 
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 					    clean();
@@ -234,6 +235,7 @@ public class RegistrarConsulta extends JDialog {
 		}
 	}
 	void clean() {
+		txtCode.setText("CON-"+String.valueOf(Hospital.getInstance().generadorConsulta));
 		cbxDoctor.setSelectedIndex(-1);
 		cbxPaciente.setSelectedIndex(-1);
 		cbxHorasDisponibles.setSelectedIndex(-1);

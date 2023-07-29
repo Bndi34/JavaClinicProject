@@ -237,7 +237,7 @@ public class List extends JDialog {
 		fila = new Object[tableModel.getColumnCount()];
 		
 		if (selection.equalsIgnoreCase("admin")) {
-			for (Admin aux : Hospital.getInstance().getMisCuentas()()) 
+			for (Usuario aux : Hospital.getInstance().getMisCuentas())
 			{
 				if (aux instanceof Admin)
 				{

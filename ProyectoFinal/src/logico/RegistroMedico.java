@@ -1,0 +1,51 @@
+package logico;
+
+import java.util.ArrayList;
+
+public class RegistroMedico {
+	private Boolean esPaciente;
+	private ArrayList<Cita>misCitas;
+	private ArrayList<Consulta>misConsultas;
+	private ArrayList<Vacuna>TotalDeVacunasColocadas;
+	
+	public RegistroMedico(Boolean esPaciente, ArrayList<Cita> misCitas, ArrayList<Consulta> misConsultas,
+			ArrayList<Vacuna> totalDeVacunasColocadas) {
+		super();
+		this.esPaciente = esPaciente;
+		this.misCitas = misCitas;
+		this.misConsultas = misConsultas;
+		TotalDeVacunasColocadas = totalDeVacunasColocadas;
+	}
+
+	public Boolean getEsPaciente() {
+		return esPaciente;
+	}
+
+	public void setEsPaciente(Boolean esPaciente) {
+		this.esPaciente = esPaciente;
+	}
+
+	public ArrayList<Cita> getMisCitas() {
+		return misCitas;
+	}
+
+	public void setMisCitas(ArrayList<Cita> misCitas) {
+		this.misCitas = misCitas;
+	}
+
+	public ArrayList<Consulta> getMisConsultas() {
+		return misConsultas;
+	}
+
+	public void setMisConsultas(ArrayList<Consulta> misConsultas) {
+		this.misConsultas = misConsultas;
+	}
+
+	public ArrayList<Vacuna> getTotalDeVacunasColocadas() {
+		return TotalDeVacunasColocadas;
+	}
+
+	public void setTotalDeVacunasColocadas(ArrayList<Vacuna> totalDeVacunasColocadas) {
+		TotalDeVacunasColocadas = totalDeVacunasColocadas;
+	}
+}

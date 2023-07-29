@@ -182,7 +182,7 @@ public class RegistrarVacuna extends JDialog {
 				if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
 					RegistrarEnfermedad regEnf;
 					try {
-						regEnf = new RegistrarEnfermedad();
+						regEnf = new RegistrarEnfermedad(null);
 						regEnf.setModal(true);
 						regEnf.setVisible(true);
 					} catch (ClassNotFoundException e1) {
@@ -342,9 +342,10 @@ public class RegistrarVacuna extends JDialog {
 	}
 	
 	private void loadEnfermedadinCbx() {
-		for (Enfermedad temp : Hospital.getInstance().getEnfermedadesReg())
+		for (Enfermedad aux : Hospital.getInstance().getEnfermedadesReg())
 		{
-			cbxEnfermedad.addItem(temp.getCodigo() );
+			String temp = aux.getCodigo()+" : "+aux.getNombre();
+			cbxEnfermedad.addItem(temp );
 		}
 		EnfermedadeSinElegir = Hospital.getInstance().getEnfermedadesReg();
 	}

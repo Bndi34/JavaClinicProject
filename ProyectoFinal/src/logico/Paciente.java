@@ -8,14 +8,16 @@ public class Paciente extends Usuario {
 	private char sexo;
 	private ArrayList<String> Alergias;
 	private String direccion;
+	private RegistroMedico miRegistro;
 	
 	public Paciente(String codigo, String nombre, String cedula, String telefono, String contrasenia,  
-					String direccion, boolean esPaciente, char sexo, ArrayList<String> alergias) {
+					String direccion, boolean esPaciente, char sexo, ArrayList<String> alergias,RegistroMedico miRegistro) {
 		super(codigo, nombre, cedula, telefono,contrasenia);
 		this.esPaciente = esPaciente;
 		this.sexo = sexo;
-		Alergias = alergias;
 		this.direccion = direccion;
+		Alergias = alergias;
+		this.miRegistro = miRegistro;
 	}
 
 	public boolean isEsPaciente() {
@@ -41,6 +43,14 @@ public class Paciente extends Usuario {
 	}
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+
+	public RegistroMedico getMiRegistro() {
+		return miRegistro;
+	}
+
+	public void setMiRegistro(RegistroMedico miRegistro) {
+		this.miRegistro = miRegistro;
 	}
 }
 //Esta clase es equivalente a la de cliente en el UML

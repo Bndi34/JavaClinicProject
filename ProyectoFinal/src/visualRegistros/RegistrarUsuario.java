@@ -83,7 +83,7 @@ public class RegistrarUsuario extends JDialog {
 		}
 	}
 	
-	public RegistrarUsuario(String title, Usuario entrada, boolean adminCheck) {
+	public RegistrarUsuario(String title, final Usuario entrada, boolean adminCheck) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		SupervisorCedula = new ArrayList<String>();
 		setModal(true);
@@ -390,7 +390,7 @@ public class RegistrarUsuario extends JDialog {
 						
 						if (rdbtnPaciente.isSelected()) {
 
-							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>());
+							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>(),null);
 						}
 						else if (rdbtnDoctor.isSelected()) {
 							aux = new Doctor(codigo,nombre,cedula,telefono,contrasenia,area);

@@ -49,7 +49,7 @@ public class ListarCompromiso extends JDialog {
 	 * Create the dialog.
 	 * @param fed 
 	 */
-	public ListarCompromiso(String type) {
+	public ListarCompromiso(final String type) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		setColumns(type);

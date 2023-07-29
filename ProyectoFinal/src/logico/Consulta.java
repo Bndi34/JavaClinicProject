@@ -10,10 +10,12 @@ public class Consulta implements Serializable {
 	private Date fecha;
 	private Paciente paciente;
 	private Doctor doctor;
+	private Enfermedad enfermedad;
 	private ArrayList<String>sintomas;
+	private ArrayList<Vacuna>VacunasColocadas;
 	
 	public Consulta(String codigo, String estado, Date fecha, Paciente paciente, Doctor doctor,
-			ArrayList<String>sintomas) {
+			ArrayList<String>sintomas,ArrayList<Vacuna>VacunasColocadas) {
 		super();
 		this.codigo = codigo;
 		this.estado = estado;
@@ -21,6 +23,7 @@ public class Consulta implements Serializable {
 		this.paciente = paciente;
 		this.doctor = doctor;
 		this.sintomas = sintomas;
+		this.VacunasColocadas = VacunasColocadas;
 	}
 	
 
@@ -69,6 +72,31 @@ public class Consulta implements Serializable {
 	}
 
 	public void setDiagnostico(ArrayList<String> diagnostico) {
+		this.sintomas = sintomas;
+	}
+
+
+	public Enfermedad getEnfermedad() {
+		return enfermedad;
+	}
+
+
+	public void setEnfermedad(Enfermedad enfermedad) {
+		this.enfermedad = enfermedad;
+	}
+
+
+	public ArrayList<Vacuna> getVacunasColocadas() {
+		return VacunasColocadas;
+	}
+
+
+	public void setVacunasColocadas(ArrayList<Vacuna> vacunasColocadas) {
+		VacunasColocadas = vacunasColocadas;
+	}
+
+
+	public void setSintomas(ArrayList<String> sintomas) {
 		this.sintomas = sintomas;
 	}
 }

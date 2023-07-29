@@ -44,10 +44,14 @@ import javax.swing.JMenuBar;
 import java.awt.Font;
 import javax.swing.JTextField;
 import java.awt.Dialog.ModalExclusionType;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Dashboard extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
+	JPanel btnDetallesDia = new JPanel();
+	JPanel btnDetallesHistorialMedico = new JPanel();
 	private JMenu mnUser;
 	
 	private Dimension dim = null;
@@ -69,7 +73,7 @@ public class Dashboard extends JFrame {
 	/**
 	 * Create the dialog.
 	 */
-	public Dashboard(Usuario Cuenta) {
+	public Dashboard(final Usuario Cuenta) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Centro M\u00E9dico");
@@ -137,17 +141,53 @@ public class Dashboard extends JFrame {
 		panel_2.add(scrllHistorialMedico);
 		
 		JComboBox cboxHistorialMedico = new JComboBox();
+		cboxHistorialMedico.setBackground(new Color(51, 153, 102));
 		cboxHistorialMedico.setBounds(240, 7, 138, 22);
+		cboxHistorialMedico.setBorder(null); // new Color(51, 153, 102)
 		panel.add(cboxHistorialMedico);
 		cboxHistorialMedico.setModel(new DefaultComboBoxModel(new String[] {"<Paciente>"}));
 		
-		JButton btnDetallesDia = new JButton("Detalles...");
-		btnDetallesDia.setBounds(37, 422, 89, 23);
+		btnDetallesDia.setBackground(new Color(51, 153, 102));
+		btnDetallesDia.setBounds(38, 411, 110, 34);
 		panel.add(btnDetallesDia);
+		btnDetallesDia.setLayout(null);
 		
-		JButton btnDetallesHistorialMedico = new JButton("Detalles...");
-		btnDetallesHistorialMedico.setBounds(278, 422, 89, 23);
+		JLabel lblbtnDetallesDia = new JLabel("    Detalles...");
+		lblbtnDetallesDia.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				setColor(btnDetallesDia);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				removeSetColor(btnDetallesDia);
+			}
+		});
+		lblbtnDetallesDia.setBounds(0, 0, 110, 34);
+		lblbtnDetallesDia.setForeground(new Color(255, 255, 255));
+		lblbtnDetallesDia.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnDetallesDia.add(lblbtnDetallesDia);
+		
+		btnDetallesHistorialMedico.setLayout(null);
+		btnDetallesHistorialMedico.setBackground(new Color(51, 153, 102));
+		btnDetallesHistorialMedico.setBounds(260, 411, 110, 34);
 		panel.add(btnDetallesHistorialMedico);
+		
+		JLabel lblbtnDetallesHistorialMedico = new JLabel("    Detalles...");
+		lblbtnDetallesHistorialMedico.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				setColor(btnDetallesHistorialMedico);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				removeSetColor(btnDetallesHistorialMedico);
+			}
+		});
+		lblbtnDetallesHistorialMedico.setForeground(Color.WHITE);
+		lblbtnDetallesHistorialMedico.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblbtnDetallesHistorialMedico.setBounds(0, 0, 110, 34);
+		btnDetallesHistorialMedico.add(lblbtnDetallesHistorialMedico);
 		
 		try {
 			if (Cuenta instanceof Secretaria)
@@ -229,7 +269,7 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				RegistrarEnfermedad regEnf;
 				try {
-					regEnf = new RegistrarEnfermedad();
+					regEnf = new RegistrarEnfermedad(null);
 					regEnf.setModal(true);
 					regEnf.setVisible(true);
 				} catch (ClassNotFoundException e1) {
@@ -357,5 +397,13 @@ public class Dashboard extends JFrame {
 		} catch (NullPointerException e) {
 			setVisible(false);
 		}
+		
+	}
+	
+	private void setColor(JPanel p) {
+		p.setBackground(new Color(73, 173, 128));
+	}
+	private void removeSetColor(JPanel p) {
+		p.setBackground(new Color(51, 153, 102));
 	}
 }

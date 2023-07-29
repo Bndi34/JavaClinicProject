@@ -48,7 +48,7 @@ public class ListarCuenta extends JDialog {
 	 * Create the dialog.
 	 * @param fed 
 	 */
-	public ListarCuenta(String type, boolean adminCheck, String codigoCuentaActual) {
+	public ListarCuenta(final String type, final boolean adminCheck, final String codigoCuentaActual) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		 String[] columnNames = setColumns(type);
