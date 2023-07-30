@@ -125,6 +125,7 @@ public class Hospital implements Serializable{
 	}
 	
 	public void insertarCita(Cita aux){
+		System.out.println(aux);
 		misCitas.add(aux);
 		generadorCita++;
 	}
@@ -140,11 +141,13 @@ public class Hospital implements Serializable{
 	}
 	
 	public static ArrayList<Cita> buscarHorasDisponiblesCitas(Date day, Doctor doc) {
-		ArrayList<Cita>citaDia;
-		citaDia = null;
+		ArrayList<Cita>citaDia = new ArrayList<>();
+		//citaDia = null;
 		
 		for (Cita aux : misCitas) {
-			if (aux.getFechaDeConsulta().getDay() == day.getDay()) {
+
+			
+			if (aux.getFechaReal().getDay() == day.getDay() && aux.getFechaReal().getMonth() == day.getMonth() && aux.getFechaReal().getYear() == day.getYear()) {
 				if (aux.getDoctor().getCodigo().equalsIgnoreCase(doc.getCodigo()) ) {
 					citaDia.add(aux);
 				}

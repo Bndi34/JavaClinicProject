@@ -28,6 +28,10 @@ import com.toedter.calendar.JDateChooser;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 public class RegistrarCita extends JDialog {
@@ -40,6 +44,7 @@ public class RegistrarCita extends JDialog {
 	private JDateChooser dateChooser = new JDateChooser();
 	private JComboBox cbxEstado = new JComboBox();
 	private Doctor doc;
+	private Paciente pac;
 	private Cita cita;
 	private Date fecha;
 
@@ -48,7 +53,7 @@ public class RegistrarCita extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarCita dialog = new RegistrarCita("",null);
+			RegistrarCita dialog = new RegistrarCita(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -59,8 +64,11 @@ public class RegistrarCita extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarCita(String tittle, Cita entrada) {
+	public RegistrarCita(Cita entrada) {
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		doc = null;
+		pac = null;
 		setTitle("Registrar Cita");
 		setBounds(100, 100, 432, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -101,9 +109,27 @@ public class RegistrarCita extends JDialog {
 			txtCode.setColumns(10);
 		}
 		{
+			cbxDoctor.setModel(new DefaultComboBoxModel(new String[] {""}));
 			cbxDoctor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if (doc != null) {
+					
+					try {
+						int indf = cbxDoctor.getSelectedItem().toString().indexOf(":");
+						String docCode = cbxDoctor.getSelectedItem().toString().substring(0, indf-1);
+						System.out.println(docCode);
+						doc = (Doctor)Hospital.getInstance().buscarUsuarioByCode(docCode);
+						
+					} catch (IndexOutOfBoundsException e2) {
+					}
+									
+					
+					System.out.println("Paciente: " + pac);
+					System.out.println("Doctor: " + doc);
+					System.out.println("Fecha: " + dateChooser.getDate());
+					System.out.println("");
+					
+					if (dateChooser.getDate() != null && doc != null && pac != null)
+					{
 						setHorasDisponibles();
 						cbxHorasDisponibles.setEnabled(true);
 					}
@@ -113,16 +139,44 @@ public class RegistrarCita extends JDialog {
 			contentPanel.add(cbxDoctor);
 		}
 		{
+			cbxPaciente.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					try {
+						int indf = cbxPaciente.getSelectedItem().toString().indexOf(":");
+						String docCode = cbxPaciente.getSelectedItem().toString().substring(0, indf-1);
+						System.out.println(docCode);
+						pac = (Paciente)Hospital.getInstance().buscarUsuarioByCode(docCode);
+						
+					} catch (IndexOutOfBoundsException e2) {
+						// TODO: handle exception
+					}
+					
+					System.out.println("Paciente: " + pac);
+					System.out.println("Doctor: " + doc);
+					System.out.println("Fecha: " + dateChooser.getDate());
+					System.out.println("");
+					
+					if (dateChooser.getDate() != null && doc != null && pac != null)
+					{
+						setHorasDisponibles();
+						cbxHorasDisponibles.setEnabled(true);
+					}
+				}
+			});
+			cbxPaciente.setModel(new DefaultComboBoxModel(new String[] {""}));
 			cbxPaciente.setBounds(67, 121, 154, 22);
 			contentPanel.add(cbxPaciente);
 		}
 		{
 			if (entrada == null) {
 				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pendiente"}));
+				cbxEstado.setSelectedIndex(1);
 			}
 			else {
 				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pendiente", "Realizado", "Cancelado"}));
 			}
+			
 			cbxEstado.setBounds(67, 158, 154, 22);
 			contentPanel.add(cbxEstado);
 		}
@@ -136,11 +190,29 @@ public class RegistrarCita extends JDialog {
 			contentPanel.add(lblNewLabel);
 		}
 		
+		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+				System.out.println("Paciente: " + pac);
+				System.out.println("Doctor: " + doc);
+				System.out.println("Fecha: " + dateChooser.getDate());
+				System.out.println("");
+
+				if (dateChooser.getDate() != null && doc != null && pac != null)
+				{
+					setHorasDisponibles();
+					cbxHorasDisponibles.setEnabled(true);
+				}
+			}
+		});
+		
+		
 		dateChooser.setBounds(67, 46, 154, 20);
 		fecha = dateChooser.getDate();
 		contentPanel.add(dateChooser);
+		cbxHorasDisponibles.setModel(new DefaultComboBoxModel(new String[] {""}));
 		cbxHorasDisponibles.setEnabled(false);
-		
+				
 		cbxHorasDisponibles.setMaximumRowCount(15);
 		cbxHorasDisponibles.setBounds(286, 47, 120, 22);
 		contentPanel.add(cbxHorasDisponibles);
@@ -156,27 +228,44 @@ public class RegistrarCita extends JDialog {
 				JButton btnOK = new JButton("OK");
 				btnOK.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Usuario doc, paciente;
-						String estado;
-						doc = Hospital.getInstance().buscarUsuarioByCode(cbxDoctor.getSelectedItem().toString());
-						paciente = Hospital.getInstance().buscarUsuarioByCode(cbxPaciente.getSelectedItem().toString());
-						fecha = dateChooser.getDate();
-						fecha.setHours(cbxHorasDisponibles.getSelectedIndex() + 8);
-						//Acá se debería convertir el string de cbxHorasDisponibles a un int como debería hacerlo cbxHorasDisponibles.getSelectedItem().toString())
-						estado = cbxEstado.getSelectedItem().toString();
-						Cita aux = new Cita( txtCode.getText(),estado,fecha,null,((Doctor)doc), ((Paciente)paciente) );
-						Hospital.getInstance().insertarCita(aux);
-						try {
-							Hospital.save();
-						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						if (!hayEspacioVacio())
+						{
+							String estado;
+							fecha = dateChooser.getDate();
+						
+							int hora = getHoraInBox();
+							//System.out.println(hora);
+							
+							//Acá se debería convertir el string de cbxHorasDisponibles a un int como debería hacerlo cbxHorasDisponibles.getSelectedItem().toString())
+							estado = cbxEstado.getSelectedItem().toString();
+							Cita aux = new Cita( txtCode.getText(),estado,fecha, hora,((Doctor)doc), ((Paciente)pac) );
+							Hospital.getInstance().insertarCita(aux);
+							
+							Consulta auxConsulta = new Consulta(txtCode.getText(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<>(), new ArrayList<>());
+							Hospital.getInstance().insertarConsulta(auxConsulta);
+							
+							for(Cita auxCita : Hospital.getInstance().getMisCitas())
+							{
+								System.out.println(auxCita);
+							}
+							
+							
+							try {
+								Hospital.save();
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+						    clean();
 						}
-						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
-					    clean();
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Información", JOptionPane.INFORMATION_MESSAGE);
+						}
 					}
 				});
 				btnOK.setActionCommand("OK");
@@ -194,55 +283,193 @@ public class RegistrarCita extends JDialog {
 				buttonPane.add(btnCancel);
 			}
 		}
-		loadCita();
+		setDoctoryPaciente();
 	}
 	
 	void loadCita(){
-		
+		setDoctoryPaciente();
 	}
 	
 	void setDoctoryPaciente() {
-		cbxDoctor.addItem("<Seleccione>");
-		cbxPaciente.addItem("<Seleccione>");
+		
+		cbxDoctor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		cbxPaciente.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		//cbxDoctor.addItem("<Seleccione>");
+		//cbxPaciente.addItem("<Seleccione>");
 		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
-			if (aux instanceof Doctor) {
-				cbxDoctor.addItem(aux.getCodigo());
+
+			if (aux instanceof Paciente) {
+				cbxPaciente.addItem(aux.getCodigo() + " : " + aux.getNombre());
 			}
 			
-			if (aux instanceof Paciente) {
-				cbxPaciente.addItem(aux.getCodigo());
+			else if (aux instanceof Doctor) {
+				cbxDoctor.addItem(aux.getCodigo() + " : " + aux.getNombre());
 			}
 		}
 	}
 	
 	void setHorasDisponibles() {
+		
+		fecha = dateChooser.getDate();
+		
 		ArrayList<Consulta>ConsultaDia = null;
 		ArrayList<Cita>CitaDia = null;
-		ConsultaDia = Hospital.getInstance().buscarHorasDisponiblesConsultas(fecha, doc);
+		
+		
+		//ConsultaDia = Hospital.getInstance().buscarHorasDisponiblesConsultas(fecha, doc);
 		CitaDia = Hospital.getInstance().buscarHorasDisponiblesCitas(fecha, doc);
+		System.out.println("Cita Dia size: "+CitaDia.size());
+		
 		//eliminar horas ocupadas
 		
-		boolean validador = false;
+		cbxHorasDisponibles.removeAllItems();
+		cbxHorasDisponibles.setSelectedItem("<Seleccione>");
+		
+		for (int horas = 8; horas <= 20; horas++)
+		{
+			colocarHora(horas);
+		}
+		System.out.println("Eliminar Horas");
 		for (int horas = 8; horas <= 20; horas++) {
-			validador = false;
-			if (ConsultaDia != null) {
-				for (Consulta aux : ConsultaDia ) {
-					if (aux.getFecha().getHours() == horas ) {
-						validador = true;
+			if (CitaDia != null) {
+				if (CitaDia.size() > 0)
+				{
+					for (Cita aux : CitaDia ) {
+						
+						if (aux.getHora() == horas && aux.getFechaReal().getDay() == dateChooser.getDate().getDay() && aux.getFechaReal().getMonth() == dateChooser.getDate().getMonth() && aux.getFechaReal().getYear() == dateChooser.getDate().getYear()) 
+						{
+							System.out.println("Deberia entrar");
+							eliminarHoras(horas);
+						}
+						System.out.println("");
 					}
-				}
-			}
-			
-			if (!validador) {
-				cbxHorasDisponibles.addItem(String.valueOf(horas)+":00");
+				}	
 			}
 		}
 	}
+	
+	void colocarHora(int horas) 
+	{
+		if (horas <= 12)
+		{
+			if (horas == 12 )
+			{
+				cbxHorasDisponibles.addItem(String.valueOf(horas)+":00 PM");
+			}
+			else 
+			{
+				cbxHorasDisponibles.addItem(String.valueOf(horas)+":00 AM");
+
+			}
+
+		}
+		else 
+		{
+			
+			cbxHorasDisponibles.addItem(String.valueOf(horas - 12)+":00 PM");
+			
+		}
+		
+		System.out.println("Hora Colocada: " + horas);
+	}
+	
+	void eliminarHoras(int horas) 
+	{
+		System.out.println("Eliminar Horas IN");
+		System.out.println("Hora: "+ horas);
+		if (horas <= 12)
+		{
+			if (horas == 12 )
+			{
+				System.out.println("Item a borrar: "+String.valueOf(horas)+":00 AM");
+				System.out.println("Item a las 8: "+cbxHorasDisponibles.getItemAt(0));
+				cbxHorasDisponibles.removeItem(String.valueOf(horas)+":00 PM");
+				
+			}
+			else 
+			{
+				System.out.println("Item a borrar: "+String.valueOf(horas)+":00 AM");
+				System.out.println("Item a las 8: "+cbxHorasDisponibles.getItemAt(0));
+				cbxHorasDisponibles.removeItem(String.valueOf(horas)+":00 AM");
+
+			}
+
+		}
+		else 
+		{
+			System.out.println("Item a borrar: "+String.valueOf(horas)+":00 AM");
+			System.out.println("Item a las 8: "+cbxHorasDisponibles.getItemAt(0));
+			cbxHorasDisponibles.removeItem(String.valueOf(horas - 12)+":00 PM");
+			
+		}
+		
+		System.out.println("Hora Removida: " + horas);
+	}
+	
 	void clean() {
 		txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
-		cbxDoctor.setSelectedIndex(-1);
-		cbxPaciente.setSelectedIndex(-1);
-		cbxHorasDisponibles.setSelectedIndex(-1);
-		cbxEstado.setSelectedIndex(-1);
+		cbxDoctor.setSelectedIndex(0);
+		cbxPaciente.setSelectedIndex(0);
+		cbxHorasDisponibles.removeAllItems();
+		cbxEstado.setSelectedIndex(1);
+		cbxHorasDisponibles.setEnabled(false);
+		
+		dateChooser.setDate(null);
+		pac = null;
+		doc = null;
+	}
+	
+	private boolean hayEspacioVacio()
+	{
+		if (cbxEstado.getSelectedIndex() < 1)
+		{
+			System.out.println("Estado Vacio");
+			return true;
+		}
+		else if (dateChooser.getDate() == null)
+		{System.out.println("Date Vacio");
+			return true;
+		}
+		else if (cbxDoctor.getSelectedIndex() < 1)
+		{System.out.println("Doc Vacio");
+			return true;
+		}
+		else if (cbxPaciente.getSelectedIndex() < 1)
+		{System.out.println("Paciente Vacio");
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private int getHoraInBox() 
+	{
+		int indf = cbxHorasDisponibles.getSelectedItem().toString().indexOf("M");
+		String selected = cbxHorasDisponibles.getSelectedItem().toString().substring(indf-1);
+		int hora = -1;
+		
+
+		
+		if (selected.equalsIgnoreCase("AM"))
+		{
+			System.out.println("AM In");
+			indf = cbxHorasDisponibles.getSelectedItem().toString().indexOf(":");
+			hora = Integer.valueOf(cbxHorasDisponibles.getSelectedItem().toString().substring(0, indf));
+			
+		}
+		else if (selected.equalsIgnoreCase("PM"))
+		{
+			System.out.println("PM In");
+			indf = cbxHorasDisponibles.getSelectedItem().toString().indexOf(":");
+			hora = Integer.valueOf(cbxHorasDisponibles.getSelectedItem().toString().substring(0, indf));
+			
+			if (hora != 12)
+			{
+				hora += 12;
+			}
+		}
+		
+		System.out.println("Hora Got: " + hora);
+		return hora;
 	}
 }

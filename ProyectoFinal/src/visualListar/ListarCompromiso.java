@@ -40,8 +40,6 @@ public class ListarCompromiso extends JDialog {
 	private int code;
 	private String[] columnNames;
 	String mode = "<Todos>";
-	//Queso selected = null;
-	JComboBox cbxQuesoType;
 
 
 
@@ -52,7 +50,7 @@ public class ListarCompromiso extends JDialog {
 	public ListarCompromiso(final String type) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-		setColumns(type);
+		columnNames = setColumns(type);
 		
 		setTitle("Listado de " + type + "s");
 		setBounds(100, 100, 650, 376);
@@ -69,7 +67,7 @@ public class ListarCompromiso extends JDialog {
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 54, 604, 228);
+		scrollPane.setBounds(10, 26, 604, 256);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -81,7 +79,7 @@ public class ListarCompromiso extends JDialog {
 					btnEliminar.setEnabled(true);
 					btnModificar.setEnabled(true);
 					btnDetalles.setEnabled(true);
-					mode = cbxQuesoType.getSelectedItem().toString();
+					//mode = cbxQuesoType.getSelectedItem().toString();
 				}
 			}
 		});
@@ -89,34 +87,6 @@ public class ListarCompromiso extends JDialog {
 		tableModel.setColumnIdentifiers(columnNames);
 		loadSportMans(type);
 		scrollPane.setViewportView(table);
-		
-		JLabel lblTipoDePublicacin = new JLabel("Tipo de Publicaci\u00F3n:");
-		lblTipoDePublicacin.setBounds(10, 29, 116, 14);
-		panel.add(lblTipoDePublicacin);
-		
-		cbxQuesoType = new JComboBox();
-		cbxQuesoType.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				switch (cbxQuesoType.getSelectedIndex())
-				{
-				case 0:
-					loadSportMans("consulta");
-					break;
-				case 1:
-					loadSportMans("cita");
-					break;
-				
-					
-				}
-				/*int selection = cbxQuesoType.getSelectedIndex();
-				loadSportMans(selection);
-				*/
-			}
-		});
-		cbxQuesoType.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "Consultas", "Citas"}));
-		cbxQuesoType.setBounds(127, 26, 157, 20);
-		panel.add(cbxQuesoType);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -126,7 +96,22 @@ public class ListarCompromiso extends JDialog {
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					modificarCompromiso(type);
+
+					if (type.equalsIgnoreCase("cita")) {	
+
+						RegistrarCita modAdmin = new RegistrarCita(Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
+						modAdmin.setModal(true);
+						modAdmin.setLocationRelativeTo(null);
+						modAdmin.setVisible(true);
+						
+					}
+
+					if (type.equalsIgnoreCase("consulta")) {	
+						RegistrarConsulta modUser = new RegistrarConsulta(Hospital.getInstance().getMisConsultas().get(table.getSelectedRow()));
+						modUser.setModal(true);
+						modUser.setLocationRelativeTo(null);
+						modUser.setVisible(true);	
+					}
 					
 				}
 			});
@@ -140,17 +125,24 @@ public class ListarCompromiso extends JDialog {
 				btnEliminar = new JButton("Eliminar");
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						/*SportMan aux = fed.getSportManByCode(code);
-					  int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar al Deportista: " + aux.getName(), null, JOptionPane.YES_NO_OPTION);
-						    if (delete == JOptionPane.YES_OPTION)
-						    {
-						       
-						    	fed.deleteSportMan(code);
-								loadSportMans();
-						    }
 						
+						int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta cuenta?", null, JOptionPane.YES_NO_OPTION);
+					    if (delete == JOptionPane.YES_OPTION)
+					    {				
+					    	//sistema para revisar que tipo se quiere eliminar
+					    	/*
+							Usuario aux = Hospital.getInstance().buscarUsuarioByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+							if (aux.getCodigo() != codigoCuentaActual)
+							
+								Hospital.getInstance().getMisCuentas().remove(aux);
+*/
+								loadSportMans(type);
 						
-						*/
+							
+							
+							
+					    }
+
 					}
 				});
 				btnEliminar.setEnabled(false);
@@ -186,6 +178,8 @@ public class ListarCompromiso extends JDialog {
 			fila[2] = aux.getEstado();
 			fila[3] = aux.getPaciente().getNombre();
 			fila[4] = aux.getDoctor().getNombre();
+			
+			tableModel.addRow(fila);
 		}
 		
 		break;
@@ -193,12 +187,31 @@ public class ListarCompromiso extends JDialog {
 		
 		for (Cita aux : Hospital.getInstance().getMisCitas())
 		{
+			System.out.println(fila[0] + " :");
 			fila[0] = aux.getCodigo();
-			fila[1] = aux.getFechaDeConsulta();
-			fila[2] = aux.getEstado();
-			fila[3] = aux.getPaciente().getNombre();
-			fila[4] = aux.getDoctor().getNombre();
-			fila[5] = "N/A";
+			fila[1] = aux.getFechaReal();
+			if (aux.getHora() > 12)
+			{
+				fila[2] = Integer.toString(aux.getHora()-12) + ":00PM";
+			}
+			else
+			{
+				if (aux.getHora() == 12)
+				{
+					fila[2] = Integer.toString(aux.getHora()) + ":00PM";
+				}
+				else 
+				{
+					fila[2] = Integer.toString(aux.getHora()) + ":00AM";
+
+				}
+			}
+			
+			fila[3] = aux.getEstado();
+			fila[4] = aux.getPaciente().getNombre();
+			fila[5] = aux.getDoctor().getNombre();
+			
+			tableModel.addRow(fila);
 		}
 		
 		break;
@@ -224,8 +237,16 @@ public class ListarCompromiso extends JDialog {
 	
 	private String[] setColumns(String type)
 	{
-			String[] columnNames = {"Código", "Fecha", "Estado","Paciente", "Doctor", "Sintomas"};
-			return columnNames;
+			if (type == "cita")
+			{
+				String[] columnNames = {"Código", "Fecha","Hora", "Estado","Paciente", "Doctor"};
+				return columnNames;
+			}
+			else
+			{
+				String[] columnNames = {"Código", "Fecha", "Estado","Paciente", "Doctor", "Sintomas"};
+				return columnNames;
+			}
 		
 	}
 	
@@ -237,7 +258,7 @@ public class ListarCompromiso extends JDialog {
 
 		case "cita":
 			
-			RegistrarCita modCita = new RegistrarCita(type, Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
+			RegistrarCita modCita = new RegistrarCita(Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
 			modCita.setModal(true);
 			modCita.setLocationRelativeTo(null);
 			modCita.setVisible(true);

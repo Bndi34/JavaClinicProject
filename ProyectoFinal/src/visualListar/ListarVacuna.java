@@ -29,6 +29,7 @@ public class ListarVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public ListarVacuna() {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());

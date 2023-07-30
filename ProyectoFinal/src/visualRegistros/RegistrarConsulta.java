@@ -66,6 +66,8 @@ public class RegistrarConsulta extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistrarConsulta(Consulta entrada) {
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		sintomas = new ArrayList<String>();
 		setTitle("Registrar Consulta");
 		setBounds(100, 100, 550, 300);

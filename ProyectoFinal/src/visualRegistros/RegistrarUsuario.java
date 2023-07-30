@@ -182,7 +182,7 @@ public class RegistrarUsuario extends JDialog {
 					cbxAlergia.setEditable(false);
 			
 				}
-				if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
+				else if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
 					btnBorrarAlergia.setText("Ok");
 					cbxAlergia.setEditable(true);
 					cbxAlergia.setSelectedItem("");

@@ -69,6 +69,8 @@ public class RegistrarVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistrarVacuna() {
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		modelEnfermedad = new DefaultListModel<String>();
 		modelAlergia = new DefaultListModel<String>();
 		setTitle("Registrar Vacuna");

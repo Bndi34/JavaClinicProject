@@ -121,6 +121,18 @@ public class Login extends JDialog {
 					
 				}
 			});
+			
+			JButton adminLogin = new JButton("adminLogin");
+			adminLogin.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Admin temp = new Admin("Temp-0", "admin", "admin", "admin", "admin");
+					Dashboard adminDashboard = new Dashboard(temp);
+					adminDashboard.setVisible(true);
+					dispose();
+					
+				}
+			});
+			buttonPane.add(adminLogin);
 			buttonPane.add(btnRegistrar);
 			{
 				JButton btnIniciar = new JButton("Iniciar Sesi\u00F3n");

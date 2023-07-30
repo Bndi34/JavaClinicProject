@@ -3,12 +3,12 @@ package logico;
 import java.util.ArrayList;
 
 public class RegistroMedico {
-	private Boolean esPaciente;
+	private boolean esPaciente;
 	private ArrayList<Cita>misCitas;
 	private ArrayList<Consulta>misConsultas;
 	private ArrayList<Vacuna>TotalDeVacunasColocadas;
 	
-	public RegistroMedico(Boolean esPaciente, ArrayList<Cita> misCitas, ArrayList<Consulta> misConsultas,
+	public RegistroMedico(boolean esPaciente, ArrayList<Cita> misCitas, ArrayList<Consulta> misConsultas,
 			ArrayList<Vacuna> totalDeVacunasColocadas) {
 		super();
 		this.esPaciente = esPaciente;
@@ -17,11 +17,11 @@ public class RegistroMedico {
 		TotalDeVacunasColocadas = totalDeVacunasColocadas;
 	}
 
-	public Boolean getEsPaciente() {
+	public boolean getEsPaciente() {
 		return esPaciente;
 	}
 
-	public void setEsPaciente(Boolean esPaciente) {
+	public void setEsPaciente(boolean esPaciente) {
 		this.esPaciente = esPaciente;
 	}
 
