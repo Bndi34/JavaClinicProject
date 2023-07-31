@@ -3,6 +3,7 @@ package visualRegistros;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -38,26 +39,48 @@ public class RegistrarEnfermedad extends JDialog {
 	private JList listSeleccionada = new JList();
 	private JComboBox cbxSintomas = new JComboBox();
 	private DefaultListModel<String> modelElegido;
-	private ArrayList<String>SintomasElegido;
-	private ArrayList<String>SintomasSinElegir;
+	private ArrayList<String>SintomasElegido = new ArrayList<>();
+	private ArrayList<String>SintomasSinElegir = new ArrayList<>();
 	private boolean cargado = false;
 	private JButton okButton;
 	private JCheckBox chbxCura;
-
+	private JPanel panel_sintomas;
+	
+	private String selectedSintoma;
+	private JButton btnAgregarSintoma;
+	private JTextField txtAlergia;
+	
+	private Enfermedad auxEnfermedad;
+	
 	/**
 	 * Create the dialog.
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
 	public RegistrarEnfermedad(Enfermedad entrada) throws ClassNotFoundException, IOException {
+		
+		auxEnfermedad = entrada;
+		
+		loadEntrada();
+		
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		SintomasSinElegir = new ArrayList<String>();
 		SintomasElegido = new ArrayList<String>();
 		modelElegido = new DefaultListModel<String>();
 		
+		
+		txtAlergia = new JTextField();
+		txtAlergia.setEnabled(false);
+		txtAlergia.setText("VA-1");
+		txtAlergia.setEditable(false);
+		txtAlergia.setVisible(false);
+		txtAlergia.setColumns(10);
+		txtAlergia.setBounds(274, 13, 123, 22);
+		contentPanel.add(txtAlergia);
+		
 		setTitle("Registar Enfermedad");
-		setBounds(100, 100, 436, 251);
+		setBounds(100, 100, 539, 251);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -79,7 +102,7 @@ public class RegistrarEnfermedad extends JDialog {
 		}
 		{
 			JLabel lblSintomas = new JLabel("S\u00EDntomas");
-			lblSintomas.setBounds(226, 16, 56, 16);
+			lblSintomas.setBounds(206, 16, 56, 16);
 			contentPanel.add(lblSintomas);
 		}
 		{
@@ -101,43 +124,44 @@ public class RegistrarEnfermedad extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					
 					
-					String selectedAlergia = cbxSintomas.getSelectedItem().toString();
-				
-					if ( !selectedAlergia.equalsIgnoreCase("Agregar...") && !selectedAlergia.equalsIgnoreCase("<Seleccione>") ) {
-						
-						SintomasSinElegir.remove(selectedAlergia);
-						SintomasElegido.add(selectedAlergia);
-						modelElegido.addElement(selectedAlergia);
-						reloadCbxSintomas();
-						
-						/*
-						try {
-							SintomasElegido.remove( cbxSintomas.getSelectedIndex());
-						} catch (IndexOutOfBoundsException e2) {
-							// TODO: handle exception
-						}*/
-						//cbxSintomas.getSelectedIndex()
-						
-					}
-					else if ( cbxSintomas.isEditable() ) {
-						String nuevo = cbxSintomas.getSelectedItem().toString();
-						
-						SintomasElegido.add(nuevo);
-						modelElegido.addElement(nuevo);
-						
-						reloadCbxSintomas();
-						cbxSintomas.setEditable(false);
-						okButton.setActionCommand("OK");
-					}
-					else if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
-						cbxSintomas.setEditable(true);
-						okButton.setActionCommand(null);
-						cbxSintomas.setSelectedItem("");
-					}
+					selectedSintoma = cbxSintomas.getSelectedItem().toString();
+						if ( selectedSintoma.equalsIgnoreCase("Agregar...") ) {
+							btnAgregarSintoma.setText("Añadir");
+							
+							txtAlergia.setVisible(true);
+							txtAlergia.setEditable(true);
+							txtAlergia.setEnabled(true);
+							txtAlergia.setText("");
+							
+							cbxSintomas.setVisible(false);
+							//cbxAlergia.setEditable(true);
+							//cbxAlergia.setSelectedItem("");
+							
+						}
+						else if (!selectedSintoma.equalsIgnoreCase("<Seleccione>"))
+						{
+							SintomasElegido.add(selectedSintoma);
+							SintomasSinElegir.remove(selectedSintoma);
+							
+							System.out.println("Reload Cuadro Combobox");
+							reloadAlergia();
+							reloadAlergiaCuadro();
+						}
+						else
+						{
+							btnAgregarSintoma.setText("Borrar");
+							
+							txtAlergia.setVisible(false);
+							txtAlergia.setEditable(false);
+							txtAlergia.setEnabled(false);
+							txtAlergia.setText("");
+							
+							cbxSintomas.setVisible(true);	
+						}
 					
 				}
 			});
-			cbxSintomas.setBounds(283, 13, 123, 22);
+			cbxSintomas.setBounds(274, 13, 123, 22);
 			contentPanel.add(cbxSintomas);
 		}
 		{
@@ -146,9 +170,9 @@ public class RegistrarEnfermedad extends JDialog {
 			contentPanel.add(chbxCura);
 		}
 		{
-			JPanel panel_sintomas = new JPanel();
+			panel_sintomas = new JPanel();
 			panel_sintomas.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_sintomas.setBounds(226, 53, 180, 95);
+			panel_sintomas.setBounds(226, 61, 283, 95);
 			contentPanel.add(panel_sintomas);
 			panel_sintomas.setLayout(new BorderLayout(0, 0));
 			{
@@ -157,23 +181,80 @@ public class RegistrarEnfermedad extends JDialog {
 				{
 					listSeleccionada.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent e) {
-							int selected = listSeleccionada.getSelectedIndex();
-							if(selected>=0){
-								cbxSintomas.addItem(SintomasElegido.get(selected));
-								SintomasSinElegir.add(SintomasElegido.get(selected));
+							
+							try 
+							{
+								int selected = listSeleccionada.getSelectedIndex();
+								selectedSintoma = listSeleccionada.getSelectedValue().toString();
+								if(selected>=0)
+								{
+									btnAgregarSintoma.setText("Borrar");
+									txtAlergia.setText(listSeleccionada.getSelectedValue().toString());
+								}
 								
-								SintomasElegido.remove(selected);
-								modelElegido.remove(selected);
-								
+							} catch (Exception e2) {
+								// TODO: handle exception
 							}
+							
+							
 						}
 					});
 					scrollPane.setViewportView(listSeleccionada);
+					System.out.println("Reload cuadro 1");
+					reloadAlergiaCuadro();
 					listSeleccionada.setModel(modelElegido);
+					
 				}
 			}
 		}
 		{
+		btnAgregarSintoma = new JButton("A\u00F1adir");
+		btnAgregarSintoma.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				selectedSintoma = cbxSintomas.getSelectedItem().toString();
+				
+				if ( btnAgregarSintoma.getText().equalsIgnoreCase("Borrar")) {
+					try {
+						if (!txtAlergia.getText().isEmpty())
+						{
+							SintomasSinElegir.add(txtAlergia.getText());
+							SintomasElegido.remove(txtAlergia.getText());
+							txtAlergia.setText("");
+							
+							reloadAlergia();
+							System.out.println("Reload cuadro Borrar");
+							reloadAlergiaCuadro();
+						}
+						
+						
+					} catch (IndexOutOfBoundsException e2) {
+						btnAgregarSintoma.setText("Añadir");
+					}
+					
+				}
+				else if ( txtAlergia.isEditable() ) {
+					
+					SintomasElegido.add(txtAlergia.getText());
+					
+					reloadAlergia();
+					reloadAlergiaCuadro();
+					txtAlergia.setVisible(false);
+					cbxSintomas.setVisible(true);
+					btnAgregarSintoma.setText("Borrar");
+				}
+				
+				
+			}
+		});
+		btnAgregarSintoma.setBounds(409, 12, 97, 25);
+		contentPanel.add(btnAgregarSintoma);
+		
+		}
+		
+		
+		{
+			
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -216,7 +297,9 @@ public class RegistrarEnfermedad extends JDialog {
 		LoadSintomas();
 		loadEnfermedad();
 		reloadElegido();
+	
 	}
+			
 	void loadEnfermedad() {
 		
 	}
@@ -276,49 +359,42 @@ public class RegistrarEnfermedad extends JDialog {
 		txtNombre.setText("");
 		modelElegido.removeAllElements();
 	}
+
+
+
+
+
+	private void reloadAlergia()
+	{
+		cbxSintomas.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
 	
+		for (String temp : SintomasSinElegir )
+		{
+			cbxSintomas.addItem(temp);
+		}
+	
+		cbxSintomas.addItem("Agregar...");
+	
+	}
+	private void reloadAlergiaCuadro()
+	{
+		modelElegido.removeAllElements();
+		for (String auxString : SintomasElegido)
+		{
+			modelElegido.addElement(auxString);
+		}
+	}
+	
+	private void loadEntrada()
+	{
+		try {
+			txtCode.setText(auxEnfermedad.getCodigo());
+			SintomasElegido = auxEnfermedad.getSintomas();
+			txtNombre.setText(auxEnfermedad.getNombre());
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+		}
+		
+		
+	}
 }
-
-
-
-
-
-/*txtSintomas = new JTextField();
-			txtSintomas.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-					okButton.setActionCommand(null);
-					txtSintomas.setActionCommand("OK");
-					
-					
-					txtSintomas.addKeyListener(new KeyAdapter() {
-						@Override
-						public void keyPressed(KeyEvent e) {
-					
-							
-							//System.out.println("Tecla pulsada: " + (e.getID() == KeyEvent.KEY_PRESSED));
-					
-							if (e.getID() == KeyEvent.KEY_PRESSED) 
-							{
-								//System.out.println("Tecla pulsada fue enter: " +(e.getKeyCode() == KeyEvent.VK_ENTER));
-								//System.out.println("Espacio no esta vacio: " + (txtSintomas.getText().trim().length() > 0));
-								
-								if (e.getKeyCode() == KeyEvent.VK_ENTER && txtSintomas.getText().trim().length() > 0)
-								{
-									String nuevo = txtSintomas.getText();
-									SintomasElegido.add(nuevo);
-									txtSintomas.setText("");
-								}
-							}
-			           
-							okButton.setActionCommand("OK");
-
-						}
-					});
-					
-				}
-			});
-			
-			txtSintomas.setBounds(313, 10, 116, 22);
-			contentPanel.add(txtSintomas);
-			txtSintomas.setColumns(10); */

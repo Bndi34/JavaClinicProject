@@ -135,52 +135,12 @@ public class ListarCuenta extends JDialog {
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-
-					if (type.equalsIgnoreCase("admin")) {	
-
-						RegistrarAdmin modAdmin = new RegistrarAdmin();
-						modAdmin.setModal(true);
-						modAdmin.setLocationRelativeTo(null);
-						modAdmin.setVisible(true);
-						
-					}
-
-					if (type.equalsIgnoreCase("cuenta")) {	
 						RegistrarUsuario modUser = new RegistrarUsuario(type, Hospital.getInstance().getMisCuentas().get(table.getSelectedRow()), false);
 						modUser.setModal(true);
 						modUser.setLocationRelativeTo(null);
 						modUser.setVisible(true);	
-					}
-					/*
-					if (type.equalsIgnoreCase("cita")) {	
-						RegistrarCita modCita = new RegistrarCita(type, Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
-						modCita.setModal(true);
-						modCita.setLocationRelativeTo(null);
-						modCita.setVisible(true);
-					}
 					
-					if (type.equalsIgnoreCase("consulta")) {	
-						RegistrarConsulta modConsulta = new RegistrarConsulta();
-						modConsulta.setModal(true);
-						modConsulta.setLocationRelativeTo(null);
-						modConsulta.setVisible(true);
-					}
-					
-					if (type.equalsIgnoreCase("enfermedad")) {	
-						RegistrarEnfermedad modEnfermedad;
-						try {
-							modEnfermedad = new RegistrarEnfermedad();
-							modEnfermedad.setModal(true);
-							modEnfermedad.setLocationRelativeTo(null);
-							modEnfermedad.setVisible(true);
-						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}*/
+				
 					loadSportMans(type);
 				}
 			});

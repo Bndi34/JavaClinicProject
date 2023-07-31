@@ -35,7 +35,6 @@ public class RegistrarConsulta extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
 	private JComboBox cbxHorasDisponibles = new JComboBox();
-	private JDateChooser dateChooser = new JDateChooser();
 	private JComboBox cbxSintoma = new JComboBox();
 	
 	private ArrayList<String>sintomas;
@@ -49,6 +48,7 @@ public class RegistrarConsulta extends JDialog {
 	private JTextField txtEstado;
 	private JComboBox cbxEnfermedad;
 	private JComboBox cbxVacunas;
+	private JTextField txtFecha;
 	
 	
 
@@ -182,10 +182,6 @@ public class RegistrarConsulta extends JDialog {
 			lblRetraso.setBounds(12, 193, 130, 16);
 			contentPanel.add(lblRetraso);
 		}
-		dateChooser.getCalendarButton().setEnabled(false);
-		
-		dateChooser.setBounds(70, 47, 154, 20);
-		contentPanel.add(dateChooser);
 		
 		JLabel lblEnfermedad = new JLabel("Enfermedad");
 		lblEnfermedad.setBounds(275, 85, 79, 16);
@@ -220,6 +216,12 @@ public class RegistrarConsulta extends JDialog {
 		txtEstado.setColumns(10);
 		txtEstado.setBounds(70, 159, 152, 22);
 		contentPanel.add(txtEstado);
+		
+		txtFecha = new JTextField();
+		txtFecha.setEditable(false);
+		txtFecha.setColumns(10);
+		txtFecha.setBounds(70, 42, 152, 22);
+		contentPanel.add(txtFecha);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -269,17 +271,50 @@ public class RegistrarConsulta extends JDialog {
 	void loadConsulta(){
 		try {
 			
+			int dia, mes, anio;
+			
+			dia = consulta.getFecha().getDay();
+			mes = consulta.getFecha().getMonth();
+			anio = consulta.getFecha().getYear();
+			
+			
+			//txtFecha.setText(dia + "/" + mes + "/" + anio);
+			txtFecha.setText(consulta.getFecha().toString());
+			
+			txtCode.setText(consulta.getCodigo());
 			txtDoctor.setText(consulta.getDoctor().getCodigo() + " : " + consulta.getDoctor().getNombre());
 			txtPaciente.setText(consulta.getPaciente().getCodigo() + " : " + consulta.getPaciente().getNombre());
 			
 			txtEstado.setText(consulta.getEstado());
-		
-			dateChooser.setDate(consulta.getFecha());
 			
 			
 		} catch (NullPointerException e) {
 			return;
 		}
+	}
+	
+	private String convertDia(int dia)
+	{
+		switch (dia)
+		{
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+			default:
+				return "";
+		}
+		return "";
 	}
 	
 	void loadEnfermedades()

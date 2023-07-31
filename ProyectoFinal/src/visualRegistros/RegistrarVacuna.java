@@ -41,13 +41,21 @@ public class RegistrarVacuna extends JDialog {
 	private DefaultListModel<String> modelAlergia;
 	private JList listAler = new JList();
 	private JList listEnf = new JList();
+	private boolean antiDoubleAddFilter = false;
+	private String selectedAlergia;
+	private String selectedEnfermedad;
 	
 	private int selected = -1;
-	private ArrayList<Enfermedad>EnfermedadesElegidas;
-	private ArrayList<Enfermedad>EnfermedadeSinElegir;
-	private ArrayList<String>AlergiasElegidas;
-	private ArrayList<String>AlergiasSinElegir;
 	
+	private String selectedItem;
+	private ArrayList<String>EnfermedadesElegidas = new ArrayList<>();
+	private ArrayList<String>EnfermedadeSinElegir = new ArrayList<>();
+	private ArrayList<String>AlergiasElegidas = new ArrayList<>();
+	private ArrayList<String>AlergiasSinElegir = new ArrayList<>();
+	private JTextField txtAlergia;
+	private JTextField txtEnfermedad;
+	
+	private Vacuna auxVacuna;
 	
 	//private ArrayList<Enfermedad>EnfermedadesPrevenidas;
 	//private ArrayList<String>Alergias;	
@@ -57,7 +65,7 @@ public class RegistrarVacuna extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarVacuna dialog = new RegistrarVacuna();
+			RegistrarVacuna dialog = new RegistrarVacuna(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -68,7 +76,14 @@ public class RegistrarVacuna extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarVacuna() {
+	public RegistrarVacuna(Vacuna entrada) {
+		
+		auxVacuna = entrada;
+		
+		loadEntrada();
+		
+		AlergiasSinElegir = Hospital.getInstance().getAlergiasRegistradas();
+		loadEnfermedadesSinElegir();
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		modelEnfermedad = new DefaultListModel<String>();
@@ -105,111 +120,144 @@ public class RegistrarVacuna extends JDialog {
 		{
 			cbxEnfermedad.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String selectedEnfermedad = cbxEnfermedad.getSelectedItem().toString();
-					if ( cbxEnfermedad.isEditable() ) {
-						cbxEnfermedad.addItem(cbxEnfermedad.getSelectedItem().toString());
-						cbxEnfermedad.removeItemAt(cbxEnfermedad.getItemCount() -2 );
-						cbxEnfermedad.addItem("Agregar...");
-						cbxEnfermedad.setEditable(false);
-				
-					}
-					if ( selectedEnfermedad.equalsIgnoreCase("Agregar...") ) {
-						btnEnfermedad.setText("Añadir");
-						
-					}
-					else {
-						if (!selectedEnfermedad.equalsIgnoreCase("<Seleccione>")){
-							String cod = cbxEnfermedad.getSelectedItem().toString();
-							modelEnfermedad.addElement(cod);
-							//AlergiasSinElegir.remove( cbxEnfermedad.getSelectedIndex()  );
-							EnfermedadesElegidas.add(EnfermedadeSinElegir.get(selected - 1));
-							System.out.println(EnfermedadeSinElegir.get(selected-1).getCodigo() );
-							cbxEnfermedad.setSelectedIndex(0);
+					{
+						try {
+							selectedEnfermedad = cbxEnfermedad.getSelectedItem().toString();
+							System.out.println(selectedEnfermedad);
+							if ( selectedEnfermedad.equalsIgnoreCase("Agregar...") ) {
+								btnEnfermedad.setText("Añadir");
+								
+								txtEnfermedad.setVisible(true);
+								txtEnfermedad.setEditable(true);
+								txtEnfermedad.setEnabled(true);
+								txtEnfermedad.setText("");
+								
+								cbxEnfermedad.setVisible(false);
+								//cbxAlergia.setEditable(true);
+								//cbxAlergia.setSelectedItem("");
+								
+							}
+							else if (!selectedEnfermedad.equalsIgnoreCase("<Seleccione>"))
+							{
+								EnfermedadesElegidas.add(selectedEnfermedad);
+								System.out.println(EnfermedadeSinElegir.get(0));
+								EnfermedadeSinElegir.remove(selectedEnfermedad);
+								
+								System.out.println("Reload Cuadro Combobox");
+								reloadEnfermedad();
+								reloadEnfermedadCuadro();
+							}
+							else
+							{
+								btnEnfermedad.setText("Borrar");
+								
+								txtEnfermedad.setVisible(false);
+								txtEnfermedad.setEditable(false);
+								txtEnfermedad.setEnabled(false);
+								txtEnfermedad.setText("");
+								
+								cbxEnfermedad.setVisible(true);	
+							}
+						} catch (NullPointerException e2) {
+							// TODO: handle exception
 						}
-					}
+						
 				}
-			});
+			}});
 			cbxEnfermedad.setBounds(22, 76, 116, 22);
 			contentPanel.add(cbxEnfermedad);
 			if (cbxEnfermedad.getItemCount() == 0) {
 				cbxEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-				loadEnfermedadinCbx();
-				cbxEnfermedad.addItem("Agregar...");
+				reloadEnfermedad();
+				//cbxEnfermedad.addItem("Agregar...");
 			}
 		}
 		
 		
 		
 		{
+			
 			cbxAlergia.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String selectedAlergia = cbxAlergia.getSelectedItem().toString();
-					if ( cbxAlergia.isEditable() ) {
-						cbxAlergia.addItem(cbxAlergia.getSelectedItem().toString());
-						cbxAlergia.removeItemAt(cbxAlergia.getItemCount() -2 );
-						cbxAlergia.addItem("Agregar...");
-						cbxAlergia.setEditable(false);
-				
-					}
-					if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
-						btnAlergia.setText("Añadir");
-						cbxAlergia.setEditable(true);
-						cbxAlergia.setSelectedItem("");
+					try {
+
+						 selectedAlergia = cbxAlergia.getSelectedItem().toString();
+						if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
+							btnAlergia.setText("Añadir");
+							
+							txtAlergia.setVisible(true);
+							txtAlergia.setEditable(true);
+							txtAlergia.setEnabled(true);
+							txtAlergia.setText("");
+							
+							cbxAlergia.setVisible(false);
+							//cbxAlergia.setEditable(true);
+							//cbxAlergia.setSelectedItem("");
+							
+						}
+						else if (!selectedAlergia.equalsIgnoreCase("<Seleccione>"))
+						{
+							AlergiasElegidas.add(selectedAlergia);
+							AlergiasSinElegir.remove(selectedAlergia);
+							
+							System.out.println("Reload Cuadro Combobox");
+							reloadEnfermedad();
+							reloadEnfermedadCuadro();
+						}
+						else
+						{
+							btnAlergia.setText("Borrar");
+							
+							txtAlergia.setVisible(false);
+							txtAlergia.setEditable(false);
+							txtAlergia.setEnabled(false);
+							txtAlergia.setText("");
+							
+							cbxAlergia.setVisible(true);	
+						}
 						
+					} catch (NullPointerException e2) {
+						// TODO: handle exception
 					}
-					else {
-						if (!selectedAlergia.equalsIgnoreCase("<Seleccione>")){
-							String cod = cbxAlergia.getSelectedItem().toString();
-							modelAlergia.addElement(cod);
-							AlergiasSinElegir.remove( cbxAlergia.getSelectedIndex()  );
-							AlergiasElegidas.add(AlergiasSinElegir.get(selected - 1));
-							cbxAlergia.setSelectedIndex(0);
-						} 
-					}
+					
 				}
 			});
 			cbxAlergia.setBounds(267, 76, 116, 22);
 			contentPanel.add(cbxAlergia);
-			if (cbxAlergia.getItemCount() == 0) {
-				cbxAlergia.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-				loadAlergiainCbx();
-				cbxAlergia.addItem("Agregar...");
-			}
+			reloadAlergia();
 			
 		}
 		btnEnfermedad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String selectedAlergia = cbxEnfermedad.getSelectedItem().toString();
+				selectedEnfermedad = cbxEnfermedad.getSelectedItem().toString();
 				
-				if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
-					RegistrarEnfermedad regEnf;
+				if ( btnEnfermedad.getText().equalsIgnoreCase("Borrar")) {
 					try {
-						regEnf = new RegistrarEnfermedad(null);
-						regEnf.setModal(true);
-						regEnf.setVisible(true);
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						if (!txtEnfermedad.getText().isEmpty())
+						{
+							EnfermedadeSinElegir.add(txtEnfermedad.getText());
+							EnfermedadesElegidas.remove(txtEnfermedad.getText());
+							txtEnfermedad.setText("");
+							
+							reloadEnfermedad();
+							reloadEnfermedadCuadro();
+						}
+						
+						
+					} catch (IndexOutOfBoundsException e2) {
+						btnEnfermedad.setText("Añadir");
 					}
 					
-					cbxEnfermedad.addItem(Hospital.getInstance().getEnfermedadesReg().get(Hospital.generadorEnfermedad - 2 ).getCodigo() );
-					cbxEnfermedad.setEditable(true);
-
-					//cbxEnfermedad.removeItemAt(cbxEnfermedad.getItemCount() - 2);
-					cbxEnfermedad.addItem("Agregar...");
-					btnEnfermedad.setText("Borrar");
+				}
+				else if ( txtEnfermedad.isEditable() ) {
 					
+					System.out.println("txtEnfermedad TXT: "+txtEnfermedad.getText());
+					EnfermedadesElegidas.add(txtEnfermedad.getText());
+					
+					txtEnfermedad.setVisible(false);
+					cbxEnfermedad.setVisible(true);
+					btnEnfermedad.setText("Borrar");
 				}
-				if ( btnEnfermedad.getText().equalsIgnoreCase("Borrar")) {
-					System.out.print(selected);
-					EnfermedadesElegidas.remove(selected);
-					modelEnfermedad.remove(selected);
-				}
-				
-				
 			}
 		});
 		
@@ -221,27 +269,41 @@ public class RegistrarVacuna extends JDialog {
 		
 		btnAlergia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String selectedAlergia = cbxAlergia.getSelectedItem().toString();
-				if ( cbxAlergia.isEditable() ) {
+				selectedAlergia = cbxAlergia.getSelectedItem().toString();
+				
+				if ( btnAlergia.getText().equalsIgnoreCase("Borrar")) {
+					try {
+						if (!txtAlergia.getText().isEmpty())
+						{
+							AlergiasSinElegir.add(txtAlergia.getText());
+							AlergiasElegidas.remove(txtAlergia.getText());
+							txtAlergia.setText("");
+							
+							reloadAlergia();
+							System.out.println("Reload cuadro Borrar");
+							reloadAlergiaCuadro();
+						}
+						
+						
+					} catch (IndexOutOfBoundsException e2) {
+						btnAlergia.setText("Añadir");
+					}
 					
-					cbxAlergia.addItem(cbxAlergia.getSelectedItem().toString());
-					cbxAlergia.removeItemAt(cbxAlergia.getItemCount() - 2);
-					cbxAlergia.addItem("Agregar...");
+				}
+				else if ( txtAlergia.isEditable() ) {
+					
+					System.out.println("Alergia TXT: "+txtAlergia.getText());
+					AlergiasElegidas.add(txtAlergia.getText());
+					
+					reloadAlergia();
+					reloadAlergiaCuadro();
+					txtAlergia.setVisible(false);
+					cbxAlergia.setVisible(true);
 					btnAlergia.setText("Borrar");
-					cbxAlergia.setEditable(false);
-			
 				}
 				
-				if ( selectedAlergia.equalsIgnoreCase("Agregar...") ) {
-					btnAlergia.setText("Agregar");
-					cbxAlergia.setEditable(true);
-					cbxAlergia.setSelectedItem("");
-					
-				}
-				if ( btnAlergia.getText().equalsIgnoreCase("Borrar")) {
-					AlergiasElegidas.remove(selected-1);
-					modelAlergia.remove(selected);
-				}
+				
+				
 				
 				
 			}
@@ -259,10 +321,17 @@ public class RegistrarVacuna extends JDialog {
 			{
 				listEnf.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent e) {
-						selected = listEnf.getSelectedIndex();
-						if(selected>=0){
-							btnEnfermedad.setText("Borrar");
+						try {
+							selected = listEnf.getSelectedIndex();
+							selectedEnfermedad = listEnf.getSelectedValue().toString();
+							if(selected>=0){
+								btnEnfermedad.setText("Borrar");
+								txtEnfermedad.setText(listEnf.getSelectedValue().toString());
+							}
+						} catch (NullPointerException e2) {
+							// TODO: handle exception
 						}
+						
 					}
 				});
 				scrollPane.setViewportView(listEnf);
@@ -280,15 +349,44 @@ public class RegistrarVacuna extends JDialog {
 			{
 				listAler.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent e) {
-						selected = listAler.getSelectedIndex();
-						if(selected>=0){
-							btnAlergia.setText("Borrar");
+						try {
+							selected = listAler.getSelectedIndex();
+							selectedAlergia = listAler.getSelectedValue().toString();
+							if(selected>=0){
+								btnAlergia.setText("Borrar");
+								txtAlergia.setText(listAler.getSelectedValue().toString());
+							}
+						} catch (NullPointerException e2) {
+							// TODO: handle exception
 						}
+						
 					}
 				});
 				scrollPane_1.setViewportView(listAler);
+				System.out.println("Reload cuadro 1");
+				reloadAlergiaCuadro();
 				listAler.setModel(modelAlergia);
 			}
+		}
+		{
+			txtAlergia = new JTextField();
+			txtAlergia.setEnabled(false);
+			txtAlergia.setText("VA-1");
+			txtAlergia.setEditable(false);
+			txtAlergia.setVisible(false);
+			txtAlergia.setColumns(10);
+			txtAlergia.setBounds(267, 78, 116, 22);
+			contentPanel.add(txtAlergia);
+			
+			
+			txtEnfermedad = new JTextField();
+			txtEnfermedad.setEnabled(false);
+			txtEnfermedad.setText("VA-1");
+			txtEnfermedad.setEditable(false);
+			txtEnfermedad.setVisible(false);
+			txtEnfermedad.setColumns(10);
+			txtEnfermedad.setBounds(22, 76, 116, 22);
+			contentPanel.add(txtEnfermedad);
 		}
 		
 		{
@@ -301,8 +399,10 @@ public class RegistrarVacuna extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						String codigo = txtCode.getText();
 						
-						Vacuna aux = new Vacuna(codigo,EnfermedadesElegidas,AlergiasElegidas);
+						Vacuna aux = new Vacuna(codigo,getArrayEnfermedadesElegidas(),AlergiasElegidas);
 						Hospital.getInstance().insertarVacuna(aux);
+						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+						
 						try {
 							Hospital.save();
 						} catch (ClassNotFoundException e1) {
@@ -312,7 +412,6 @@ public class RegistrarVacuna extends JDialog {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 					    clean();
 					}
 				});
@@ -331,7 +430,7 @@ public class RegistrarVacuna extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		//loadAlergiainCbx();
+		reloadAlergia();
 	}
 	
 	private void clean() {
@@ -343,20 +442,90 @@ public class RegistrarVacuna extends JDialog {
 		
 	}
 	
-	private void loadEnfermedadinCbx() {
+
+	
+	private void reloadAlergia()
+	{
+		cbxAlergia.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		
+		for (String temp : AlergiasSinElegir )
+		{
+			cbxAlergia.addItem(temp);
+		}
+		
+		cbxAlergia.addItem("Agregar...");
+		
+	}
+	private void reloadAlergiaCuadro()
+	{
+		modelAlergia.removeAllElements();
+		for (String auxString : AlergiasElegidas)
+		{
+			modelAlergia.addElement(auxString);
+		}
+	}
+	
+	private void loadEnfermedadesSinElegir()
+	{
+
+		EnfermedadeSinElegir = new ArrayList<>();
+		
 		for (Enfermedad aux : Hospital.getInstance().getEnfermedadesReg())
 		{
 			String temp = aux.getCodigo()+" : "+aux.getNombre();
-			cbxEnfermedad.addItem(temp );
+			EnfermedadeSinElegir.add(temp);
 		}
-		EnfermedadeSinElegir = Hospital.getInstance().getEnfermedadesReg();
+		
 	}
 	
-	private void loadAlergiainCbx() {
-		for (String temp : Hospital.getInstance().getAlergiasRegistradas() )
+		private void reloadEnfermedad() {
+		
+		cbxEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		
+		for (String auxString : EnfermedadeSinElegir)
 		{
-			cbxEnfermedad.addItem(temp);
+			cbxEnfermedad.addItem(auxString);
 		}
-		AlergiasSinElegir = Hospital.getInstance().getAlergiasRegistradas();
+		
+	}
+	private void reloadEnfermedadCuadro()
+	{
+		modelEnfermedad.removeAllElements();
+		for (String auxString : EnfermedadesElegidas)
+		{
+			modelEnfermedad.addElement(auxString);
+		}
+	}
+	
+	private ArrayList<Enfermedad> getArrayEnfermedadesElegidas()
+	{
+		ArrayList<Enfermedad> temp = new ArrayList<>();
+		
+		for (String tempString : EnfermedadesElegidas)
+		{
+			int i = tempString.indexOf(":");
+			System.out.println("Buscando enfermedad codigo: " + tempString.substring(0, i-1));
+			temp.add(Hospital.getInstance().buscarEnfermedadesByCode(tempString.substring(0, i-1)));
+		}
+		
+		return temp;
+	}
+	
+	private void loadEntrada()
+	{
+		try {
+			txtCode.setText(auxVacuna.getCodigo());
+			AlergiasElegidas = auxVacuna.getPosiblesAlergias();
+			
+			for (Enfermedad aux : auxVacuna.getEnfermedadesPrevenidas())
+			{
+				String temp = aux.getCodigo()+" : "+aux.getNombre();
+				EnfermedadesElegidas.add(temp);
+			}
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+		}
+		
+		
 	}
 }

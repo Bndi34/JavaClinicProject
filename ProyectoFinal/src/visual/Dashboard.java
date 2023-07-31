@@ -49,6 +49,8 @@ import logico.Secretaria;
 import logico.Usuario;
 import visualListar.ListarCompromiso;
 import visualListar.ListarCuenta;
+import visualListar.ListarEnfermedad;
+import visualListar.ListarVacuna;
 import visualRegistros.RegistrarCita;
 import visualRegistros.RegistrarConsulta;
 import visualRegistros.RegistrarEnfermedad;
@@ -443,6 +445,12 @@ public class Dashboard extends JFrame {
 		mnEnfermedad.add(mntmRegistrarEnfermedad);
 
 		JMenuItem mntmListarEnfermedad = new JMenuItem("Listar");
+		mntmListarEnfermedad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarEnfermedad listEnf =  new ListarEnfermedad(true);
+				listEnf.setVisible(true);
+			}
+		});
 		mnEnfermedad.add(mntmListarEnfermedad);
 
 		JMenu mnVacuna = new JMenu("Vacuna");
@@ -451,7 +459,7 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmRegistrarVacuna = new JMenuItem("Registrar");
 		mntmRegistrarVacuna.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarVacuna regVac = new RegistrarVacuna(); //("Registrar Usuario",null);
+				RegistrarVacuna regVac = new RegistrarVacuna(null); //("Registrar Usuario",null);
 				regVac.setModal(true);
 				regVac.setVisible(true);
 			}
@@ -459,6 +467,12 @@ public class Dashboard extends JFrame {
 		mnVacuna.add(mntmRegistrarVacuna);
 
 		JMenuItem mntmListarVacuna = new JMenuItem("Listar");
+		mntmListarVacuna.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarVacuna listVac = new ListarVacuna(true);
+				listVac.setVisible(true);
+			}
+		});
 		mnVacuna.add(mntmListarVacuna);
 
 		JMenu mnEstadisticas = new JMenu("Estad\u00EDsticas");
