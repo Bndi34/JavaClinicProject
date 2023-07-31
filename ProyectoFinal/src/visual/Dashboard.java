@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
 import java.awt.event.ActionEvent;
+
+import com.sun.xml.internal.ws.api.Component;
 import com.toedter.calendar.JCalendar;
 
 import javafx.collections.FXCollections;
@@ -60,6 +62,7 @@ import visualRegistros.RegistrarVacuna;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import java.util.Date;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import java.awt.Font;
@@ -76,6 +79,8 @@ import javax.swing.UIManager;
 import javax.swing.JList;
 import java.awt.Toolkit;
 import javax.swing.JRadioButton;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class Dashboard extends JFrame {
 
@@ -103,6 +108,10 @@ public class Dashboard extends JFrame {
 	private Color MyBlue = 	new Color(72, 61, 139);
 	private Paciente paciente;
 	private Dimension dim = null;
+	private Usuario cuentaUsuario;
+	private JCalendar calendar;
+	private JList<String> listHorasDelDia;
+	private JScrollPane scrllDetallesDia;
 	
 	/**
 	 * Launch the application.
@@ -137,6 +146,7 @@ public class Dashboard extends JFrame {
 	 */
 	public Dashboard(final Usuario Cuenta) {
 		
+		cuentaUsuario = Cuenta;
 		
 		modalHistorialMedico = new DefaultListModel<String>();
 		
@@ -234,7 +244,13 @@ public class Dashboard extends JFrame {
 		dashboardCalender.add(panel_calendar);
 		panel_calendar.setLayout(null);
 
-		JCalendar calendar = new JCalendar();
+		calendar = new JCalendar();
+		calendar.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				setHorarioPendiente();
+			}
+		});
+		
 		calendar.setBounds(10, 11, 685, 443);
 		panel_calendar.add(calendar);
 
@@ -253,15 +269,14 @@ public class Dashboard extends JFrame {
 		panel_calenderSecundario.add(panel_horarioDIa);
 		panel_horarioDIa.setLayout(null);
 
-		JScrollPane scrllDetallesDia = new JScrollPane();
+		scrllDetallesDia = new JScrollPane();
 		scrllDetallesDia.setBounds(0, 0, 158, 348);
 		panel_horarioDIa.add(scrllDetallesDia);
 
-		JList listHorasDelDia = new JList();
-		listHorasDelDia.setBackground(new Color(0, 51, 153));
-		listHorasDelDia.setFont(new Font("Tahoma", Font.BOLD, 11));
-		listHorasDelDia.setForeground(new Color(51, 153, 102));
-		scrllDetallesDia.setColumnHeaderView(listHorasDelDia);
+		DefaultListModel<String> model = new DefaultListModel<>();
+		listHorasDelDia = new JList<>( model );
+		setHorarioPendiente();
+		
 
 		JPanel panel_HistorialMedico = new JPanel();
 		panel_HistorialMedico.setBounds(244, 52, 158, 348);
@@ -400,6 +415,8 @@ public class Dashboard extends JFrame {
 				RegistrarCita regCit = new RegistrarCita(null); //("Registrar Usuario",null);
 				regCit.setModal(true);
 				regCit.setVisible(true);
+				
+				setHorarioPendiente();
 			}
 		});
 		mnCita.add(mntmRegistrarCita);
@@ -409,6 +426,8 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ListarCompromiso listCita = new ListarCompromiso("cita");
 				listCita.setVisible(true);
+			
+				setHorarioPendiente();
 			}
 		});
 		mnCita.add(mntmListarCita);
@@ -418,6 +437,8 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ListarCompromiso listarConsulta = new ListarCompromiso("consulta");
 				listarConsulta.setVisible(true);
+				
+				setHorarioPendiente();
 			}
 		});
 		mnCita.add(mntmListarConsultas);
@@ -549,16 +570,18 @@ public class Dashboard extends JFrame {
 		}
 		//openLogIn();
 		setPaciente();
+		setHorarioPendiente();
 
 	}
 	
 	private void openLogIn()
 	{
+		Usuario cuenta = null;
 		Login login = new Login();
 		login.setVisible(true);
 		
-		Usuario cuenta = null;
 		
+		/*
 		cuenta = login.getUsuario();
 		System.out.println(cuenta);
 
@@ -584,7 +607,7 @@ public class Dashboard extends JFrame {
 			
 		} catch (NullPointerException e) {
 			setVisible(false);
-		}
+		}*/
 		
 	}
 	
@@ -620,5 +643,83 @@ public class Dashboard extends JFrame {
 		
 		paciente.getMiRegistro().getMisConsultas();
 		paciente.getMiRegistro().getMisCitas();
+	}
+	
+	private void setHorarioPendiente()
+	{
+		System.out.println("Cargar Horario IN");
+		
+		listHorasDelDia.removeAll();
+		
+		
+		boolean isAdmin = false;
+		Doctor dependienteSecre = null;
+		
+		if (cuentaUsuario instanceof Admin)
+		{
+			isAdmin = true;
+		}
+		else if (cuentaUsuario instanceof Secretaria)
+		{
+			dependienteSecre = ((Secretaria) cuentaUsuario).getDependiente();
+		}
+		
+		DefaultListModel<String> model = new DefaultListModel<>();
+;
+		System.out.println("Model size "+model.getSize());
+		System.out.println("Cuenta = " + cuentaUsuario);
+		for(Cita auxCita : Hospital.getInstance().getMisCitas())
+		{
+			
+			
+			if (auxCita.getDoctor().getCodigo().equalsIgnoreCase(cuentaUsuario.getCodigo()) || auxCita.getPaciente().getCodigo().equalsIgnoreCase(cuentaUsuario.getCodigo()) || isAdmin)
+			{
+			
+				if (auxCita.getFechaReal().getDay() == calendar.getDate().getDay() && auxCita.getFechaReal().getMonth() == calendar.getDate().getMonth() && auxCita.getFechaReal().getYear() == calendar.getDate().getYear())
+				{
+					if (cuentaUsuario instanceof Paciente)
+					{
+						model.addElement(auxCita.getCodigo() + " : " + auxCita.getDoctor().getNombre()+ " : " +  auxCita.getHora()+ ":00");
+						
+					}
+					else if (cuentaUsuario instanceof Doctor)
+					{
+						model.addElement(auxCita.getCodigo() + " : " + auxCita.getPaciente().getNombre() + " " + auxCita.getHora()+ ":00");
+
+					}
+					
+					else if (cuentaUsuario instanceof Admin) {
+						
+						model.addElement(auxCita.getCodigo() + " : " + auxCita.getPaciente().getNombre() + " : "+ auxCita.getDoctor().getNombre() + " : " + auxCita.getHora()+ ":00");
+						}
+					
+				}
+			}
+			else 
+			{
+				try {
+					if (auxCita.getDoctor().getCodigo().equalsIgnoreCase(dependienteSecre.getCodigo()))
+					{
+						if (auxCita.getFechaReal().getDay() == calendar.getDate().getDay() && auxCita.getFechaReal().getMonth() == calendar.getDate().getMonth() && auxCita.getFechaReal().getYear() == calendar.getDate().getYear())
+						{
+							model.addElement(auxCita.getCodigo() + " : " + auxCita.getPaciente().getNombre() + " : "+ auxCita.getDoctor().getNombre() + " : " + auxCita.getHora()+ ":00");
+
+						}
+							
+					}
+				} catch (NullPointerException e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		listHorasDelDia = new JList<>( model );
+		listHorasDelDia.setValueIsAdjusting(true);
+		listHorasDelDia.setVisibleRowCount(22);
+		
+		scrllDetallesDia.add(listHorasDelDia);
+		listHorasDelDia.setBackground(new Color(0, 51, 153));
+		listHorasDelDia.setFont(new Font("Tahoma", Font.BOLD, 11));
+		listHorasDelDia.setForeground(new Color(51, 153, 102));
+		scrllDetallesDia.setColumnHeaderView(listHorasDelDia);
 	}
 }

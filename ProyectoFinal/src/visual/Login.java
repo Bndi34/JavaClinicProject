@@ -17,6 +17,7 @@ import logico.Usuario;
 import visualRegistros.RegistrarEnfermedad;
 import visualRegistros.RegistrarUsuario;
 
+import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -26,6 +27,7 @@ import java.awt.event.ActionEvent;
 
 import visualRegistros.RegistrarUsuario;
 import java.awt.Dialog.ModalityType;
+import java.awt.Font;
 
 public class Login extends JDialog {
 
@@ -78,30 +80,58 @@ public class Login extends JDialog {
 		
 		
 		setTitle("Centro M\u00E9dico");
-		setBounds(100, 100, 467, 245);
+		setBounds(100, 100, 467, 326);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			JLabel lblUser = new JLabel("C\u00E9dula");
-			lblUser.setBounds(12, 69, 56, 16);
+			lblUser.setBounds(72, 118, 56, 16);
 			contentPanel.add(lblUser);
 		}
 		
 		JLabel lblPassword = new JLabel("Contrase\u00F1a");
-		lblPassword.setBounds(12, 134, 99, 16);
+		lblPassword.setBounds(72, 171, 99, 16);
 		contentPanel.add(lblPassword);
 		
 		txtUser = new JTextField();
-		txtUser.setBounds(90, 66, 333, 22);
+		txtUser.setBounds(72, 134, 318, 22);
 		contentPanel.add(txtUser);
 		txtUser.setColumns(10);
 		
 		txtPassword = new JTextField();
-		txtPassword.setBounds(90, 131, 333, 22);
+		txtPassword.setBounds(72, 193, 318, 22);
 		contentPanel.add(txtPassword);
 		txtPassword.setColumns(10);
+		
+		Date tempDate = new Date();
+		System.out.println("Hora: " + tempDate.getHours());
+		
+		JLabel lblBienvenida = new JLabel();
+		
+		if (tempDate.getHours() > 5 && tempDate.getHours() <= 12 )
+		{
+			lblBienvenida.setText("Buen D\u00EDa");
+		}
+		else if (tempDate.getHours() > 12 && tempDate.getHours() <= 18)
+		{
+			lblBienvenida.setText("Buenas Tardes");
+		}
+		else 
+		{
+			lblBienvenida.setText("Buenas Noches");
+		}
+		
+		//lblBienvenida = new JLabel("Buen D\u00EDa");
+		lblBienvenida.setFont(new Font("Impact", Font.ITALIC, 36));
+		lblBienvenida.setBounds(105, 13, 285, 57);
+		contentPanel.add(lblBienvenida);
+		
+		JLabel lblLogIn = new JLabel("Iniciar Sesi\u00F3n");
+		lblLogIn.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblLogIn.setBounds(53, 89, 118, 16);
+		contentPanel.add(lblLogIn);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

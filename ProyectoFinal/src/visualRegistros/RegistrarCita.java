@@ -245,7 +245,6 @@ public class RegistrarCita extends JDialog {
 							int hora = getHoraInBox();
 							//System.out.println(hora);
 							
-							//Acá se debería convertir el string de cbxHorasDisponibles a un int como debería hacerlo cbxHorasDisponibles.getSelectedItem().toString())
 							estado = cbxEstado.getSelectedItem().toString();
 							Cita aux = new Cita( txtCode.getText(),estado,fecha, hora,((Doctor)doc), ((Paciente)pac) );
 							
@@ -263,22 +262,16 @@ public class RegistrarCita extends JDialog {
 							
 							if (cita == null)
 							{
+								System.out.println("Fecha al intentar insertar Cita: " + aux.getFechaReal());
 								Hospital.getInstance().insertarCita(aux);
 								Hospital.getInstance().insertarConsulta(auxConsulta);
 							}
 							else
 							{
+								System.out.println("Fecha al intentar modificar Cita: " + aux.getFechaReal());
 								Hospital.getInstance().modificarCita(aux);
 								Hospital.getInstance().modificarConsulta(auxConsulta);
 							}
-							
-							
-							
-							for(Cita auxCita : Hospital.getInstance().getMisCitas())
-							{
-								System.out.println(auxCita);
-							}
-							
 							
 							try {
 								Hospital.save();

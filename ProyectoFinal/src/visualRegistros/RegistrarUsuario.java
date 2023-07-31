@@ -678,6 +678,13 @@ public class RegistrarUsuario extends JDialog {
 				return true;
 			}
 		}
+		else if (rdbtnSecretaria.isSelected())
+		{
+			if (cbxSupervisor.getSelectedIndex() <= 0 )
+			{
+				return true;
+			}
+		}
 
 		
 		return false;
