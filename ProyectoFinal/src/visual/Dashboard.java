@@ -364,21 +364,36 @@ public class Dashboard extends JFrame {
 		});
 		mnUsuario.add(mntmListaUsuario);
 		
-		JMenu mnVacuna = new JMenu("Vacuna");
-		menuBar.add(mnVacuna);
+		JMenu mnCita = new JMenu("Chequeos");
+		menuBar.add(mnCita);
 		
-		JMenuItem mntmRegistrarVacuna = new JMenuItem("Registrar");
-		mntmRegistrarVacuna.addActionListener(new ActionListener() {
+		JMenuItem mntmRegistrarCita = new JMenuItem("Hacer una Cita");
+		mntmRegistrarCita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarVacuna regVac = new RegistrarVacuna(); //("Registrar Usuario",null);
-				regVac.setModal(true);
-				regVac.setVisible(true);
+				RegistrarCita regCit = new RegistrarCita(null); //("Registrar Usuario",null);
+				regCit.setModal(true);
+				regCit.setVisible(true);
 			}
 		});
-		mnVacuna.add(mntmRegistrarVacuna);
+		mnCita.add(mntmRegistrarCita);
 		
-		JMenuItem mntmListarVacuna = new JMenuItem("Listar");
-		mnVacuna.add(mntmListarVacuna);
+		JMenuItem mntmListarCita = new JMenuItem("Listar Citas");
+		mntmListarCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarCompromiso listCita = new ListarCompromiso("cita");
+				listCita.setVisible(true);
+			}
+		});
+		mnCita.add(mntmListarCita);
+		
+		JMenuItem mntmListarConsultas = new JMenuItem("Listar Consultas");
+		mntmListarConsultas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarCompromiso listarConsulta = new ListarCompromiso("consulta");
+				listarConsulta.setVisible(true);
+			}
+		});
+		mnCita.add(mntmListarConsultas);
 		
 		JMenu mnEnfermedad = new JMenu("Enfermedad");
 		menuBar.add(mnEnfermedad);
@@ -405,57 +420,27 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmListarEnfermedad = new JMenuItem("Listar");
 		mnEnfermedad.add(mntmListarEnfermedad);
 		
-		JMenu mnCita = new JMenu("Chequeos");
-		menuBar.add(mnCita);
+		JMenu mnVacuna = new JMenu("Vacuna");
+		menuBar.add(mnVacuna);
 		
-		JMenuItem mntmRegistrarCita = new JMenuItem("Hacer una Cita");
-		mntmRegistrarCita.addActionListener(new ActionListener() {
+		JMenuItem mntmRegistrarVacuna = new JMenuItem("Registrar");
+		mntmRegistrarVacuna.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarCita regCit = new RegistrarCita(null); //("Registrar Usuario",null);
-				regCit.setModal(true);
-				regCit.setVisible(true);
+				RegistrarVacuna regVac = new RegistrarVacuna(); //("Registrar Usuario",null);
+				regVac.setModal(true);
+				regVac.setVisible(true);
 			}
 		});
-		mnCita.add(mntmRegistrarCita);
+		mnVacuna.add(mntmRegistrarVacuna);
 		
-		JMenuItem mntmListarCita = new JMenuItem("Listar Citas");
-		mntmListarCita.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ListarCompromiso listCita = new ListarCompromiso("cita");
-				listCita.setVisible(true);
-			}
-		});
-		mnCita.add(mntmListarCita);
-		
-		JMenuItem mntmListarConsultas = new JMenuItem("Listar Consultas");
-		mnCita.add(mntmListarConsultas);
+		JMenuItem mntmListarVacuna = new JMenuItem("Listar");
+		mnVacuna.add(mntmListarVacuna);
 		
 		JMenu mnEstadisticas = new JMenu("Estad\u00EDsticas");
 		menuBar.add(mnEstadisticas);
 		
 		JMenuItem mntmAbrirEstadisticas = new JMenuItem("Abrir men\u00FA de Estad\u00EDsticas");
 		mnEstadisticas.add(mntmAbrirEstadisticas);
-		
-		mnUser = new JMenu("<User>");
-		menuBar.add(mnUser);
-		mnUser.setText(Cuenta.getNombre());
-		
-		JMenuItem mntmUserConfig = new JMenuItem("Configuraci\u00F3n");
-		mnUser.add(mntmUserConfig);
-		
-		JMenuItem mntmUserLogOut = new JMenuItem("Cerrar Sesi\u00F3n");
-		mntmUserLogOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				setVisible(false);
-				Login aLogin = new Login();
-				aLogin.setVisible(true);
-				
-				
-				dispose();
-			}
-		});
-		mnUser.add(mntmUserLogOut);
 		
 		JMenu mnRespaldo = new JMenu("Respaldo");
 		menuBar.add(mnRespaldo);
@@ -494,11 +479,32 @@ public class Dashboard extends JFrame {
 		});
 		mnRespaldo.add(mntmNewMenuItem);
 		
+		mnUser = new JMenu("<User>");
+		menuBar.add(mnUser);
+		mnUser.setText(Cuenta.getNombre());
+		
+		JMenuItem mntmUserConfig = new JMenuItem("Configuraci\u00F3n");
+		mnUser.add(mntmUserConfig);
+		
+		JMenuItem mntmUserLogOut = new JMenuItem("Cerrar Sesi\u00F3n");
+		mntmUserLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				Login aLogin = new Login();
+				aLogin.setVisible(true);
+				
+				
+				dispose();
+			}
+		});
+		mnUser.add(mntmUserLogOut);
+		
 		if (Cuenta instanceof Doctor || Cuenta instanceof Paciente)
 		{
 			mnUsuario.setEnabled(false);
 			mnVacuna.setEnabled(false);
-			mnConsulta.setEnabled(false);
+			//mnConsulta.setEnabled(false);
 			mnEnfermedad.setEnabled(false);
 			mnCita.setEnabled(false);
 		}

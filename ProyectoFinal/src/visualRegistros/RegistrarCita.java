@@ -315,6 +315,8 @@ public class RegistrarCita extends JDialog {
 	}
 	
 	void loadCita(){
+		
+		
 		try {
 			
 			cbxDoctor.setSelectedItem(cita.getDoctor());

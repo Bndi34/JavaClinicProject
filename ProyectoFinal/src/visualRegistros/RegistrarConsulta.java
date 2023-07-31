@@ -188,7 +188,7 @@ public class RegistrarConsulta extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						Consulta aux = new Consulta(txtCode.getText(),consulta.getEstado(),fecha,(Paciente) paciente,(Doctor) doctor ,sintomas,vacunasColocadas);
+						Consulta aux = new Consulta(txtCode.getText(),consulta.getEstado(),fecha, consulta.getPaciente(),consulta.getDoctor(), sintomas, vacunasColocadas);
 						Hospital.getInstance().insertarConsulta(aux); 
 					   
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
