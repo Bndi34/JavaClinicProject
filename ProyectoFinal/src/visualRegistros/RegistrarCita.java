@@ -12,6 +12,7 @@ import logico.Hospital;
 import logico.Cita;
 import logico.Consulta;
 import logico.Usuario;
+import logico.Vacuna;
 import logico.Doctor;
 import logico.Paciente;
 
@@ -241,7 +242,7 @@ public class RegistrarCita extends JDialog {
 							Cita aux = new Cita( txtCode.getText(),estado,fecha, hora,((Doctor)doc), ((Paciente)pac) );
 							Hospital.getInstance().insertarCita(aux);
 							
-							Consulta auxConsulta = new Consulta(txtCode.getText(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<>(), new ArrayList<>());
+							Consulta auxConsulta = new Consulta(txtCode.getText(), estado, fecha, ((Paciente)pac), ((Doctor)doc) ,new ArrayList<String>(), new ArrayList<Vacuna>());
 							Hospital.getInstance().insertarConsulta(auxConsulta);
 							
 							for(Cita auxCita : Hospital.getInstance().getMisCitas())
