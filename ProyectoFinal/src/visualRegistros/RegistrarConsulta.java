@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import logico.Cita;
 import logico.Consulta;
 import logico.Doctor;
+import logico.Enfermedad;
 import logico.Hospital;
 import logico.Paciente;
 import logico.Usuario;
@@ -46,6 +47,8 @@ public class RegistrarConsulta extends JDialog {
 	private JTextField txtDoctor;
 	private JTextField txtPaciente;
 	private JTextField txtEstado;
+	private JComboBox cbxEnfermedad;
+	private JComboBox cbxVacunas;
 	
 	
 
@@ -126,6 +129,35 @@ public class RegistrarConsulta extends JDialog {
 			contentPanel.add(lblSintomas);
 		}
 		{
+			cbxSintoma.setModel(new DefaultComboBoxModel(entrada.getPaciente().getAlergias().toArray(new String[0])));
+			cbxSintoma.addItem("<Seleccione>");
+			cbxSintoma.addItem("Agregar...");
+
+			cbxSintoma.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					if ( cbxSintoma.isEditable() ) {
+						
+						System.out.println("Alergia Registrado");
+						
+						
+						cbxSintoma.addItem(cbxSintoma.getSelectedItem().toString());
+						System.out.println(cbxSintoma.getSelectedItem().toString());
+						System.out.println(cbxSintoma.getItemAt(cbxSintoma.getItemCount() - 2));
+						cbxSintoma.removeItemAt(cbxSintoma.getItemCount() - 2);
+						cbxSintoma.addItem("Agregar...");
+						cbxSintoma.setEditable(false);
+				
+					}
+					else if ( cbxSintoma.getSelectedItem().toString().equalsIgnoreCase("Agregar...") ) {
+						
+						cbxSintoma.setEditable(true);
+						cbxSintoma.setSelectedItem("");
+						
+					}
+					
+				}
+			});
 			
 			cbxSintoma.setBounds(344, 10, 152, 22);
 			contentPanel.add(cbxSintoma);
@@ -133,6 +165,15 @@ public class RegistrarConsulta extends JDialog {
 		}
 		{
 			JButton btnBorrarSintoma = new JButton("Borrar Sintoma Elegido");
+			btnBorrarSintoma.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					if (cbxSintoma.getSelectedItem().toString() != "<Seleccione>" && cbxSintoma.getSelectedItem().toString() != "Agregar...")
+					{
+						cbxSintoma.removeItemAt(cbxSintoma.getSelectedIndex());
+					}
+				}
+			});
 			btnBorrarSintoma.setBounds(320, 42, 176, 25);
 			contentPanel.add(btnBorrarSintoma);
 		}
@@ -150,7 +191,7 @@ public class RegistrarConsulta extends JDialog {
 		lblEnfermedad.setBounds(275, 85, 79, 16);
 		contentPanel.add(lblEnfermedad);
 		
-		JComboBox cbxEnfermedad = new JComboBox();
+		cbxEnfermedad = new JComboBox();
 		cbxEnfermedad.setBounds(354, 78, 142, 22);
 		contentPanel.add(cbxEnfermedad);
 		
@@ -158,7 +199,7 @@ public class RegistrarConsulta extends JDialog {
 		lblVacunas.setBounds(275, 122, 56, 16);
 		contentPanel.add(lblVacunas);
 		
-		JComboBox cbxVacunas = new JComboBox();
+		cbxVacunas = new JComboBox();
 		cbxVacunas.setBounds(344, 118, 152, 22);
 		contentPanel.add(cbxVacunas);
 		
@@ -189,7 +230,7 @@ public class RegistrarConsulta extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						
 						Consulta aux = new Consulta(txtCode.getText(),consulta.getEstado(),fecha, consulta.getPaciente(),consulta.getDoctor(), sintomas, vacunasColocadas);
-						Hospital.getInstance().insertarConsulta(aux); 
+						Hospital.getInstance().modificarConsulta(aux);
 					   
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 						
@@ -220,6 +261,8 @@ public class RegistrarConsulta extends JDialog {
 			}
 		}
 		loadConsulta();
+		loadVacunas();
+		loadEnfermedades();
 	}
 	
 
@@ -236,6 +279,24 @@ public class RegistrarConsulta extends JDialog {
 			
 		} catch (NullPointerException e) {
 			return;
+		}
+	}
+	
+	void loadEnfermedades()
+	{
+		cbxEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		for (Enfermedad auxEnfermedad : Hospital.getInstance().getEnfermedadesReg())
+		{
+			cbxEnfermedad.addItem(auxEnfermedad.getCodigo() + " : " + auxEnfermedad.getNombre());
+		}
+	}
+	
+	void loadVacunas()
+	{
+		cbxVacunas.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+		for (Vacuna auxEnfermedad : Hospital.getInstance().getMisVacunas())
+		{
+			cbxVacunas.addItem(auxEnfermedad.getCodigo());
 		}
 	}
 	

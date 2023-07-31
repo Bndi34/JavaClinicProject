@@ -249,8 +249,17 @@ public class RegistrarCita extends JDialog {
 							estado = cbxEstado.getSelectedItem().toString();
 							Cita aux = new Cita( txtCode.getText(),estado,fecha, hora,((Doctor)doc), ((Paciente)pac) );
 							
+							Consulta auxConsulta;
 							
-							Consulta auxConsulta = new Consulta(txtCode.getText(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<>(), new ArrayList<>());
+							if (cita != null)
+							{
+								auxConsulta = new Consulta("CON-" + cita.getCodigo(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<>(), new ArrayList<>());
+							}
+							else {
+								auxConsulta = new Consulta("CON-" + String.valueOf(Hospital.getInstance().generadorConsulta), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<>(), new ArrayList<>());
+							}
+						
+							
 							
 							if (cita == null)
 							{
