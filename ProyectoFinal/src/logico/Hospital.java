@@ -80,6 +80,28 @@ public class Hospital implements Serializable{
 		}
 		return ConsultaDia;
 	}
+	public int cantidadDeConsultasPorMes(Date fechaSolicitada) {
+		int count = 0;
+		for ( Consulta temp : misConsultas){
+			if (temp.getFecha().getMonth() == fechaSolicitada.getMonth()) {
+				count++;
+			}
+			
+		}
+		return count;
+	}
+	
+	public int cantidadDeCitasPorMes(Date fechaSolicitada) {
+		int count = 0;
+		for ( Cita temp : misCitas){
+			if (temp.getFechaReal().getMonth() == fechaSolicitada.getMonth()) {
+				count++;
+			}
+			
+		}
+		return count;
+	}
+	
 	
 	/*public int cantidadDeConsultasPorEnfermedad (String codigoEnfermedad){
 	int porcentaje = 0;
@@ -142,20 +164,6 @@ public class Hospital implements Serializable{
 	}
 	public void setMisVacunas(ArrayList<Vacuna> misVacunas) {
 		this.misVacunas = misVacunas;
-	}
-	
-	public float porcentajeEfermedadPorPaciente(String codigoEnfermedad){
-		float porcentaje = 0;
-		
-		//for ()
-		for (Usuario aux : misCuentas) {
-			if (aux instanceof Paciente) {
-				
-			}
-		}
-		
-		
-		return porcentaje;
 	}
 	
 	public ArrayList<String> getSintomasRegistrados() {
