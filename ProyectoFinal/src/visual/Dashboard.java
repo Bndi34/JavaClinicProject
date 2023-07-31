@@ -405,33 +405,10 @@ public class Dashboard extends JFrame {
 		JMenuItem mntmListarEnfermedad = new JMenuItem("Listar");
 		mnEnfermedad.add(mntmListarEnfermedad);
 		
-		JMenu mnConsulta = new JMenu("Consulta");
-		menuBar.add(mnConsulta);
-		
-		JMenuItem mntmRegistrarConsulta = new JMenuItem("Registrar");
-		mntmRegistrarConsulta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RegistrarConsulta regCon = new RegistrarConsulta(null);
-				regCon.setModal(true);
-				regCon.setVisible(true);
-			}
-		});
-		mnConsulta.add(mntmRegistrarConsulta);
-		
-		JMenuItem mntmListarConsulta = new JMenuItem("Listar");
-		mntmListarConsulta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ListarCompromiso listCons = new ListarCompromiso("consulta");
-				listCons.setVisible(true);
-				
-			}
-		});
-		mnConsulta.add(mntmListarConsulta);
-		
-		JMenu mnCita = new JMenu("Cita");
+		JMenu mnCita = new JMenu("Chequeos");
 		menuBar.add(mnCita);
 		
-		JMenuItem mntmRegistrarCita = new JMenuItem("Registrar");
+		JMenuItem mntmRegistrarCita = new JMenuItem("Hacer una Cita");
 		mntmRegistrarCita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RegistrarCita regCit = new RegistrarCita(null); //("Registrar Usuario",null);
@@ -441,8 +418,17 @@ public class Dashboard extends JFrame {
 		});
 		mnCita.add(mntmRegistrarCita);
 		
-		JMenuItem mntmListarCita = new JMenuItem("Listar");
+		JMenuItem mntmListarCita = new JMenuItem("Listar Citas");
+		mntmListarCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListarCompromiso listCita = new ListarCompromiso("cita");
+				listCita.setVisible(true);
+			}
+		});
 		mnCita.add(mntmListarCita);
+		
+		JMenuItem mntmListarConsultas = new JMenuItem("Listar Consultas");
+		mnCita.add(mntmListarConsultas);
 		
 		JMenu mnEstadisticas = new JMenu("Estad\u00EDsticas");
 		menuBar.add(mnEstadisticas);

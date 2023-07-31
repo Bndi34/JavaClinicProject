@@ -12,7 +12,6 @@ import logico.Hospital;
 import logico.Cita;
 import logico.Consulta;
 import logico.Usuario;
-import logico.Vacuna;
 import logico.Doctor;
 import logico.Paciente;
 
@@ -48,6 +47,7 @@ public class RegistrarCita extends JDialog {
 	private Paciente pac;
 	private Cita cita;
 	private Date fecha;
+	private JCheckBox chbxRetraso;
 
 	/**
 	 * Launch the application.
@@ -66,6 +66,9 @@ public class RegistrarCita extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistrarCita(Cita entrada) {
+		
+		cita = entrada;
+		
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		doc = null;
@@ -105,7 +108,12 @@ public class RegistrarCita extends JDialog {
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
 			txtCode.setBounds(67, 10, 97, 22);
-			txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
+			try {
+				txtCode.setText(cita.getCodigo());
+			} catch (NullPointerException e) {
+				txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
+			}
+			
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
 		}
@@ -182,7 +190,7 @@ public class RegistrarCita extends JDialog {
 			contentPanel.add(cbxEstado);
 		}
 		
-		JCheckBox chbxRetraso = new JCheckBox("");
+		chbxRetraso = new JCheckBox("");
 		chbxRetraso.setBounds(80, 194, 36, 25);
 		contentPanel.add(chbxRetraso);
 		{
@@ -240,10 +248,22 @@ public class RegistrarCita extends JDialog {
 							//Acá se debería convertir el string de cbxHorasDisponibles a un int como debería hacerlo cbxHorasDisponibles.getSelectedItem().toString())
 							estado = cbxEstado.getSelectedItem().toString();
 							Cita aux = new Cita( txtCode.getText(),estado,fecha, hora,((Doctor)doc), ((Paciente)pac) );
-							Hospital.getInstance().insertarCita(aux);
 							
-							Consulta auxConsulta = new Consulta(txtCode.getText(), estado, fecha, ((Paciente)pac), ((Doctor)doc) ,new ArrayList<String>(), new ArrayList<Vacuna>());
-							Hospital.getInstance().insertarConsulta(auxConsulta);
+							
+							Consulta auxConsulta = new Consulta(txtCode.getText(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<>(), new ArrayList<>());
+							
+							if (cita == null)
+							{
+								Hospital.getInstance().insertarCita(aux);
+								Hospital.getInstance().insertarConsulta(auxConsulta);
+							}
+							else
+							{
+								Hospital.getInstance().modificarCita(aux);
+								Hospital.getInstance().modificarConsulta(auxConsulta);
+							}
+							
+							
 							
 							for(Cita auxCita : Hospital.getInstance().getMisCitas())
 							{
@@ -262,6 +282,12 @@ public class RegistrarCita extends JDialog {
 							}
 							JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 						    clean();
+						    
+						    if (cita != null)
+						    {
+						    	dispose();
+						    }
+						    
 						}
 						else
 						{
@@ -285,10 +311,40 @@ public class RegistrarCita extends JDialog {
 			}
 		}
 		setDoctoryPaciente();
+		loadCita();
 	}
 	
 	void loadCita(){
-		setDoctoryPaciente();
+		try {
+			
+			cbxDoctor.setSelectedItem(cita.getDoctor());
+			cbxPaciente.setSelectedItem(cita.getPaciente());
+			
+			switch (cita.getEstado())
+			{
+			case "Pendiente":
+				cbxEstado.setSelectedIndex(1);
+				break;
+			}
+			
+			//cbxHorasDisponibles.setSelectedIndex(cita.getHora() - 8);
+			
+			
+			dateChooser.setDate(cita.getFechaReal());
+			
+			if (cita.getFechaReal() != cita.getFechaOriginal())
+			{
+				chbxRetraso.setSelected(true);
+			}
+			else 
+			{
+				chbxRetraso.setSelected(false);
+			}
+			
+			
+		} catch (NullPointerException e) {
+			return;
+		}
 	}
 	
 	void setDoctoryPaciente() {
@@ -325,6 +381,23 @@ public class RegistrarCita extends JDialog {
 		
 		cbxHorasDisponibles.removeAllItems();
 		cbxHorasDisponibles.setSelectedItem("<Seleccione>");
+		if (cita != null)
+		{
+			int horacita = cita.getHora();
+			
+			if (horacita < 12)
+			{
+				cbxHorasDisponibles.addItem(horacita + ":00 AM");
+			}
+			else if (horacita == 12)
+			{
+				cbxHorasDisponibles.addItem(horacita + ":00 PM");
+			}
+			else if (horacita > 12)
+			{
+				cbxHorasDisponibles.addItem((horacita - 12) + ":00 PM");
+			}
+		}
 		
 		for (int horas = 8; horas <= 20; horas++)
 		{

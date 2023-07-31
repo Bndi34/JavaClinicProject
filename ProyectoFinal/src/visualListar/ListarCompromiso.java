@@ -48,6 +48,7 @@ public class ListarCompromiso extends JDialog {
 	 * @param fed 
 	 */
 	public ListarCompromiso(final String type) {
+		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		columnNames = setColumns(type);
@@ -112,6 +113,7 @@ public class ListarCompromiso extends JDialog {
 						modUser.setLocationRelativeTo(null);
 						modUser.setVisible(true);	
 					}
+					loadSportMans(type);
 					
 				}
 			});
@@ -126,17 +128,29 @@ public class ListarCompromiso extends JDialog {
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta cuenta?", null, JOptionPane.YES_NO_OPTION);
-					    if (delete == JOptionPane.YES_OPTION)
+						int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta "+type+"?", null, JOptionPane.YES_NO_OPTION);
+					    
+						if (delete == JOptionPane.YES_OPTION)
 					    {				
-					    	//sistema para revisar que tipo se quiere eliminar
-					    	/*
-							Usuario aux = Hospital.getInstance().buscarUsuarioByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
-							if (aux.getCodigo() != codigoCuentaActual)
-							
-								Hospital.getInstance().getMisCuentas().remove(aux);
-*/
-								loadSportMans(type);
+					    	switch (type)
+					    	{
+					    	case "cita":
+					    		Cita auxCita = Hospital.getInstance().buscarCitasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+					    		
+					    		Hospital.getInstance().getMisCitas().remove(auxCita);
+					    		
+					    		break;
+					    	
+					    	case "consulta":
+					    		
+					    		Consulta auxConsulta = Hospital.getInstance().buscarConsultasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+					    		
+					    		Hospital.getInstance().getMisConsultas().remove(auxConsulta);
+					    		
+					    		break;
+					    	}
+					    	
+							loadSportMans(type);
 						
 							
 							
