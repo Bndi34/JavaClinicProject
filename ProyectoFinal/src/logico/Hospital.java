@@ -16,8 +16,8 @@ public class Hospital implements Serializable{
 	
 	private static final long serialVersionUID = 5219225790495881149L;
 	private ArrayList<Usuario> misCuentas;
-	private static ArrayList<Consulta> misConsultas;
-	private static ArrayList<Cita> misCitas;
+	private ArrayList<Consulta> misConsultas;
+	private ArrayList<Cita> misCitas;
 	private ArrayList<Enfermedad> enfermedadesReg;
 	private ArrayList<Vacuna> misVacunas;
 	private ArrayList<String>sintomasRegistrados;
@@ -50,7 +50,7 @@ public class Hospital implements Serializable{
 		return hospi;
 	}
 	
-	public static ArrayList<Cita> buscarHorasDisponiblesCitas(Date day, Doctor doc) {
+	public ArrayList<Cita> buscarHorasDisponiblesCitas(Date day, Doctor doc) {
 		ArrayList<Cita>citaDia = new ArrayList<>();
 		//citaDia = null;
 		
@@ -66,7 +66,7 @@ public class Hospital implements Serializable{
 		return citaDia;
 	}
 	
-	public static ArrayList<Consulta> buscarHorasDisponiblesConsultas(Date day, Doctor doc) {
+	public ArrayList<Consulta> buscarHorasDisponiblesConsultas(Date day, Doctor doc) {
 		ArrayList<Consulta>ConsultaDia;
 		ConsultaDia = null;
 		

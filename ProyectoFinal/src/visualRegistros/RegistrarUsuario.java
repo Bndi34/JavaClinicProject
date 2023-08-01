@@ -20,8 +20,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JRadioButton;
 
 import logico.Usuario;
-
+import logico.Vacuna;
 import logico.Hospital;
+import logico.Consulta;
+import logico.Cita;
 
 import logico.Paciente;
 import logico.RegistroMedico;
@@ -85,11 +87,11 @@ public class RegistrarUsuario extends JDialog {
 	}
 	
 	public RegistrarUsuario(String title, final Usuario entrada, boolean adminCheck) {
+		setEnabled(false);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		SupervisorCedula = new ArrayList<String>();
 		setModal(true);
 		
-		System.out.println("Registrar IN");
 		setResizable(false);
 		setBounds(100, 100, 475, 400);
 		setTitle(title);
@@ -391,7 +393,7 @@ public class RegistrarUsuario extends JDialog {
 						
 						if (rdbtnPaciente.isSelected()) {
 							
-							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>(),new RegistroMedico(false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>(),new RegistroMedico(false, new ArrayList<Cita>(), new ArrayList<Consulta>(), new ArrayList<Vacuna>()));
 						}
 						else if (rdbtnDoctor.isSelected()) {
 							aux = new Doctor(codigo,nombre,cedula,telefono,contrasenia,area);
