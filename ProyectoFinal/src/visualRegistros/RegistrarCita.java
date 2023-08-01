@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import logico.Hospital;
 import logico.Cita;
@@ -43,13 +44,11 @@ public class RegistrarCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
-	private JComboBox cbxDoctor = new JComboBox();
-	private JComboBox cbxPaciente = new JComboBox();
 	private JComboBox cbxHorasDisponibles = new JComboBox();
 	private JDateChooser dateChooser = new JDateChooser();
 	private JComboBox cbxEstado = new JComboBox();
-	private Doctor doc;
-	private Paciente pac;
+	private Doctor doc = null;
+	private Paciente pac = null;
 	private Cita cita;
 	private Date fecha;
 	private JCheckBox chbxRetraso;
@@ -128,66 +127,6 @@ public class RegistrarCita extends JDialog {
 			txtCode.setColumns(10);
 		}
 		{
-			cbxDoctor.setModel(new DefaultComboBoxModel(new String[] {""}));
-			cbxDoctor.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-					try {
-						int indf = cbxDoctor.getSelectedItem().toString().indexOf(":");
-						String docCode = cbxDoctor.getSelectedItem().toString().substring(0, indf-1);
-						System.out.println(docCode);
-						doc = (Doctor)Hospital.getInstance().buscarUsuarioByCode(docCode);
-						
-					} catch (IndexOutOfBoundsException e2) {
-					}
-									
-					
-					System.out.println("Paciente: " + pac);
-					System.out.println("Doctor: " + doc);
-					System.out.println("Fecha: " + dateChooser.getDate());
-					System.out.println("");
-					
-					if (dateChooser.getDate() != null && doc != null && pac != null)
-					{
-						setHorasDisponibles();
-						cbxHorasDisponibles.setEnabled(true);
-					}
-				}
-			});
-			cbxDoctor.setBounds(67, 126, 154, 22);
-			contentPanel.add(cbxDoctor);
-		}
-		{
-			cbxPaciente.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-					try {
-						int indf = cbxPaciente.getSelectedItem().toString().indexOf(":");
-						String docCode = cbxPaciente.getSelectedItem().toString().substring(0, indf-1);
-						System.out.println(docCode);
-						pac = (Paciente)Hospital.getInstance().buscarUsuarioByCode(docCode);
-						
-					} catch (IndexOutOfBoundsException e2) {
-						// TODO: handle exception
-					}
-					
-					System.out.println("Paciente: " + pac);
-					System.out.println("Doctor: " + doc);
-					System.out.println("Fecha: " + dateChooser.getDate());
-					System.out.println("");
-					
-					if (dateChooser.getDate() != null && doc != null && pac != null)
-					{
-						setHorasDisponibles();
-						cbxHorasDisponibles.setEnabled(true);
-					}
-				}
-			});
-			cbxPaciente.setModel(new DefaultComboBoxModel(new String[] {""}));
-			cbxPaciente.setBounds(305, 123, 154, 22);
-			contentPanel.add(cbxPaciente);
-		}
-		{
 			if (entrada == null) {
 				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pendiente"}));
 				cbxEstado.setSelectedIndex(1);
@@ -212,16 +151,13 @@ public class RegistrarCita extends JDialog {
 		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				
+				/*
 				System.out.println("Paciente: " + pac);
 				System.out.println("Doctor: " + doc);
 				System.out.println("Fecha: " + dateChooser.getDate());
-				System.out.println("");
+				System.out.println("");*/
 
-				if (dateChooser.getDate() != null && doc != null && pac != null)
-				{
-					setHorasDisponibles();
-					cbxHorasDisponibles.setEnabled(true);
-				}
+				checkDatosCompletos();
 			}
 		});
 		
@@ -252,6 +188,7 @@ public class RegistrarCita extends JDialog {
 						if(tableDoctor.getSelectedRow()>=0){
 							doc = (Doctor)Hospital.getInstance().buscarUsuarioByCode(tableDoctor.getValueAt(tableDoctor.getSelectedRow(), 0).toString());
 							System.out.println(tableDoctor.getValueAt(tableDoctor.getSelectedRow(), 0).toString());
+							checkDatosCompletos();
 
 						}
 					}
@@ -270,8 +207,23 @@ public class RegistrarCita extends JDialog {
 			contentPanel.add(scrollPanePaciente);
 			{
 				tablePaciente = new JTable();
+				tablePaciente.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if(tablePaciente.getSelectedRow()>=0){
+							pac = (Paciente)Hospital.getInstance().buscarUsuarioByCode(tablePaciente.getValueAt(tablePaciente.getSelectedRow(), 0).toString());
+							System.out.println(tablePaciente.getValueAt(tablePaciente.getSelectedRow(), 0).toString());
+							checkDatosCompletos();
+						}
+					}
+				});
 				scrollPanePaciente.setRowHeaderView(tablePaciente);
 			}
+			tableModelPaciente = new DefaultTableModel();
+			tableModelPaciente.setColumnIdentifiers(setColumns());
+			loadListPaciente();
+			scrollPanePaciente.setViewportView(tablePaciente);
+			
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -367,7 +319,6 @@ public class RegistrarCita extends JDialog {
 				buttonPane.add(btnCancel);
 			}
 		}
-		setDoctoryPaciente();
 		loadCita();
 	}
 	
@@ -375,9 +326,6 @@ public class RegistrarCita extends JDialog {
 		
 		
 		try {
-			
-			cbxDoctor.setSelectedItem(cita.getDoctor());
-			cbxPaciente.setSelectedItem(cita.getPaciente());
 			
 			switch (cita.getEstado())
 			{
@@ -406,23 +354,7 @@ public class RegistrarCita extends JDialog {
 		}
 	}
 	
-	void setDoctoryPaciente() {
-		
-		cbxDoctor.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-		cbxPaciente.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-		//cbxDoctor.addItem("<Seleccione>");
-		//cbxPaciente.addItem("<Seleccione>");
-		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
-
-			if (aux instanceof Paciente) {
-				cbxPaciente.addItem(aux.getCodigo() + " : " + aux.getNombre());
-			}
-			
-			else if (aux instanceof Doctor) {
-				cbxDoctor.addItem(aux.getCodigo() + " : " + aux.getNombre());
-			}
-		}
-	}
+	
 	
 	void setHorasDisponibles() {
 		
@@ -541,8 +473,6 @@ public class RegistrarCita extends JDialog {
 	
 	private void clean() {
 		txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
-		cbxDoctor.setSelectedIndex(0);
-		cbxPaciente.setSelectedIndex(0);
 		cbxHorasDisponibles.removeAllItems();
 		cbxEstado.setSelectedIndex(1);
 		cbxHorasDisponibles.setEnabled(false);
@@ -561,18 +491,51 @@ public class RegistrarCita extends JDialog {
 			if(aux instanceof Doctor){
 				fila[0] = aux.getCodigo();
 				fila[1] = aux.getNombre();
-				fila[2] = aux.getCedula();
 
 	
 				tableModelDoctor.addRow(fila);
 			}
 		}
+		
+		tableDoctor.setModel(tableModelDoctor);
+		tableDoctor.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		tableDoctor.getTableHeader().setReorderingAllowed(false);
+		tableDoctor.getTableHeader().setResizingAllowed(false);
+		TableColumnModel columnModel = tableDoctor.getColumnModel();
+		
+		columnModel.getColumn(0).setPreferredWidth(60);
+		columnModel.getColumn(1).setPreferredWidth(130);
+	}
+	
+	private void loadListPaciente()
+	{
+		tableModelPaciente.setRowCount(0);
+		Object[] fila = new Object[tableModelPaciente.getColumnCount()];
+		
+		for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
+			if(aux instanceof Paciente){
+				fila[0] = aux.getCodigo();
+				fila[1] = aux.getNombre();
+
+	
+				tableModelPaciente.addRow(fila);
+			}
+		}
+		
+		tablePaciente.setModel(tableModelPaciente);
+		tablePaciente.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		tablePaciente.getTableHeader().setReorderingAllowed(false);
+		tablePaciente.getTableHeader().setResizingAllowed(false);
+		TableColumnModel columnModel = tablePaciente.getColumnModel();
+		
+		columnModel.getColumn(0).setPreferredWidth(60);
+		columnModel.getColumn(1).setPreferredWidth(130);
 	}
 	
 	private String[] setColumns()
 	{
 		
-			String[] columnNames = {"Código", "Nombre", "Cédula"};
+			String[] columnNames = {"Código", "Nombre"};
 			return columnNames;
 		
 	}
@@ -588,11 +551,11 @@ public class RegistrarCita extends JDialog {
 		{System.out.println("Date Vacio");
 			return true;
 		}
-		else if (cbxDoctor.getSelectedIndex() < 1)
+		else if (doc == null)
 		{System.out.println("Doc Vacio");
 			return true;
 		}
-		else if (cbxPaciente.getSelectedIndex() < 1)
+		else if (pac == null)
 		{System.out.println("Paciente Vacio");
 			return true;
 		}
@@ -629,5 +592,14 @@ public class RegistrarCita extends JDialog {
 		
 		System.out.println("Hora Got: " + hora);
 		return hora;
+	}
+	
+	private void checkDatosCompletos()
+	{
+		if (dateChooser.getDate() != null && doc != null && pac != null)
+		{
+			setHorasDisponibles();
+			cbxHorasDisponibles.setEnabled(true);
+		}
 	}
 }

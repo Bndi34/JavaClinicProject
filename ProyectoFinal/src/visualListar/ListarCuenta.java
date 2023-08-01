@@ -110,7 +110,6 @@ public class ListarCuenta extends JDialog {
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columnNames);
 		loadSportMans(type);
-		
 		scrollPane.setViewportView(table);
 		
 		JLabel lblTipoDePublicacin = new JLabel("Tipo de Cuenta:");
@@ -438,7 +437,6 @@ public class ListarCuenta extends JDialog {
 		columnModel.getColumn(1).setPreferredWidth(130);
 		columnModel.getColumn(2).setPreferredWidth(130);
 		columnModel.getColumn(3).setPreferredWidth(130);
-		columnModel.getColumn(4).setPreferredWidth(130);
 		
 		
 		

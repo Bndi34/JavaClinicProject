@@ -55,7 +55,7 @@ public class RegistrarVacuna extends JDialog {
 	private JTextField txtAlergia;
 	private JTextField txtEnfermedad;
 	
-	private Vacuna auxVacuna;
+	private Vacuna auxVacuna = null;
 	
 	//private ArrayList<Enfermedad>EnfermedadesPrevenidas;
 	//private ArrayList<String>Alergias;	
@@ -78,9 +78,8 @@ public class RegistrarVacuna extends JDialog {
 	 */
 	public RegistrarVacuna(Vacuna entrada) {
 		
-		auxVacuna = entrada;
 		
-		loadEntrada();
+		auxVacuna = entrada;
 		
 		AlergiasSinElegir = Hospital.getInstance().getAlergiasRegistradas();
 		loadEnfermedadesSinElegir();
@@ -399,22 +398,42 @@ public class RegistrarVacuna extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						String codigo = txtCode.getText();
 						
-						Vacuna aux = new Vacuna(codigo,getArrayEnfermedadesElegidas(),AlergiasElegidas);
-						Hospital.getInstance().insertarVacuna(aux);
-						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
-						
-						try {
-							Hospital.save();
-						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						if (!hayEspacioVacio())
+						{
+							String codigo = txtCode.getText();
+							
+							
+							Vacuna aux = new Vacuna(codigo,getArrayEnfermedadesElegidas(),AlergiasElegidas);
+							
+							if (auxVacuna != null)
+							{
+								Hospital.getInstance().insertarVacuna(aux);
+								JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+							}
+							else
+							{
+								Hospital.getInstance().modificarVacuna(aux);
+								JOptionPane.showMessageDialog(null, "Modificación satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
+							
+							}
+							
+							try {
+								Hospital.save();
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						    clean();
 						}
-					    clean();
+						else 
+						{
+							
+						}
+						
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -432,6 +451,7 @@ public class RegistrarVacuna extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		loadEntrada();
 		reloadAlergia();
 	}
 	
@@ -516,6 +536,7 @@ public class RegistrarVacuna extends JDialog {
 	private void loadEntrada()
 	{
 		try {
+			System.out.println("Aux vac: " + auxVacuna.getCodigo());
 			txtCode.setText(auxVacuna.getCodigo());
 			AlergiasElegidas = auxVacuna.getPosiblesAlergias();
 			
@@ -524,10 +545,30 @@ public class RegistrarVacuna extends JDialog {
 				String temp = aux.getCodigo()+" : "+aux.getNombre();
 				EnfermedadesElegidas.add(temp);
 			}
+			System.out.println("alergias elegidas: " + AlergiasElegidas + " no. 1: " + AlergiasElegidas.get(0));
+			System.out.println("Enfermedades elegidas: " + EnfermedadesElegidas+ " no. 1: " + EnfermedadesElegidas.get(0));
+			
 		} catch (NullPointerException e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		
 	}
+	
+	private boolean hayEspacioVacio()
+	{
+		if (AlergiasElegidas.size() < 1)
+		{
+			return true;
+		}
+		else if (EnfermedadesElegidas.size() < 1)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+		
+	
+	
 }
