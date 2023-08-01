@@ -59,6 +59,12 @@ public class ListarCuenta extends JDialog {
 	private JPanel PanelAlergia;
 	private JScrollPane scrollPaneAlergia;
 	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
+	private JLabel lblBuscar;
+	private JPanel panelBuscar;
+	private JLabel lblBuscarPorCodigo;
+	private JTextField txtBuscarCodigo;
+	private JLabel lblBuscarPorAreaSupervisor;
+	private JTable table_1;
 	
 
 	/**
@@ -71,7 +77,7 @@ public class ListarCuenta extends JDialog {
 		 String[] columnNames = setColumns(type);
 		
 		setTitle("Listado de " + type + "s");
-		setBounds(100, 100, 987, 376);
+		setBounds(100, 100, 1001, 629);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,12 +86,12 @@ public class ListarCuenta extends JDialog {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Listado de " + type + "s:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 959, 293);
+		panel.setBounds(10, 11, 953, 535);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 54, 583, 228);
+		scrollPane.setBounds(10, 26, 583, 496);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -94,9 +100,6 @@ public class ListarCuenta extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				
 				if(table.getSelectedRow()>=0){
-					btnEliminar.setEnabled(true);
-					btnModificar.setEnabled(true);
-					mode = cbxQuesoType.getSelectedItem().toString();
 					selected = Hospital.getInstance().buscarUsuarioByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
 					updateDetalles();
 					System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
@@ -111,7 +114,7 @@ public class ListarCuenta extends JDialog {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblTipoDePublicacin = new JLabel("Tipo de Cuenta:");
-		lblTipoDePublicacin.setBounds(10, 29, 116, 14);
+		lblTipoDePublicacin.setBounds(605, 29, 116, 14);
 		panel.add(lblTipoDePublicacin);
 		
 		cbxQuesoType = new JComboBox();
@@ -144,7 +147,7 @@ public class ListarCuenta extends JDialog {
 		});
 		
 		cbxQuesoType.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "Administradores", "Pacientes", "Doctores", "Secretarias"}));
-		cbxQuesoType.setBounds(127, 26, 157, 20);
+		cbxQuesoType.setBounds(722, 26, 157, 20);
 		panel.add(cbxQuesoType);
 		
 		
@@ -159,7 +162,7 @@ public class ListarCuenta extends JDialog {
 		
 		
 		
-		panelDetalles.setBounds(605, 56, 335, 228);
+		panelDetalles.setBounds(602, 294, 335, 228);
 		panel.add(panelDetalles);
 		panelDetalles.setLayout(null);
 		
@@ -220,8 +223,37 @@ public class ListarCuenta extends JDialog {
 		updateDetalles();
 		
 		JLabel lblDetalles = new JLabel("Detalles:");
-		lblDetalles.setBounds(605, 29, 335, 16);
+		lblDetalles.setBounds(602, 267, 335, 16);
 		panel.add(lblDetalles);
+		
+		lblBuscar = new JLabel("Buscar por:");
+		lblBuscar.setBounds(605, 0, 116, 16);
+		panel.add(lblBuscar);
+		
+		panelBuscar = new JPanel();
+		panelBuscar.setBounds(615, 56, 325, 182);
+		panel.add(panelBuscar);
+		panelBuscar.setLayout(null);
+		
+		lblBuscarPorCodigo = new JLabel("C\u00F3digo");
+		lblBuscarPorCodigo.setBounds(12, 13, 56, 16);
+		panelBuscar.add(lblBuscarPorCodigo);
+		
+		txtBuscarCodigo = new JTextField();
+		txtBuscarCodigo.setBounds(80, 10, 233, 22);
+		panelBuscar.add(txtBuscarCodigo);
+		txtBuscarCodigo.setColumns(10);
+		
+		lblBuscarPorAreaSupervisor = new JLabel("New label");
+		lblBuscarPorAreaSupervisor.setBounds(12, 59, 56, 16);
+		panelBuscar.add(lblBuscarPorAreaSupervisor);
+		
+		JScrollPane scrollPaneBuscarAreaSupervisor = new JScrollPane();
+		scrollPaneBuscarAreaSupervisor.setBounds(80, 59, 233, 110);
+		panelBuscar.add(scrollPaneBuscarAreaSupervisor);
+		
+		table_1 = new JTable();
+		scrollPaneBuscarAreaSupervisor.setViewportView(table_1);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

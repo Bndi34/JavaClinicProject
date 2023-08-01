@@ -76,15 +76,16 @@ public class RegistrarEnfermedad extends JDialog {
 		txtAlergia.setEditable(false);
 		txtAlergia.setVisible(false);
 		txtAlergia.setColumns(10);
-		txtAlergia.setBounds(274, 13, 123, 22);
+		txtAlergia.setBounds(83, 75, 247, 22);
 		contentPanel.add(txtAlergia);
 		
 		setTitle("Registar Enfermedad");
-		setBounds(100, 100, 539, 251);
+		setBounds(100, 100, 447, 390);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		{
 			JLabel lblCode = new JLabel("C\u00F3digo");
 			lblCode.setBounds(10, 13, 56, 16);
@@ -92,30 +93,30 @@ public class RegistrarEnfermedad extends JDialog {
 		}
 		{
 			JLabel lblName = new JLabel("Nombre");
-			lblName.setBounds(10, 53, 56, 16);
+			lblName.setBounds(10, 45, 56, 16);
 			contentPanel.add(lblName);
 		}
 		{
 			JLabel lblCura = new JLabel("Tiene Cura");
-			lblCura.setBounds(12, 132, 75, 16);
+			lblCura.setBounds(10, 280, 75, 16);
 			contentPanel.add(lblCura);
 		}
 		{
 			JLabel lblSintomas = new JLabel("S\u00EDntomas");
-			lblSintomas.setBounds(206, 16, 56, 16);
+			lblSintomas.setBounds(15, 78, 56, 16);
 			contentPanel.add(lblSintomas);
 		}
 		{
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
-			txtCode.setBounds(78, 10, 116, 22);
+			txtCode.setBounds(78, 10, 339, 22);
 			contentPanel.add(txtCode);
 			txtCode.setText("ENF-"+String.valueOf(Hospital.getInstance().generadorEnfermedad));
 			txtCode.setColumns(10);
 		}
 		{
 			txtNombre = new JTextField();
-			txtNombre.setBounds(78, 50, 116, 22);
+			txtNombre.setBounds(78, 42, 339, 22);
 			contentPanel.add(txtNombre);
 			txtNombre.setColumns(10);
 		}
@@ -161,18 +162,18 @@ public class RegistrarEnfermedad extends JDialog {
 					
 				}
 			});
-			cbxSintomas.setBounds(274, 13, 123, 22);
+			cbxSintomas.setBounds(83, 75, 247, 22);
 			contentPanel.add(cbxSintomas);
 		}
 		{
 			chbxCura = new JCheckBox("");
-			chbxCura.setBounds(80, 132, 43, 16);
+			chbxCura.setBounds(78, 283, 43, 16);
 			contentPanel.add(chbxCura);
 		}
 		{
 			panel_sintomas = new JPanel();
 			panel_sintomas.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_sintomas.setBounds(226, 61, 283, 95);
+			panel_sintomas.setBounds(10, 110, 407, 157);
 			contentPanel.add(panel_sintomas);
 			panel_sintomas.setLayout(new BorderLayout(0, 0));
 			{
@@ -247,7 +248,7 @@ public class RegistrarEnfermedad extends JDialog {
 				
 			}
 		});
-		btnAgregarSintoma.setBounds(409, 12, 97, 25);
+		btnAgregarSintoma.setBounds(342, 74, 75, 25);
 		contentPanel.add(btnAgregarSintoma);
 		
 		}
@@ -262,7 +263,7 @@ public class RegistrarEnfermedad extends JDialog {
 				okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Enfermedad aux = new Enfermedad(txtCode.getText(), txtNombre.getText(), SintomasElegido,chbxCura.isSelected() );
+						Enfermedad aux = new Enfermedad(txtCode.getText(), txtNombre.getText(), SintomasElegido,chbxCura.isSelected());
 						Hospital.getInstance().insertarEnfermedad(aux);
 						try {
 							Hospital.save();

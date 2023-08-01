@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import logico.Hospital;
 import logico.Cita;
@@ -32,6 +33,10 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class RegistrarCita extends JDialog {
@@ -48,6 +53,11 @@ public class RegistrarCita extends JDialog {
 	private Cita cita;
 	private Date fecha;
 	private JCheckBox chbxRetraso;
+	
+	private  DefaultTableModel tableModelDoctor;
+	private  DefaultTableModel tableModelPaciente;
+	private JTable tableDoctor;
+	private JTable tablePaciente;
 
 	/**
 	 * Launch the application.
@@ -74,7 +84,7 @@ public class RegistrarCita extends JDialog {
 		doc = null;
 		pac = null;
 		setTitle("Registrar Cita");
-		setBounds(100, 100, 432, 300);
+		setBounds(100, 100, 502, 437);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -91,17 +101,17 @@ public class RegistrarCita extends JDialog {
 		}
 		{
 			JLabel lblDoctor = new JLabel("Doctor");
-			lblDoctor.setBounds(12, 87, 56, 16);
+			lblDoctor.setBounds(12, 129, 56, 16);
 			contentPanel.add(lblDoctor);
 		}
 		{
 			JLabel lblPaciente = new JLabel("Paciente");
-			lblPaciente.setBounds(12, 124, 56, 16);
+			lblPaciente.setBounds(250, 126, 56, 16);
 			contentPanel.add(lblPaciente);
 		}
 		{
 			JLabel lblEstado = new JLabel("Estado");
-			lblEstado.setBounds(12, 161, 56, 16);
+			lblEstado.setBounds(12, 82, 56, 16);
 			contentPanel.add(lblEstado);
 		}
 		{
@@ -144,7 +154,7 @@ public class RegistrarCita extends JDialog {
 					}
 				}
 			});
-			cbxDoctor.setBounds(67, 84, 154, 22);
+			cbxDoctor.setBounds(67, 126, 154, 22);
 			contentPanel.add(cbxDoctor);
 		}
 		{
@@ -174,7 +184,7 @@ public class RegistrarCita extends JDialog {
 				}
 			});
 			cbxPaciente.setModel(new DefaultComboBoxModel(new String[] {""}));
-			cbxPaciente.setBounds(67, 121, 154, 22);
+			cbxPaciente.setBounds(305, 123, 154, 22);
 			contentPanel.add(cbxPaciente);
 		}
 		{
@@ -186,16 +196,16 @@ public class RegistrarCita extends JDialog {
 				cbxEstado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pendiente", "Realizado", "Cancelado"}));
 			}
 			
-			cbxEstado.setBounds(67, 158, 154, 22);
+			cbxEstado.setBounds(67, 79, 154, 22);
 			contentPanel.add(cbxEstado);
 		}
 		
 		chbxRetraso = new JCheckBox("");
-		chbxRetraso.setBounds(80, 194, 36, 25);
+		chbxRetraso.setBounds(339, 41, 36, 25);
 		contentPanel.add(chbxRetraso);
 		{
 			JLabel lblNewLabel = new JLabel("Cita Retrasada");
-			lblNewLabel.setBounds(6, 198, 80, 16);
+			lblNewLabel.setBounds(250, 45, 125, 16);
 			contentPanel.add(lblNewLabel);
 		}
 		
@@ -223,12 +233,46 @@ public class RegistrarCita extends JDialog {
 		cbxHorasDisponibles.setEnabled(false);
 				
 		cbxHorasDisponibles.setMaximumRowCount(15);
-		cbxHorasDisponibles.setBounds(286, 47, 120, 22);
+		cbxHorasDisponibles.setBounds(298, 76, 161, 22);
 		contentPanel.add(cbxHorasDisponibles);
 		
 		JLabel lblHora = new JLabel("Hora");
-		lblHora.setBounds(240, 50, 36, 16);
+		lblHora.setBounds(252, 79, 36, 16);
 		contentPanel.add(lblHora);
+		{
+			JScrollPane scrollPaneDoctor = new JScrollPane();
+			scrollPaneDoctor.setBounds(22, 158, 199, 184);
+			contentPanel.add(scrollPaneDoctor);
+			{
+				tableDoctor = new JTable();
+				tableDoctor.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						
+						if(tableDoctor.getSelectedRow()>=0){
+							doc = (Doctor)Hospital.getInstance().buscarUsuarioByCode(tableDoctor.getValueAt(tableDoctor.getSelectedRow(), 0).toString());
+							System.out.println(tableDoctor.getValueAt(tableDoctor.getSelectedRow(), 0).toString());
+
+						}
+					}
+				});
+				scrollPaneDoctor.setViewportView(tableDoctor);
+			}
+			
+			tableModelDoctor = new DefaultTableModel();
+			tableModelDoctor.setColumnIdentifiers(setColumns());
+			loadListDoctor();
+			scrollPaneDoctor.setViewportView(tableDoctor);
+		}
+		{
+			JScrollPane scrollPanePaciente = new JScrollPane();
+			scrollPanePaciente.setBounds(250, 158, 209, 184);
+			contentPanel.add(scrollPanePaciente);
+			{
+				tablePaciente = new JTable();
+				scrollPanePaciente.setRowHeaderView(tablePaciente);
+			}
+		}
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -495,7 +539,7 @@ public class RegistrarCita extends JDialog {
 		System.out.println("Hora Removida: " + horas);
 	}
 	
-	void clean() {
+	private void clean() {
 		txtCode.setText("CI-"+String.valueOf(Hospital.getInstance().generadorCita));
 		cbxDoctor.setSelectedIndex(0);
 		cbxPaciente.setSelectedIndex(0);
@@ -506,6 +550,31 @@ public class RegistrarCita extends JDialog {
 		dateChooser.setDate(null);
 		pac = null;
 		doc = null;
+	}
+	
+	private void loadListDoctor()
+	{
+		tableModelDoctor.setRowCount(0);
+		Object[] fila = new Object[tableModelDoctor.getColumnCount()];
+		
+		for (Usuario aux : Hospital.getInstance().getMisCuentas()) {
+			if(aux instanceof Doctor){
+				fila[0] = aux.getCodigo();
+				fila[1] = aux.getNombre();
+				fila[2] = aux.getCedula();
+
+	
+				tableModelDoctor.addRow(fila);
+			}
+		}
+	}
+	
+	private String[] setColumns()
+	{
+		
+			String[] columnNames = {"Código", "Nombre", "Cédula"};
+			return columnNames;
+		
 	}
 	
 	private boolean hayEspacioVacio()

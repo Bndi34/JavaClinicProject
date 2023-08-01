@@ -89,11 +89,13 @@ public class RegistrarVacuna extends JDialog {
 		modelEnfermedad = new DefaultListModel<String>();
 		modelAlergia = new DefaultListModel<String>();
 		setTitle("Registrar Vacuna");
-		setBounds(100, 100, 525, 300);
+		setBounds(100, 100, 384, 474);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
+		
 		{
 			JLabel lblCode = new JLabel("C\u00F3digo");
 			lblCode.setBounds(22, 13, 56, 16);
@@ -101,18 +103,18 @@ public class RegistrarVacuna extends JDialog {
 		}
 		{
 			JLabel lblEnfermedad = new JLabel("Enfermedad Prevenida:");
-			lblEnfermedad.setBounds(22, 49, 129, 16);
+			lblEnfermedad.setBounds(22, 49, 165, 16);
 			contentPanel.add(lblEnfermedad);
 		}
 		{
 			JLabel lblAlergia = new JLabel("Posibles Alergias:");
-			lblAlergia.setBounds(273, 49, 129, 16);
+			lblAlergia.setBounds(28, 173, 129, 16);
 			contentPanel.add(lblAlergia);
 		}
 		{
 			txtCode = new JTextField();
 			txtCode.setEditable(false);
-			txtCode.setBounds(71, 10, 116, 22);
+			txtCode.setBounds(71, 10, 265, 22);
 			txtCode.setText("VA-"+String.valueOf(Hospital.getInstance().generadorVacuna));
 			contentPanel.add(txtCode);
 			txtCode.setColumns(10);
@@ -164,7 +166,7 @@ public class RegistrarVacuna extends JDialog {
 						
 				}
 			}});
-			cbxEnfermedad.setBounds(22, 76, 116, 22);
+			cbxEnfermedad.setBounds(22, 76, 196, 22);
 			contentPanel.add(cbxEnfermedad);
 			if (cbxEnfermedad.getItemCount() == 0) {
 				cbxEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
@@ -222,7 +224,7 @@ public class RegistrarVacuna extends JDialog {
 					
 				}
 			});
-			cbxAlergia.setBounds(267, 76, 116, 22);
+			cbxAlergia.setBounds(22, 200, 196, 22);
 			contentPanel.add(cbxAlergia);
 			reloadAlergia();
 			
@@ -261,10 +263,10 @@ public class RegistrarVacuna extends JDialog {
 			}
 		});
 		
-		btnEnfermedad.setBounds(143, 76, 89, 23);
+		btnEnfermedad.setBounds(230, 76, 106, 23);
 		contentPanel.add(btnEnfermedad);
 		
-		btnAlergia.setBounds(393, 76, 89, 23);
+		btnAlergia.setBounds(230, 200, 106, 23);
 		contentPanel.add(btnAlergia);
 		
 		btnAlergia.addActionListener(new ActionListener() {
@@ -312,7 +314,7 @@ public class RegistrarVacuna extends JDialog {
 		
 		JPanel panel_enfermedad = new JPanel();
 		panel_enfermedad.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_enfermedad.setBounds(22, 109, 116, 108);
+		panel_enfermedad.setBounds(22, 109, 314, 51);
 		contentPanel.add(panel_enfermedad);
 		panel_enfermedad.setLayout(new BorderLayout(0, 0));
 		{
@@ -340,7 +342,7 @@ public class RegistrarVacuna extends JDialog {
 		}
 		
 		JPanel panel_alergia = new JPanel();
-		panel_alergia.setBounds(267, 109, 116, 108);
+		panel_alergia.setBounds(22, 233, 314, 146);
 		contentPanel.add(panel_alergia);
 		panel_alergia.setLayout(new BorderLayout(0, 0));
 		{
@@ -375,7 +377,7 @@ public class RegistrarVacuna extends JDialog {
 			txtAlergia.setEditable(false);
 			txtAlergia.setVisible(false);
 			txtAlergia.setColumns(10);
-			txtAlergia.setBounds(267, 78, 116, 22);
+			txtAlergia.setBounds(22, 202, 196, 22);
 			contentPanel.add(txtAlergia);
 			
 			
@@ -385,7 +387,7 @@ public class RegistrarVacuna extends JDialog {
 			txtEnfermedad.setEditable(false);
 			txtEnfermedad.setVisible(false);
 			txtEnfermedad.setColumns(10);
-			txtEnfermedad.setBounds(22, 76, 116, 22);
+			txtEnfermedad.setBounds(22, 76, 196, 22);
 			contentPanel.add(txtEnfermedad);
 		}
 		

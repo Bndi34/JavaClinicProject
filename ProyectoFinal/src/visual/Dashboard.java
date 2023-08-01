@@ -257,7 +257,7 @@ public class Dashboard extends JFrame {
 
 		JPanel panel_calenderSecundario = new JPanel();
 		panel_calenderSecundario.setBackground(new Color(72, 61, 139));
-		panel_calenderSecundario.setBounds(741, 158, 445, 468);
+		panel_calenderSecundario.setBounds(741, 158, 445, 420);
 
 		LineBorder border = new LineBorder(MyGreen,13);
 		panel_calenderSecundario.setBorder(border);
@@ -390,7 +390,6 @@ public class Dashboard extends JFrame {
 					regUs = new RegistrarUsuario("Registrar Usuario",null, false);
 				}
 
-				regUs.setModal(true);
 				regUs.setVisible(true);
 			}
 		});
@@ -497,12 +496,6 @@ public class Dashboard extends JFrame {
 		});
 		mnVacuna.add(mntmListarVacuna);
 
-		JMenu mnEstadisticas = new JMenu("Estad\u00EDsticas");
-		menuBar.add(mnEstadisticas);
-
-		JMenuItem mntmAbrirEstadisticas = new JMenuItem("Abrir men\u00FA de Estad\u00EDsticas");
-		mnEstadisticas.add(mntmAbrirEstadisticas);
-
 		JMenu mnRespaldo = new JMenu("Respaldo");
 		menuBar.add(mnRespaldo);
 
@@ -543,9 +536,6 @@ public class Dashboard extends JFrame {
 		mnUser = new JMenu("<User>");
 		menuBar.add(mnUser);
 		mnUser.setText(Cuenta.getNombre());
-
-		JMenuItem mntmUserConfig = new JMenuItem("Configuraci\u00F3n");
-		mnUser.add(mntmUserConfig);
 
 		JMenuItem mntmUserLogOut = new JMenuItem("Cerrar Sesi\u00F3n");
 		mntmUserLogOut.addActionListener(new ActionListener() {

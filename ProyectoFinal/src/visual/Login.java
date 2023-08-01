@@ -85,6 +85,7 @@ public class Login extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		{
 			JLabel lblUser = new JLabel("C\u00E9dula");
 			lblUser.setBounds(72, 118, 56, 16);
@@ -137,21 +138,6 @@ public class Login extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			
-			JButton btnRegistrar = new JButton("Registrar");
-			btnRegistrar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-
-					RegistrarUsuario regUs = new RegistrarUsuario("Registrar Usuario",null, false);
-					regUs.setModal(true);
-					regUs.setVisible(true);
-					/*
-					RegistrarUsuario registro = new RegistrarUsuario("Paciente", null);
-					registro.setModal(true);
-					registro.setVisible(true);*/
-					
-				}
-			});
-			
 			JButton adminLogin = new JButton("adminLogin");
 			adminLogin.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -163,7 +149,6 @@ public class Login extends JDialog {
 				}
 			});
 			buttonPane.add(adminLogin);
-			buttonPane.add(btnRegistrar);
 			{
 				JButton btnIniciar = new JButton("Iniciar Sesi\u00F3n");
 				btnIniciar.addActionListener(new ActionListener() {
