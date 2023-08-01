@@ -129,7 +129,7 @@ public class RegistrarConsulta extends JDialog {
 			contentPanel.add(lblSintomas);
 		}
 		{
-			cbxSintoma.setModel(new DefaultComboBoxModel(entrada.getPaciente().getAlergias().toArray(new String[0])));
+			cbxSintoma.setModel(new DefaultComboBoxModel(entrada.getPaciente().getMiRegistro().getMisAlergias().toArray(new String[0])));
 			cbxSintoma.addItem("<Seleccione>");
 			cbxSintoma.addItem("Agregar...");
 

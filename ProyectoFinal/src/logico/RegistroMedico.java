@@ -6,17 +6,19 @@ import java.util.ArrayList;
 public class RegistroMedico implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean esPaciente;
+	private ArrayList<String> misAlergias;
 	private ArrayList<Cita>misCitas;
 	private ArrayList<Consulta>misConsultas;
 	private ArrayList<Vacuna>TotalDeVacunasColocadas;
 	
 	public RegistroMedico(boolean esPaciente, ArrayList<Cita> misCitas, ArrayList<Consulta> misConsultas,
-			ArrayList<Vacuna> totalDeVacunasColocadas) {
+			ArrayList<Vacuna> totalDeVacunasColocadas, ArrayList<String> misAlergias) {
 		super();
 		this.esPaciente = esPaciente;
 		this.misCitas = misCitas;
 		this.misConsultas = misConsultas;
 		TotalDeVacunasColocadas = totalDeVacunasColocadas;
+		this.misAlergias = misAlergias;
 	}
 
 	public boolean getEsPaciente() {
@@ -49,5 +51,13 @@ public class RegistroMedico implements Serializable {
 
 	public void setTotalDeVacunasColocadas(ArrayList<Vacuna> totalDeVacunasColocadas) {
 		TotalDeVacunasColocadas = totalDeVacunasColocadas;
+	}
+
+	public ArrayList<String> getMisAlergias() {
+		return misAlergias;
+	}
+
+	public void setMisAlergias(ArrayList<String> misAlergias) {
+		this.misAlergias = misAlergias;
 	}
 }

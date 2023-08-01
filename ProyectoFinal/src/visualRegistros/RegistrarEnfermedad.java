@@ -61,7 +61,6 @@ public class RegistrarEnfermedad extends JDialog {
 		
 		auxEnfermedad = entrada;
 		
-		loadEntrada();
 		
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -295,9 +294,13 @@ public class RegistrarEnfermedad extends JDialog {
 		}
 		//Debería existir un sistema de si estas cargando una enfermedad no funcione loadSintomas, 
 		//o que solo cargue los sintomas que no esten seleccionados
+		loadEntrada();
 		LoadSintomas();
 		loadEnfermedad();
 		reloadElegido();
+		reloadAlergia();
+		reloadAlergiaCuadro();
+
 	
 	}
 			

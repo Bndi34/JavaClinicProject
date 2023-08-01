@@ -6,17 +6,15 @@ public class Paciente extends Usuario {
 	private static final long serialVersionUID = 1L;
 	private boolean esPaciente;
 	private char sexo;
-	private ArrayList<String> Alergias;
 	private String direccion;
 	private RegistroMedico miRegistro;
 	
 	public Paciente(String codigo, String nombre, String cedula, String telefono, String contrasenia,  
-					String direccion, boolean esPaciente, char sexo, ArrayList<String> alergias,RegistroMedico miRegistro) {
+					String direccion, boolean esPaciente, char sexo,RegistroMedico miRegistro) {
 		super(codigo, nombre, cedula, telefono,contrasenia);
 		this.esPaciente = esPaciente;
 		this.sexo = sexo;
 		this.direccion = direccion;
-		Alergias = alergias;
 		this.miRegistro = miRegistro;
 	}
 
@@ -31,12 +29,6 @@ public class Paciente extends Usuario {
 	}
 	public void setSexo(char sexo) {
 		this.sexo = sexo;
-	}
-	public ArrayList<String> getAlergias() {
-		return Alergias;
-	}
-	public void setAlergias(ArrayList<String> alergias) {
-		Alergias = alergias;
 	}
 	public String getDireccion() {
 		return direccion;

@@ -510,10 +510,8 @@ public class ListarCuenta extends JDialog {
 	
 	private void reloadAlergiaCuadro()
 	{
-		System.out.println("Reload Alergia");
-		System.out.println(((Paciente)selected).getAlergias().size());
 		modelAlergia.removeAllElements();
-		for (String auxString : ((Paciente)selected).getAlergias())
+		for (String auxString : ((Paciente)selected).getMiRegistro().getMisAlergias())
 		{
 			System.out.println(auxString);
 			modelAlergia.addElement(auxString);

@@ -34,15 +34,13 @@ public class RegistrarVacuna extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode; 
 	private JComboBox cbxEnfermedad = new JComboBox();
-	private JComboBox cbxAlergia = new JComboBox();
+	
 	private JButton btnEnfermedad = new JButton("A\u00F1adir");
-	private JButton btnAlergia = new JButton("A\u00F1adir");
+	
+	
 	private DefaultListModel<String> modelEnfermedad;
-	private DefaultListModel<String> modelAlergia;
-	private JList listAler = new JList();
 	private JList listEnf = new JList();
 	private boolean antiDoubleAddFilter = false;
-	private String selectedAlergia;
 	private String selectedEnfermedad;
 	
 	private int selected = -1;
@@ -50,9 +48,16 @@ public class RegistrarVacuna extends JDialog {
 	private String selectedItem;
 	private ArrayList<String>EnfermedadesElegidas = new ArrayList<>();
 	private ArrayList<String>EnfermedadeSinElegir = new ArrayList<>();
+	
+	private JComboBox cbxAlergia = new JComboBox();
+	private JButton btnAlergia = new JButton("A\u00F1adir");
+	private DefaultListModel<String> modelAlergia;
+	private JList listAler = new JList();
+	private String selectedAlergia;
 	private ArrayList<String>AlergiasElegidas = new ArrayList<>();
 	private ArrayList<String>AlergiasSinElegir = new ArrayList<>();
 	private JTextField txtAlergia;
+	
 	private JTextField txtEnfermedad;
 	
 	private Vacuna auxVacuna = null;
@@ -406,7 +411,8 @@ public class RegistrarVacuna extends JDialog {
 							
 							Vacuna aux = new Vacuna(codigo,getArrayEnfermedadesElegidas(),AlergiasElegidas);
 							
-							if (auxVacuna != null)
+
+							if (auxVacuna == null)
 							{
 								Hospital.getInstance().insertarVacuna(aux);
 								JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -431,7 +437,7 @@ public class RegistrarVacuna extends JDialog {
 						}
 						else 
 						{
-							
+							JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Información", JOptionPane.INFORMATION_MESSAGE);
 						}
 						
 					}
@@ -453,6 +459,9 @@ public class RegistrarVacuna extends JDialog {
 		}
 		loadEntrada();
 		reloadAlergia();
+		reloadAlergiaCuadro();
+		reloadEnfermedad();
+		reloadEnfermedadCuadro();
 	}
 	
 	private void clean() {
@@ -549,7 +558,6 @@ public class RegistrarVacuna extends JDialog {
 			System.out.println("Enfermedades elegidas: " + EnfermedadesElegidas+ " no. 1: " + EnfermedadesElegidas.get(0));
 			
 		} catch (NullPointerException e) {
-			e.printStackTrace();
 		}
 		
 		
