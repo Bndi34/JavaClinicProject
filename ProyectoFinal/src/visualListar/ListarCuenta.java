@@ -25,6 +25,9 @@ import visualRegistros.*;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JTextField;
+import javax.swing.JList;
 
 public class ListarCuenta extends JDialog {
 
@@ -34,7 +37,6 @@ public class ListarCuenta extends JDialog {
 	private  DefaultTableModel tableModel;
 	private  JButton btnEliminar;
 	private  JButton btnModificar;
-	private JButton btnDetalles;
 	private int code;
 	//private String[] columnNames;
 	String mode = "<Todos>";
@@ -42,7 +44,22 @@ public class ListarCuenta extends JDialog {
 	JComboBox cbxQuesoType;
 	private JButton btnRegistrar;
 	
-
+	
+	private JTextField txtCode;
+	private JTextField txtNombre;
+	private JTextField txtCedula;
+	private JTextField txtDirAreaSupervisor;
+	
+	private JLabel lblCode;
+	private JLabel lblNombre;
+	private JLabel lblCedula;
+	private JLabel lblAlergias;
+	private JPanel panelDetalles;
+	private JLabel lblDirAreaSupervisor;
+	private JPanel PanelAlergia;
+	private JScrollPane scrollPaneAlergia;
+	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
+	
 
 	/**
 	 * Create the dialog.
@@ -54,7 +71,7 @@ public class ListarCuenta extends JDialog {
 		 String[] columnNames = setColumns(type);
 		
 		setTitle("Listado de " + type + "s");
-		setBounds(100, 100, 650, 376);
+		setBounds(100, 100, 987, 376);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -63,12 +80,12 @@ public class ListarCuenta extends JDialog {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Listado de " + type + "s:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 624, 293);
+		panel.setBounds(10, 11, 959, 293);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 54, 604, 228);
+		scrollPane.setBounds(10, 54, 583, 228);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -79,8 +96,9 @@ public class ListarCuenta extends JDialog {
 				if(table.getSelectedRow()>=0){
 					btnEliminar.setEnabled(true);
 					btnModificar.setEnabled(true);
-					btnDetalles.setEnabled(true);
 					mode = cbxQuesoType.getSelectedItem().toString();
+					selected = Hospital.getInstance().buscarUsuarioByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+					updateDetalles();
 					System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
 
 				}
@@ -89,6 +107,7 @@ public class ListarCuenta extends JDialog {
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columnNames);
 		loadSportMans(type);
+		
 		scrollPane.setViewportView(table);
 		
 		JLabel lblTipoDePublicacin = new JLabel("Tipo de Cuenta:");
@@ -123,9 +142,86 @@ public class ListarCuenta extends JDialog {
 				*/
 			}
 		});
+		
 		cbxQuesoType.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "Administradores", "Pacientes", "Doctores", "Secretarias"}));
 		cbxQuesoType.setBounds(127, 26, 157, 20);
 		panel.add(cbxQuesoType);
+		
+		
+		
+		lblCode = new JLabel("C\u00F3digo:");
+		lblNombre = new JLabel("Nombre");
+		lblCedula = new JLabel("C\u00E9dula");
+		
+		lblAlergias = new JLabel("Alergias");
+		panelDetalles = new JPanel();
+
+		
+		
+		
+		panelDetalles.setBounds(605, 56, 335, 228);
+		panel.add(panelDetalles);
+		panelDetalles.setLayout(null);
+		
+		lblDirAreaSupervisor = new JLabel("New label");
+		lblCode.setBounds(12, 13, 56, 16);
+		lblNombre.setBounds(12, 42, 56, 16);
+		lblCedula.setBounds(12, 71, 56, 16);
+		lblDirAreaSupervisor.setBounds(12, 100, 92, 16);
+		panelDetalles.add(lblCode);
+		
+
+		panelDetalles.add(lblNombre);
+		
+		panelDetalles.add(lblCedula);
+		
+		panelDetalles.add(lblDirAreaSupervisor);
+		
+		lblAlergias.setBounds(12, 129, 56, 16);
+		panelDetalles.add(lblAlergias);
+		
+		txtCode = new JTextField();
+		txtCode.setEditable(false);
+		txtCode.setBounds(116, 13, 207, 22);
+		panelDetalles.add(txtCode);
+		txtCode.setColumns(10);
+		
+		txtNombre = new JTextField();
+		txtNombre.setEditable(false);
+		txtNombre.setBounds(116, 42, 207, 22);
+		panelDetalles.add(txtNombre);
+		txtNombre.setColumns(10);
+		
+		txtCedula = new JTextField();
+		txtCedula.setEditable(false);
+		txtCedula.setBounds(116, 74, 207, 22);
+		panelDetalles.add(txtCedula);
+		txtCedula.setColumns(10);
+		
+		txtDirAreaSupervisor = new JTextField();
+		txtDirAreaSupervisor.setEditable(false);
+		txtDirAreaSupervisor.setBounds(116, 103, 207, 22);
+		panelDetalles.add(txtDirAreaSupervisor);
+		txtDirAreaSupervisor.setColumns(10);
+		
+		PanelAlergia = new JPanel();
+		PanelAlergia.setBounds(116, 138, 207, 64);
+		panelDetalles.add(PanelAlergia);
+		PanelAlergia.setLayout(null);
+		
+		scrollPaneAlergia = new JScrollPane();
+		scrollPaneAlergia.setBounds(0, 0, 207, 64);
+		PanelAlergia.add(scrollPaneAlergia);
+		
+		JList listAlergia = new JList();
+		listAlergia.setModel(modelAlergia);
+		scrollPaneAlergia.setRowHeaderView(listAlergia);
+		
+		updateDetalles();
+		
+		JLabel lblDetalles = new JLabel("Detalles:");
+		lblDetalles.setBounds(605, 29, 335, 16);
+		panel.add(lblDetalles);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -142,17 +238,9 @@ public class ListarCuenta extends JDialog {
 					
 				
 					loadSportMans(type);
-				}
-			});
-			
-			btnDetalles = new JButton("Detalles");
-			btnDetalles.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
 					
 				}
 			});
-			btnDetalles.setEnabled(false);
-			buttonPane.add(btnDetalles);
 			btnModificar.setEnabled(false);
 			buttonPane.add(btnModificar);
 			{
@@ -170,6 +258,7 @@ public class ListarCuenta extends JDialog {
 									Hospital.getInstance().getMisCuentas().remove(aux);
 
 									loadSportMans(type);
+									
 								}
 								else
 								{
@@ -201,6 +290,7 @@ public class ListarCuenta extends JDialog {
 						regisUser.setModal(true);
 						
 						loadSportMans(type);
+						
 					}
 				});
 				buttonPane.add(btnRegistrar);
@@ -208,7 +298,9 @@ public class ListarCuenta extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		
 		loadSportMans(type);
+		
 
 	}
 
@@ -307,17 +399,95 @@ public class ListarCuenta extends JDialog {
 		table.setModel(tableModel);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
 		TableColumnModel columnModel = table.getColumnModel();
-		/*
+		
 		columnModel.getColumn(0).setPreferredWidth(60);
-		columnModel.getColumn(1).setPreferredWidth(180);
-		columnModel.getColumn(2).setPreferredWidth(150);
+		columnModel.getColumn(1).setPreferredWidth(130);
+		columnModel.getColumn(2).setPreferredWidth(130);
 		columnModel.getColumn(3).setPreferredWidth(130);
-		columnModel.getColumn(4).setPreferredWidth(81);
-		/*if(tableModel.getRowCount()==0){
-			btnEliminar.setEnabled(false);
-			btnModificar.setEnabled(false);
-		}*/
+		columnModel.getColumn(4).setPreferredWidth(130);
+		
+		
+		
+	}
+	
+	private void updateDetalles()
+	{
+		if (selected != null)
+		{
+			lblCode.setVisible(true);
+			lblNombre.setVisible(true);
+			lblCedula.setVisible(true);
+			txtCedula.setVisible(true);
+			lblDirAreaSupervisor.setVisible(true);
+			txtDirAreaSupervisor.setVisible(true);
+			lblAlergias.setVisible(true);
+			
+			txtCode.setText(selected.getCodigo());
+			txtNombre.setText(selected.getNombre());
+			txtCedula.setText(selected.getCedula());
+			if (selected instanceof Paciente)
+			{
+				lblDirAreaSupervisor.setText("Dirección:");
+				txtDirAreaSupervisor.setText(((Paciente) selected).getDireccion());
+				reloadAlergiaCuadro();
+				lblAlergias.setVisible(true);
+				PanelAlergia.setVisible(true);
+				
+			}
+			else 
+			{
+				lblAlergias.setVisible(false);
+				PanelAlergia.setVisible(false);
+			}
+			if (selected instanceof Doctor)
+			{
+				lblDirAreaSupervisor.setText("Área Médica:");
+				txtDirAreaSupervisor.setText(((Doctor) selected).getAreaMedica());
+			}
+			else if (selected instanceof Secretaria)
+			{
+				lblDirAreaSupervisor.setText("Supervisor:");
+				txtDirAreaSupervisor.setText(((Secretaria) selected).getDependiente().getNombre());
+			}
+			else if (selected instanceof Admin)
+			{
+				txtDirAreaSupervisor.setVisible(false);;
+				lblDirAreaSupervisor.setVisible(false);
+			}
+			
+		}
+		else
+		{
+			lblCode.setVisible(false);
+			lblNombre.setVisible(false);
+			txtCode.setText("Seleccione un usuario");
+			txtNombre.setText("Para ver Detalles.");
+			
+			lblCedula.setVisible(false);
+			txtCedula.setVisible(false);
+			lblDirAreaSupervisor.setVisible(false);
+			txtDirAreaSupervisor.setVisible(false);
+			lblAlergias.setVisible(false);
+			PanelAlergia.setVisible(false);
+			
+			
+			
+			
+		}
+	}
+	
+	private void reloadAlergiaCuadro()
+	{
+		System.out.println("Reload Alergia");
+		System.out.println(((Paciente)selected).getAlergias().size());
+		modelAlergia.removeAllElements();
+		for (String auxString : ((Paciente)selected).getAlergias())
+		{
+			System.out.println(auxString);
+			modelAlergia.addElement(auxString);
+		}
 	}
 	
 	private String[] setColumns(String type)

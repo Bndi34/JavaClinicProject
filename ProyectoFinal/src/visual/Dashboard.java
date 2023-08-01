@@ -172,7 +172,7 @@ public class Dashboard extends JFrame {
 		Dashboard.setBounds(22, 13, 217, 54);
 		contentPanel.add(Dashboard);
 
-		radioCalendar = new JRadioButton("");
+		radioCalendar = new JRadioButton("Calendario");
 		radioCalendar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (radioCalendar.isSelected()) {
@@ -183,10 +183,10 @@ public class Dashboard extends JFrame {
 			}
 		});
 		radioCalendar.setBackground(Color.ORANGE);
-		radioCalendar.setBounds(300, 28, 26, 23);
+		radioCalendar.setBounds(300, 28, 100, 23);
 		contentPanel.add(radioCalendar);
 
-		radioDashStads = new JRadioButton("");
+		radioDashStads = new JRadioButton("Estad\u00EDsticas");
 		radioDashStads.setSelected(true);
 		radioDashStads.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -199,7 +199,7 @@ public class Dashboard extends JFrame {
 			}
 		});
 		radioDashStads.setBackground(Color.ORANGE);
-		radioDashStads.setBounds(352, 28, 26, 23);
+		radioDashStads.setBounds(400, 28, 100, 23);
 		contentPanel.add(radioDashStads);
 
 		dashboardStads = new JPanel();
@@ -239,8 +239,9 @@ public class Dashboard extends JFrame {
 
 
 		JPanel panel_calendar = new JPanel();
-		panel_calendar.setBackground(new Color(51, 153, 102));
-		panel_calendar.setBounds(22, 159, 707, 467);
+		panel_calendar.setBackground(new Color(255, 255, 255));
+		//panel_calendar.setBackground(MyBlue);
+		panel_calendar.setBounds(22, 159, 707, 420);
 		dashboardCalender.add(panel_calendar);
 		panel_calendar.setLayout(null);
 
@@ -251,7 +252,7 @@ public class Dashboard extends JFrame {
 			}
 		});
 		
-		calendar.setBounds(10, 11, 685, 443);
+		calendar.setBounds(10, 11, 685, 390);
 		panel_calendar.add(calendar);
 
 		JPanel panel_calenderSecundario = new JPanel();
@@ -630,19 +631,24 @@ public class Dashboard extends JFrame {
 	
 	private void setPacienteHistorialMedico(){
 		String temp = "";
-		if ( paciente.getMiRegistro().getEsPaciente() ) {
-			for (Consulta aux : paciente.getMiRegistro().getMisConsultas() ) {
-				//temp = aux.getCodigo() + aux.getFecha().getDate().toString(); //aux.getFecha().getYear().toString();
-				modalHistorialMedico.addElement(temp);
+		try {
+			if ( paciente.getMiRegistro().getEsPaciente() ) {
+				for (Consulta aux : paciente.getMiRegistro().getMisConsultas() ) {
+					//temp = aux.getCodigo() + aux.getFecha().getDate().toString(); //aux.getFecha().getYear().toString();
+					modalHistorialMedico.addElement(temp);
+				}
+				for (Cita aux : paciente.getMiRegistro().getMisCitas() ) {
+					//temp = aux.getCodigo() + aux.getFechaDeConsulta().getHours()//toString() + " :00";
+					modalHistorialMedico.addElement(temp);
+				}
 			}
-			for (Cita aux : paciente.getMiRegistro().getMisCitas() ) {
-				//temp = aux.getCodigo() + aux.getFechaDeConsulta().getHours()//toString() + " :00";
-				modalHistorialMedico.addElement(temp);
-			}
+			
+			paciente.getMiRegistro().getMisConsultas();
+			paciente.getMiRegistro().getMisCitas();
+		} catch (NullPointerException e) {
+			// TODO: handle exception
 		}
 		
-		paciente.getMiRegistro().getMisConsultas();
-		paciente.getMiRegistro().getMisCitas();
 	}
 	
 	private void setHorarioPendiente()

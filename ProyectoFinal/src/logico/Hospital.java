@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-//Hay que poner que solo se pueda de una instancia a la vez
 public class Hospital implements Serializable{
 	
 	private static final long serialVersionUID = 5219225790495881149L;
@@ -420,6 +419,7 @@ public class Hospital implements Serializable{
 	public static void save() throws IOException, ClassNotFoundException {
 		getInstance();
     	File file = new File("main.dat");
+    
     	file.createNewFile();
     	FileOutputStream f = new FileOutputStream(file);
     	ObjectOutputStream oos = new ObjectOutputStream(f);

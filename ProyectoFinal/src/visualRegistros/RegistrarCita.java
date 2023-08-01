@@ -265,12 +265,23 @@ public class RegistrarCita extends JDialog {
 								System.out.println("Fecha al intentar insertar Cita: " + aux.getFechaReal());
 								Hospital.getInstance().insertarCita(aux);
 								Hospital.getInstance().insertarConsulta(auxConsulta);
+								aux.getPaciente().getMiRegistro().getMisCitas().add(aux);
+								aux.getPaciente().getMiRegistro().getMisConsultas().add(auxConsulta);
 							}
 							else
 							{
 								System.out.println("Fecha al intentar modificar Cita: " + aux.getFechaReal());
 								Hospital.getInstance().modificarCita(aux);
 								Hospital.getInstance().modificarConsulta(auxConsulta);
+								
+								//Ingresar Cita y consulta modificada al registro del paciente
+								int index = -1;
+								index = Hospital.getInstance().buscarIndexByCita(aux.getCodigo());
+								aux.getPaciente().getMiRegistro().getMisCitas().set(index, aux);
+								
+								index = -1;
+								index = Hospital.getInstance().buscarIndexByConsulta(auxConsulta.getCodigo());
+								auxConsulta.getPaciente().getMiRegistro().getMisConsultas().set(index, auxConsulta);
 							}
 							
 							try {

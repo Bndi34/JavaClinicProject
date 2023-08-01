@@ -234,6 +234,10 @@ public class RegistrarConsulta extends JDialog {
 						Consulta aux = new Consulta(txtCode.getText(),consulta.getEstado(),fecha, consulta.getPaciente(),consulta.getDoctor(), sintomas, vacunasColocadas);
 						Hospital.getInstance().modificarConsulta(aux);
 					   
+						int index = -1;
+						index = Hospital.getInstance().buscarIndexByConsulta(aux.getCodigo());
+						aux.getPaciente().getMiRegistro().getMisConsultas().set(index, aux);
+						
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 						
 						try {

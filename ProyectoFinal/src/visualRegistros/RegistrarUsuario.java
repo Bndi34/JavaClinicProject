@@ -24,6 +24,7 @@ import logico.Usuario;
 import logico.Hospital;
 
 import logico.Paciente;
+import logico.RegistroMedico;
 import logico.Admin;
 import logico.Doctor;
 import logico.Secretaria;
@@ -389,8 +390,8 @@ public class RegistrarUsuario extends JDialog {
 						Doctor dependiente = null;
 						
 						if (rdbtnPaciente.isSelected()) {
-
-							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>(),null);
+							
+							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero, new ArrayList<String>(),new RegistroMedico(false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 						}
 						else if (rdbtnDoctor.isSelected()) {
 							aux = new Doctor(codigo,nombre,cedula,telefono,contrasenia,area);
@@ -417,6 +418,7 @@ public class RegistrarUsuario extends JDialog {
 							{
 								if (entrada == null)
 								{	
+									
 									System.out.println("IngresarGood");
 									Hospital.getInstance().insertarUsuario(aux);
 									JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -424,6 +426,11 @@ public class RegistrarUsuario extends JDialog {
 								}
 								else
 								{
+									if (entrada instanceof Paciente)
+									{
+										((Paciente) aux).setMiRegistro(((Paciente) entrada).getMiRegistro());
+									}
+									
 									System.out.println("ModificarGood");
 									JOptionPane.showMessageDialog(null, "Modificacion satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
 									Hospital.getInstance().modificarUsuario(aux);
