@@ -36,11 +36,8 @@ public class RegistrarEnfermedad extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode;
 	private JTextField txtNombre;
-	private JList listSeleccionada = new JList();
-	private JComboBox cbxSintomas = new JComboBox();
-	private DefaultListModel<String> modelElegido;
-	private ArrayList<String>SintomasElegido = new ArrayList<>();
-	private ArrayList<String>SintomasSinElegir = new ArrayList<>();
+	
+	
 	private boolean cargado = false;
 	private JButton okButton;
 	private JCheckBox chbxCura;
@@ -48,7 +45,12 @@ public class RegistrarEnfermedad extends JDialog {
 	
 	private String selectedSintoma;
 	private JButton btnAgregarSintoma;
-	private JTextField txtAlergia;
+	private JTextField txtSintoma;
+	private JList listSeleccionada = new JList();
+	private JComboBox cbxSintomas = new JComboBox();
+	private DefaultListModel<String> modelSintomaElegido;
+	private ArrayList<String>SintomasElegido = new ArrayList<>();
+	private ArrayList<String>SintomasSinElegir = new ArrayList<>();
 	
 	private Enfermedad auxEnfermedad;
 	
@@ -64,19 +66,19 @@ public class RegistrarEnfermedad extends JDialog {
 		
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		SintomasSinElegir = new ArrayList<String>();
 		SintomasElegido = new ArrayList<String>();
-		modelElegido = new DefaultListModel<String>();
+		modelSintomaElegido = new DefaultListModel<String>();
 		
 		
-		txtAlergia = new JTextField();
-		txtAlergia.setEnabled(false);
-		txtAlergia.setText("VA-1");
-		txtAlergia.setEditable(false);
-		txtAlergia.setVisible(false);
-		txtAlergia.setColumns(10);
-		txtAlergia.setBounds(83, 75, 247, 22);
-		contentPanel.add(txtAlergia);
+		txtSintoma = new JTextField();
+		txtSintoma.setEnabled(false);
+		txtSintoma.setEditable(false);
+		txtSintoma.setVisible(false);
+		txtSintoma.setColumns(10);
+		txtSintoma.setBounds(83, 75, 247, 22);
+		contentPanel.add(txtSintoma);
 		
 		setTitle("Registar Enfermedad");
 		setBounds(100, 100, 447, 390);
@@ -128,10 +130,10 @@ public class RegistrarEnfermedad extends JDialog {
 						if ( selectedSintoma.equalsIgnoreCase("Agregar...") ) {
 							btnAgregarSintoma.setText("Añadir");
 							
-							txtAlergia.setVisible(true);
-							txtAlergia.setEditable(true);
-							txtAlergia.setEnabled(true);
-							txtAlergia.setText("");
+							txtSintoma.setVisible(true);
+							txtSintoma.setEditable(true);
+							txtSintoma.setEnabled(true);
+							txtSintoma.setText("");
 							
 							cbxSintomas.setVisible(false);
 							//cbxAlergia.setEditable(true);
@@ -151,10 +153,10 @@ public class RegistrarEnfermedad extends JDialog {
 						{
 							btnAgregarSintoma.setText("Borrar");
 							
-							txtAlergia.setVisible(false);
-							txtAlergia.setEditable(false);
-							txtAlergia.setEnabled(false);
-							txtAlergia.setText("");
+							txtSintoma.setVisible(false);
+							txtSintoma.setEditable(false);
+							txtSintoma.setEnabled(false);
+							txtSintoma.setText("");
 							
 							cbxSintomas.setVisible(true);	
 						}
@@ -184,14 +186,14 @@ public class RegistrarEnfermedad extends JDialog {
 							
 							try 
 							{
-								if (!txtAlergia.isEditable())
+								if (!txtSintoma.isEditable())
 								{
 									int selected = listSeleccionada.getSelectedIndex();
 									selectedSintoma = listSeleccionada.getSelectedValue().toString();
 									if(selected>=0)
 									{
 										btnAgregarSintoma.setText("Borrar");
-										txtAlergia.setText(listSeleccionada.getSelectedValue().toString());
+										txtSintoma.setText(listSeleccionada.getSelectedValue().toString());
 									}
 								}
 								
@@ -206,7 +208,7 @@ public class RegistrarEnfermedad extends JDialog {
 					scrollPane.setViewportView(listSeleccionada);
 					System.out.println("Reload cuadro 1");
 					reloadAlergiaCuadro();
-					listSeleccionada.setModel(modelElegido);
+					listSeleccionada.setModel(modelSintomaElegido);
 					
 				}
 			}
@@ -220,11 +222,11 @@ public class RegistrarEnfermedad extends JDialog {
 				
 				if ( btnAgregarSintoma.getText().equalsIgnoreCase("Borrar")) {
 					try {
-						if (!txtAlergia.getText().isEmpty())
+						if (!txtSintoma.getText().isEmpty())
 						{
-							SintomasSinElegir.add(txtAlergia.getText());
-							SintomasElegido.remove(txtAlergia.getText());
-							txtAlergia.setText("");
+							SintomasSinElegir.add(txtSintoma.getText());
+							SintomasElegido.remove(txtSintoma.getText());
+							txtSintoma.setText("");
 							
 							reloadAlergia();
 							System.out.println("Reload cuadro Borrar");
@@ -237,13 +239,13 @@ public class RegistrarEnfermedad extends JDialog {
 					}
 					
 				}
-				else if ( txtAlergia.isEditable() ) {
+				else if ( txtSintoma.isEditable() ) {
 					
-					SintomasElegido.add(txtAlergia.getText());
+					SintomasElegido.add(txtSintoma.getText());
 					
 					reloadAlergia();
 					reloadAlergiaCuadro();
-					txtAlergia.setVisible(false);
+					txtSintoma.setVisible(false);
 					cbxSintomas.setVisible(true);
 					btnAgregarSintoma.setText("Borrar");
 				}
@@ -296,11 +298,9 @@ public class RegistrarEnfermedad extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		//Debería existir un sistema de si estas cargando una enfermedad no funcione loadSintomas, 
-		//o que solo cargue los sintomas que no esten seleccionados
+
 		loadEntrada();
 		LoadSintomas();
-		loadEnfermedad();
 		reloadElegido();
 		reloadAlergia();
 		reloadAlergiaCuadro();
@@ -308,9 +308,6 @@ public class RegistrarEnfermedad extends JDialog {
 	
 	}
 			
-	void loadEnfermedad() {
-		
-	}
 	
 	
 	void LoadSintomas() throws IOException, ClassNotFoundException{
@@ -353,11 +350,11 @@ public class RegistrarEnfermedad extends JDialog {
 	
 	
 	private void reloadElegido() {
-		modelElegido.removeAllElements();
+		modelSintomaElegido.removeAllElements();
 		String aux = "";
 		for (int i = 0; i < SintomasElegido.size(); i++) {
 			aux = SintomasElegido.get(i);
-			modelElegido.addElement(aux);
+			modelSintomaElegido.addElement(aux);
 		}
 		
 	}
@@ -365,7 +362,7 @@ public class RegistrarEnfermedad extends JDialog {
 	void clean() {
 		txtCode.setText("ENF-"+ String.valueOf(Hospital.getInstance().generadorEnfermedad));
 		txtNombre.setText("");
-		modelElegido.removeAllElements();
+		modelSintomaElegido.removeAllElements();
 	}
 
 
@@ -386,10 +383,10 @@ public class RegistrarEnfermedad extends JDialog {
 	}
 	private void reloadAlergiaCuadro()
 	{
-		modelElegido.removeAllElements();
+		modelSintomaElegido.removeAllElements();
 		for (String auxString : SintomasElegido)
 		{
-			modelElegido.addElement(auxString);
+			modelSintomaElegido.addElement(auxString);
 		}
 	}
 	

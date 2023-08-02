@@ -199,6 +199,10 @@ public class ListarVacuna extends JDialog {
 						modEnfermedad.setLocationRelativeTo(null);
 						modEnfermedad.setVisible(true);
 					
+						selected = null;
+						btnEliminar.setEnabled(false);
+						btnModificar.setEnabled(false);
+						
 					loadSportMans();
 				}
 			});
@@ -209,11 +213,36 @@ public class ListarVacuna extends JDialog {
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-	
-					  int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta Vacuna?", null, JOptionPane.YES_NO_OPTION);
-						    if (delete == JOptionPane.YES_OPTION)
-						    {						    	
-								Vacuna aux = Hospital.getInstance().buscarVacunasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+						 int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta Vacuna?", null, JOptionPane.YES_NO_OPTION);
+						 boolean vacunaUtilizada = false;
+						
+					Vacuna aux = Hospital.getInstance().buscarVacunasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+					for (Usuario auxUsuario : Hospital.getInstance().getMisCuentas())
+					{
+						if (auxUsuario instanceof Paciente)
+						{
+							for (Vacuna auxVacuna : ((Paciente) auxUsuario).getMiRegistro().getTotalDeVacunasColocadas())
+							{
+								if (aux == auxVacuna)
+								{
+									vacunaUtilizada = true;
+									break;
+								}
+							}
+						}
+						if (vacunaUtilizada)
+						{
+							break;
+						}
+					}
+					
+					 
+					if (vacunaUtilizada)
+					{
+						JOptionPane.showMessageDialog(null, "Esta vacuna no puede ser eliminada\nEstá siendo usada por algun paciente", "Información", JOptionPane.INFORMATION_MESSAGE);
+					}
+					else if (delete == JOptionPane.YES_OPTION)
+						   {						    	
 								
 									Hospital.getInstance().getMisVacunas().remove(aux);
 
@@ -221,7 +250,7 @@ public class ListarVacuna extends JDialog {
 									btnEliminar.setEnabled(false);
 									btnModificar.setEnabled(false);
 								
-						    }
+						   }
 						
 					}
 				});

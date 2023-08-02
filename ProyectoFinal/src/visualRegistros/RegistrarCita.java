@@ -250,10 +250,10 @@ public class RegistrarCita extends JDialog {
 							
 							if (cita != null)
 							{
-								auxConsulta = new Consulta("CON-" + cita.getCodigo(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<String>(), new ArrayList<Vacuna>());
+								auxConsulta = new Consulta("CON-" + cita.getCodigo(), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<String>(), new ArrayList<Vacuna>(), null);
 							}
 							else {
-								auxConsulta = new Consulta("CON-" + String.valueOf(Hospital.getInstance().generadorConsulta), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<String>(), new ArrayList<Vacuna>());
+								auxConsulta = new Consulta("CON-" + String.valueOf(Hospital.getInstance().generadorConsulta), estado, fecha, ((Paciente)pac), ((Doctor)doc), new ArrayList<String>(), new ArrayList<Vacuna>(), null);
 							}
 						
 							

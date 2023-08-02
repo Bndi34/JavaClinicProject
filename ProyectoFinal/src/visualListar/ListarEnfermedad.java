@@ -207,6 +207,9 @@ public class ListarEnfermedad extends JDialog {
 							e1.printStackTrace();
 						}
 					
+					selected = null;
+					btnEliminar.setEnabled(false);
+					btnModificar.setEnabled(false);
 					loadSportMans();
 				}
 			});

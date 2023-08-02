@@ -275,6 +275,9 @@ public class ListarCuenta extends JDialog {
 				
 					loadSportMans(type);
 					
+					selected = null;
+					btnEliminar.setEnabled(false);
+					btnModificar.setEnabled(false);
 				}
 			});
 			btnModificar.setEnabled(false);

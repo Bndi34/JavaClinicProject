@@ -33,21 +33,19 @@ public class RegistrarVacuna extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCode; 
+	
 	private JComboBox cbxEnfermedad = new JComboBox();
-	
 	private JButton btnEnfermedad = new JButton("A\u00F1adir");
-	
-	
 	private DefaultListModel<String> modelEnfermedad;
 	private JList listEnf = new JList();
-	private boolean antiDoubleAddFilter = false;
 	private String selectedEnfermedad;
+	private JTextField txtEnfermedad;
+	private ArrayList<String>EnfermedadesElegidas = new ArrayList<>();
+	private ArrayList<String>EnfermedadeSinElegir = new ArrayList<>();
 	
 	private int selected = -1;
 	
-	private String selectedItem;
-	private ArrayList<String>EnfermedadesElegidas = new ArrayList<>();
-	private ArrayList<String>EnfermedadeSinElegir = new ArrayList<>();
+
 	
 	//Bloque de variables para el recuadro
 	private JComboBox cbxAlergia = new JComboBox();
@@ -59,7 +57,6 @@ public class RegistrarVacuna extends JDialog {
 	private ArrayList<String>AlergiasSinElegir = new ArrayList<>();
 	private JTextField txtAlergia;
 	
-	private JTextField txtEnfermedad;
 	
 	private Vacuna auxVacuna = null;
 	
@@ -89,10 +86,13 @@ public class RegistrarVacuna extends JDialog {
 		
 		AlergiasSinElegir = Hospital.getInstance().getAlergiasRegistradas();
 		loadEnfermedadesSinElegir();
-		setModal(true);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		modelEnfermedad = new DefaultListModel<String>();
 		modelAlergia = new DefaultListModel<String>();
+		
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		setTitle("Registrar Vacuna");
 		setBounds(100, 100, 384, 474);
 		getContentPane().setLayout(new BorderLayout());
@@ -430,11 +430,19 @@ public class RegistrarVacuna extends JDialog {
 							if (auxVacuna == null)
 							{
 								Hospital.getInstance().insertarVacuna(aux);
+								for (Enfermedad auxEnfermedad : aux.getEnfermedadesPrevenidas())
+								{
+									auxEnfermedad.setCuraEncontrada(true);
+								}
 								JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 							}
 							else
 							{
 								Hospital.getInstance().modificarVacuna(aux);
+								for (Enfermedad auxEnfermedad : aux.getEnfermedadesPrevenidas())
+								{
+									auxEnfermedad.setCuraEncontrada(true);
+								}
 								JOptionPane.showMessageDialog(null, "Modificación satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
 							
 							}
@@ -551,7 +559,6 @@ public class RegistrarVacuna extends JDialog {
 		for (String tempString : EnfermedadesElegidas)
 		{
 			int i = tempString.indexOf(":");
-			System.out.println("Buscando enfermedad codigo: " + tempString.substring(0, i-1));
 			temp.add(Hospital.getInstance().buscarEnfermedadesByCode(tempString.substring(0, i-1)));
 		}
 		

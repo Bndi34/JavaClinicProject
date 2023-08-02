@@ -282,7 +282,7 @@ public class ListarCompromiso extends JDialog {
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-
+					
 					if (type.equalsIgnoreCase("cita")) {	
 						
 						RegistrarCita modAdmin = new RegistrarCita(Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
@@ -298,6 +298,11 @@ public class ListarCompromiso extends JDialog {
 						modUser.setLocationRelativeTo(null);
 						modUser.setVisible(true);	
 					}
+					selectedCita = null;
+					selectedConsulta = null;
+					btnEliminar.setEnabled(false);
+					btnModificar.setEnabled(false);
+					
 					loadSportMans(type);
 					
 				}
