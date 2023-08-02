@@ -95,14 +95,11 @@ import java.beans.PropertyChangeEvent;
 public class Dashboard extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
-	JPanel btnDetallesDia = new JPanel();
 	JPanel dashboardCalender;
 	JPanel dashboardStads;
 	static JPanel panelAlergiasComunes;
-	JPanel btnDetallesHistorialMedico = new JPanel();
 	JComboBox cboxHistorialMedico;
 	private DefaultListModel<String> modalHistorialMedico;
-	JList listHistorial;
 	JRadioButton radioCalendar;
 	JRadioButton radioDashStads;
 	private JMenu mnUser;
@@ -115,14 +112,22 @@ public class Dashboard extends JFrame {
 	
     private static DataOutputStream dataOutputStream = null;
     private static DataInputStream dataInputStream = null;
-	private Color MyGreen = new Color(255, 228, 196);
+	//private Color MyGreen = new Color(255, 228, 196);
 	private Color MyBlue = 	new Color(205, 133, 63);
+	private Color myCalendarColorLight = new Color(255, 228, 196);
+	private Color myCalendarBGColor = new Color(245, 245, 220);
+	private Color myCalendarColorDark = new Color(205, 133, 63);
 	private Paciente paciente;
 	private Dimension dim = null;
 	private Usuario cuentaUsuario;
 	private JCalendar calendar;
 	private JList<String> listHorasDelDia;
 	private JScrollPane scrllDetallesDia;
+
+	private JPanel PanelAlergia;
+	private JScrollPane scrollPaneAlergia;
+	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
+	
 	
 	/**
 	 * Launch the application.
@@ -152,7 +157,7 @@ public class Dashboard extends JFrame {
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Centro M\u00E9dico");
 		
-		setBounds(100, 100, 1270, 690);
+		setBounds(100, 100, 1304, 690);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -180,7 +185,7 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		radioCalendar.setBackground(new Color(245, 245, 220));
+		radioCalendar.setBackground(myCalendarBGColor);
 		radioCalendar.setBounds(234, 25, 166, 35);
 		contentPanel.add(radioCalendar);
 
@@ -199,19 +204,21 @@ public class Dashboard extends JFrame {
 		radioDashStads.setBackground(new Color(216, 191, 216));
 		radioDashStads.setBounds(420, 25, 189, 35);
 		contentPanel.add(radioDashStads);
-
+		
+		dashboardCalender = new JPanel();
+		dashboardCalender.setBackground(myCalendarBGColor);
+		dashboardCalender.setBounds(0, 60, 1413, 580);
+		contentPanel.add(dashboardCalender);
+		dashboardCalender.setLayout(null);
+		dashboardCalender.setVisible(false);
+		
 		dashboardStads = new JPanel();
 		dashboardStads.setBounds(0, 60, 1264, 580);
 		dashboardStads.setBackground(new Color(216, 191, 216));
 		contentPanel.add(dashboardStads);
 		dashboardStads.setLayout(null);
 		
-		dashboardCalender = new JPanel();
-		dashboardCalender.setBackground(new Color(245, 245, 220));
-		dashboardCalender.setBounds(0, 60, 1264, 580);
-		contentPanel.add(dashboardCalender);
-		dashboardCalender.setLayout(null);
-		dashboardCalender.setVisible(false);
+		
 		
 		
 		panelAlergiasComunes = new JPanel();
@@ -227,7 +234,7 @@ public class Dashboard extends JFrame {
 		}
 		JFreeChart chart = ChartFactory.createPieChart("Alergias más comunes", dataset);
 		ChartPanel chartpanel = new ChartPanel(chart);
-		chartpanel.setBackground(MyGreen);
+		chartpanel.setBackground(myCalendarColorLight);
 		chartpanel.setPreferredSize(new Dimension(430,400));
 		chartpanel.setBounds(0,0,289,252);
 		
@@ -283,7 +290,7 @@ public class Dashboard extends JFrame {
         panelConsultasPorMes.add(chartpl);
         
 		JLabel lblCalendario = new JLabel("Calendario");
-		lblCalendario.setForeground(new Color(205, 133, 63));
+		lblCalendario.setForeground(myCalendarColorDark);
 		lblCalendario.setFont(new Font("Poor Richard", Font.BOLD, 43));
 		lblCalendario.setBounds(124, 23, 288, 43);
 		dashboardCalender.add(lblCalendario);
@@ -291,19 +298,19 @@ public class Dashboard extends JFrame {
 		JLabel lblHistorialMedico = new JLabel("Historial Medico");
 		
 		lblHistorialMedico.setFont(new Font("Poor Richard", Font.BOLD, 26));
-		lblHistorialMedico.setForeground(new Color(205, 133, 63));
+		lblHistorialMedico.setForeground(myCalendarColorDark);
 		lblHistorialMedico.setBounds(983, 36, 203, 43);
 		dashboardCalender.add(lblHistorialMedico);
 		
 		JLabel label = new JLabel("Horario del D\u00EDa");
-		label.setForeground(new Color(205, 133, 63));
+		label.setForeground(myCalendarColorDark);
 		label.setFont(new Font("Poor Richard", Font.BOLD, 26));
-		label.setBounds(752, 36, 198, 43);
+		label.setBounds(749, 36, 198, 43);
 		dashboardCalender.add(label);
 
 
 		JPanel panel_calendar = new JPanel();
-		panel_calendar.setBackground(new Color(255, 228, 196));
+		panel_calendar.setBackground(myCalendarColorLight);
 		//panel_calendar.setBackground(MyBlue);
 		panel_calendar.setBounds(22, 80, 707, 420);
 		dashboardCalender.add(panel_calendar);
@@ -322,7 +329,7 @@ public class Dashboard extends JFrame {
 		JPanel panel_calenderSecundario = new JPanel();
 		panel_calenderSecundario.setForeground(new Color(255, 228, 196));
 		panel_calenderSecundario.setBackground(new Color(245, 245, 220));
-		panel_calenderSecundario.setBounds(741, 80, 445, 420);
+		panel_calenderSecundario.setBounds(741, 80, 512, 420);
 
 		LineBorder border = new LineBorder(new Color(255, 228, 196),13);
 		panel_calenderSecundario.setBorder(border);
@@ -330,91 +337,57 @@ public class Dashboard extends JFrame {
 		panel_calenderSecundario.setLayout(null);
 
 		JPanel panel_horarioDIa = new JPanel();
-		panel_horarioDIa.setBounds(43, 52, 158, 348);
+		panel_horarioDIa.setBounds(12, 17, 189, 383);
 
 		panel_calenderSecundario.add(panel_horarioDIa);
 		panel_horarioDIa.setLayout(null);
 
 		scrllDetallesDia = new JScrollPane();
-		scrllDetallesDia.setBounds(0, 0, 158, 348);
+		scrllDetallesDia.setBounds(0, 0, 189, 383);
 		panel_horarioDIa.add(scrllDetallesDia);
 
 		DefaultListModel<String> model = new DefaultListModel<>();
 		listHorasDelDia = new JList<>( model );
 		setHorarioPendiente();
 		
-
-		JPanel panel_HistorialMedico = new JPanel();
-		panel_HistorialMedico.setBounds(244, 52, 158, 348);
-		panel_calenderSecundario.add(panel_HistorialMedico);
-		panel_HistorialMedico.setLayout(null);
-
-		JScrollPane scrllHistorialMedico = new JScrollPane();
-		scrllHistorialMedico.setBounds(0, 0, 158, 348);
-		panel_HistorialMedico.add(scrllHistorialMedico);
-
-		listHistorial = new JList();
-		scrllHistorialMedico.setViewportView(listHistorial);
-
+		
+		PanelAlergia = new JPanel();
+		PanelAlergia.setBounds(213, 56, 260, 344);
+		panel_calenderSecundario.add(PanelAlergia);
+		PanelAlergia.setLayout(null);
+		
+		scrollPaneAlergia = new JScrollPane();
+		scrollPaneAlergia.setBounds(0, 0, 258, 344);
+		PanelAlergia.add(scrollPaneAlergia);
+		
+		JList listAlergia = new JList();
+		listAlergia.setModel(modelAlergia);
+		scrollPaneAlergia.setRowHeaderView(listAlergia);
+		
+		setPacienteHistorialMedico();
+		
 		cboxHistorialMedico = new JComboBox();
 		cboxHistorialMedico.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cboxHistorialMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//if () {
+				try {
 					int indf = cboxHistorialMedico.getSelectedItem().toString().indexOf(":");
 					paciente = (Paciente) Hospital.getInstance().buscarUsuarioByCode(cboxHistorialMedico.getSelectedItem().toString().substring(0, indf-1));
 
 					setPacienteHistorialMedico();
+				} catch (NullPointerException e2) {
+					// TODO: handle exception
+				}
+					
 					//}
 			}
 		});
-		cboxHistorialMedico.setBackground(new Color(51, 153, 102));
-		cboxHistorialMedico.setBounds(244, 17, 158, 26);
+		cboxHistorialMedico.setBackground(myCalendarColorDark);
+		cboxHistorialMedico.setBounds(238, 17, 196, 26);
 		cboxHistorialMedico.setBorder(null); // new Color(51, 153, 102)
 		panel_calenderSecundario.add(cboxHistorialMedico);
 		cboxHistorialMedico.setModel(new DefaultComboBoxModel(new String[] {"<Paciente>"}));
-
-		btnDetallesDia.setBackground(new Color(51, 153, 102));
-		btnDetallesDia.setBounds(65, 411, 110, 34);
-		panel_calenderSecundario.add(btnDetallesDia);
-		btnDetallesDia.setLayout(null);
-
-		JLabel lblbtnDetallesDia = new JLabel("    Detalles...");
-		lblbtnDetallesDia.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				setColor(btnDetallesDia);
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				removeSetColor(btnDetallesDia);
-			}
-		});
-		lblbtnDetallesDia.setBounds(0, 0, 110, 34);
-		lblbtnDetallesDia.setForeground(new Color(255, 255, 255));
-		lblbtnDetallesDia.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnDetallesDia.add(lblbtnDetallesDia);
-
-		btnDetallesHistorialMedico.setLayout(null);
-		btnDetallesHistorialMedico.setBackground(new Color(51, 153, 102));
-		btnDetallesHistorialMedico.setBounds(260, 411, 110, 34);
-		panel_calenderSecundario.add(btnDetallesHistorialMedico);
-
-		JLabel lblbtnDetallesHistorialMedico = new JLabel("    Detalles...");
-		lblbtnDetallesHistorialMedico.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				setColor(btnDetallesHistorialMedico);
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				removeSetColor(btnDetallesHistorialMedico);
-			}
-		});
-		lblbtnDetallesHistorialMedico.setForeground(Color.WHITE);
-		lblbtnDetallesHistorialMedico.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblbtnDetallesHistorialMedico.setBounds(0, 0, 110, 34);
-		btnDetallesHistorialMedico.add(lblbtnDetallesHistorialMedico);
 
 		try {
 			if (Cuenta instanceof Secretaria)
@@ -667,13 +640,6 @@ public class Dashboard extends JFrame {
 		
 	}
 	
-	private void setColor(JPanel p) {
-		p.setBackground(MyGreen);
-	}
-	private void removeSetColor(JPanel p) {
-		p.setBackground(MyGreen);
-	}
-	
 	private void setPaciente() {
 		String temp = ""; 
 		for (Usuario aux : Hospital.getInstance().getMisCuentas() ) {
@@ -687,24 +653,41 @@ public class Dashboard extends JFrame {
 	private void setPacienteHistorialMedico(){
 		String temp = "";
 		try {
+			modelAlergia.removeAllElements();
+			
 			if ( paciente.getMiRegistro().getEsPaciente() ) {
+				
+				for (String auxString : paciente.getMiRegistro().getMisAlergias())
+				{
+					temp = "Alergia: " + auxString; //aux.getFecha().getYear().toString();
+					modelAlergia.addElement(temp);
+				}
+				for (Vacuna auxString : paciente.getMiRegistro().getTotalDeVacunasColocadas())
+				{
+					modelAlergia.addElement(temp);
+					temp = "Vacuna Código: " + auxString.getCodigo() + " Colocada"; //aux.getFecha().getYear().toString();
+				}
 				for (Consulta aux : paciente.getMiRegistro().getMisConsultas() ) {
-					//temp = aux.getCodigo() + aux.getFecha().getDate().toString(); //aux.getFecha().getYear().toString();
-					modalHistorialMedico.addElement(temp);
+					Integer tempInteger = aux.getFecha().getDate();
+					temp = "Consulta: " + aux.getCodigo() + " -- " + aux.getFecha(); //aux.getFecha().getYear().toString();
+					modelAlergia.addElement(temp);
 				}
+				/*
 				for (Cita aux : paciente.getMiRegistro().getMisCitas() ) {
-					//temp = aux.getCodigo() + aux.getFechaDeConsulta().getHours()//toString() + " :00";
-					modalHistorialMedico.addElement(temp);
-				}
+					Integer tempInteger = aux.getFechaReal().getHours();
+					temp = "Cita: " + aux.getCodigo() + " -- " + tempInteger.toString() + " :00";
+					modelAlergia.addElement(temp);
+				}*/
 			}
 			
-			paciente.getMiRegistro().getMisConsultas();
-			paciente.getMiRegistro().getMisCitas();
+			//paciente.getMiRegistro().getMisConsultas();
+			//paciente.getMiRegistro().getMisCitas();
 		} catch (NullPointerException e) {
 			// TODO: handle exception
 		}
 		
 	}
+	
 	
 	private void setHorarioPendiente()
 	{
@@ -778,9 +761,9 @@ public class Dashboard extends JFrame {
 		listHorasDelDia.setVisibleRowCount(22);
 		
 		scrllDetallesDia.add(listHorasDelDia);
-		listHorasDelDia.setBackground(new Color(0, 51, 153));
+		listHorasDelDia.setBackground(myCalendarColorLight);
 		listHorasDelDia.setFont(new Font("Tahoma", Font.BOLD, 11));
-		listHorasDelDia.setForeground(new Color(51, 153, 102));
+		listHorasDelDia.setForeground(myCalendarColorDark);
 		scrllDetallesDia.setColumnHeaderView(listHorasDelDia);
 	}
 }
