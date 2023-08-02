@@ -23,13 +23,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import logico.Usuario;
-
+import logico.Vacuna;
 import logico.Hospital;
 
 import logico.Paciente;
 import logico.RegistroMedico;
 import logico.Admin;
 import logico.Cita;
+import logico.Consulta;
 import logico.Doctor;
 import logico.Enfermedad;
 import logico.Secretaria;
@@ -68,6 +69,7 @@ public class RegistrarUsuario extends JDialog {
 
 	private Usuario aux;
 	
+	JLabel lblSupervisor;
 	private JTextField txtTelefono;
 	private JTextField txtDir;
 	private JTextField txtCedula;
@@ -83,6 +85,7 @@ public class RegistrarUsuario extends JDialog {
 	private ArrayList<String>AlergiasElegidas = new ArrayList<>();
 	private ArrayList<String>AlergiasSinElegir = new ArrayList<>();
 	private JTextField txtAlergia;
+	
 	private JComboBox cbxAlergia = new JComboBox();
 	private JButton btnAlergia = new JButton("A\u00F1adir");
 	private int selectedInCuadro = -1;
@@ -282,6 +285,7 @@ public class RegistrarUsuario extends JDialog {
 					
 					System.out.println("Alergia TXT: "+txtAlergia.getText());
 					AlergiasElegidas.add(txtAlergia.getText());
+					Hospital.getInstance().getAlergiasRegistradas().add(txtAlergia.getText());
 					
 					reloadAlergia();
 					reloadAlergiaCuadro();
@@ -342,7 +346,7 @@ public class RegistrarUsuario extends JDialog {
 		panel_secretaria.setVisible(false);
 		
 		
-		JLabel lblSupervisor = new JLabel("Supervisor:");
+		lblSupervisor = new JLabel("Supervisor:");
 		lblSupervisor.setBounds(7, 23, 75, 16);
 		panel_secretaria.add(lblSupervisor);
 		
@@ -363,7 +367,6 @@ public class RegistrarUsuario extends JDialog {
 		
 		txtAlergia = new JTextField();
 		txtAlergia.setEnabled(false);
-		txtAlergia.setText("VA-1");
 		txtAlergia.setEditable(false);
 		txtAlergia.setVisible(false);
 		txtAlergia.setColumns(10);
@@ -494,7 +497,7 @@ public class RegistrarUsuario extends JDialog {
 						
 						if (rdbtnPaciente.isSelected()) {
 							
-							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero,new RegistroMedico(false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), AlergiasElegidas));
+							aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero,new RegistroMedico(false, new ArrayList<Cita>(), new ArrayList<Consulta>(), new ArrayList<Vacuna>(), AlergiasElegidas));
 							//aux = new Paciente(codigo, nombre, cedula, telefono, contrasenia, dir, false, genero,new RegistroMedico(false, new ArrayList<Cita>(), new ArrayList<Consulta>(), new ArrayList<Vacuna>(), AlergiasElegidas));
 						}
 						else if (rdbtnDoctor.isSelected()) {

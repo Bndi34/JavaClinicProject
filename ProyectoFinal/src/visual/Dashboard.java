@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 import com.sun.xml.internal.ws.api.Component;
@@ -45,6 +46,7 @@ import logico.Admin;
 import logico.Cita;
 import logico.Consulta;
 import logico.Doctor;
+import logico.Enfermedad;
 import logico.Hospital;
 import logico.Paciente;
 import logico.Secretaria;
@@ -71,8 +73,12 @@ import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import org.jfree.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.general.AbstractDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import javax.swing.UIManager;
@@ -88,6 +94,7 @@ public class Dashboard extends JFrame {
 	JPanel btnDetallesDia = new JPanel();
 	JPanel dashboardCalender;
 	JPanel dashboardStads;
+	static JPanel EnfermedadesComunes;
 	JPanel btnDetallesHistorialMedico = new JPanel();
 	JComboBox cboxHistorialMedico;
 	private DefaultListModel<String> modalHistorialMedico;
@@ -116,14 +123,34 @@ public class Dashboard extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)  {
 		try {
 			Dashboard dialog = new Dashboard(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public static void test() {
+		/*JPanel panel = new JPanel();
+		panel.setBounds(26, 122, 400, 400);
+		getContentPane().add(panel);
+		
+		DefaultPieDataset dataset = new  DefaultPieDataset();
+		for (Enfermedad aux : Hospital.getInstance().getEnfermedadesReg()) {
+			dataset.setValue(aux.getNombre(), 2 );
+		}
+		
+		JFreeChart chart = ChartFactory.createPieChart("Enfermedades m�s comunes tratadas por vacunas", dataset);
+		
+		ChartPanel chartpanel = new ChartPanel(chart);
+		chartpanel.setBounds(0,0,400,270);
+		panel.setLayout(null);
+		chartpanel.setPreferredSize(new Dimension(430,400));
+		
+		panel.add(chartpanel);*/
 	}
 
 	public void start(Stage primayStage) throws Exception{
@@ -182,7 +209,7 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		radioCalendar.setBackground(Color.ORANGE);
+		radioCalendar.setBackground(new Color(255,255,255,0));
 		radioCalendar.setBounds(300, 28, 100, 23);
 		contentPanel.add(radioCalendar);
 
@@ -198,7 +225,7 @@ public class Dashboard extends JFrame {
 
 			}
 		});
-		radioDashStads.setBackground(Color.ORANGE);
+		radioDashStads.setBackground(new Color(255,255,255,0));
 		radioDashStads.setBounds(400, 28, 100, 23);
 		contentPanel.add(radioDashStads);
 
@@ -207,17 +234,33 @@ public class Dashboard extends JFrame {
 		dashboardStads.setBackground(MyGreen);
 		contentPanel.add(dashboardStads);
 		dashboardStads.setLayout(null);
-
-		JPanel EnfermedadesComunes = new JPanel();
-		EnfermedadesComunes.setBounds(26, 122, 428, 252);
-		dashboardStads.add(EnfermedadesComunes);
-
+		
 		dashboardCalender = new JPanel();
 		dashboardCalender.setBackground(MyBlue);
 		dashboardCalender.setBounds(0, 0, 1264, 640);
 		contentPanel.add(dashboardCalender);
 		dashboardCalender.setLayout(null);
 		dashboardCalender.setVisible(false);
+		
+		
+		EnfermedadesComunes = new JPanel();
+		EnfermedadesComunes.setBounds(24, 158, 428, 252);
+		EnfermedadesComunes.setLayout(null);
+		dashboardStads.add(EnfermedadesComunes);
+
+		DefaultPieDataset dataset = new  DefaultPieDataset();
+		
+		for (String aux : Hospital.getInstance().getAlergiasRegistradas()){ //Hospital.getInstance().getMisCuentas()) {
+			dataset.setValue(aux, 2 );
+			System.out.print("Alergia:"+aux);
+		}
+		JFreeChart chart = ChartFactory.createPieChart("Alergia más comunes", dataset);
+		ChartPanel chartpanel = new ChartPanel(chart);
+		chartpanel.setPreferredSize(new Dimension(430,400));
+		chartpanel.setBounds(0,0,428,252);
+		
+		//chart.addChangeListener(listener);	
+		EnfermedadesComunes.add(chartpanel);
 
 		JLabel lblCalendario = new JLabel("Calendario");
 		lblCalendario.setForeground(new Color(255, 255, 255));
@@ -719,3 +762,4 @@ public class Dashboard extends JFrame {
 		scrllDetallesDia.setColumnHeaderView(listHorasDelDia);
 	}
 }
+
