@@ -23,8 +23,12 @@ import logico.*;
 import visualRegistros.*;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
 
 public class ListarEnfermedad extends JDialog {
 
@@ -34,13 +38,28 @@ public class ListarEnfermedad extends JDialog {
 	private  DefaultTableModel tableModel;
 	private  JButton btnEliminar;
 	private  JButton btnModificar;
-	private JButton btnDetalles;
 	private int code;
 	//private String[] columnNames;
 	String mode = "<Todos>";
-	Usuario selected = null;
+	private Enfermedad selected = null;
 	private JButton btnRegistrar;
+	private JPanel panelBuscar;
+	private JLabel lblBuscar;
+	private JLabel lblBuscarCodigo;
+	private JPanel panelDetalles;
+	private JLabel lblDetalles;
+	private JLabel lblCodigo;
+	private JLabel lblNombre;
+	private JLabel lblCura;
+	private JLabel lblSntomas_1;
+	private JTextField txtBuscarCodigo;
+	private JTextField txtDetallesCodigo;
+	private JTextField txtDetallesNombre;
+	private JCheckBox chckbxDetallesCura;
 	
+	private JPanel PanelAlergia;
+	private JScrollPane scrollPaneAlergia;
+	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
 
 
 	/**
@@ -53,7 +72,7 @@ public class ListarEnfermedad extends JDialog {
 		 String[] columnNames = setColumns();
 		
 		setTitle("Listado de enfermedades");
-		setBounds(100, 100, 650, 376);
+		setBounds(100, 100, 895, 584);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -62,12 +81,14 @@ public class ListarEnfermedad extends JDialog {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Listado de enfermedades", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 27, 624, 277);
+		panel.setBounds(10, 27, 564, 474);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
+		setLocationRelativeTo(null);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 34, 604, 248);
+		scrollPane.setBounds(10, 34, 531, 427);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -78,7 +99,8 @@ public class ListarEnfermedad extends JDialog {
 				if(table.getSelectedRow()>=0){
 					btnEliminar.setEnabled(true);
 					btnModificar.setEnabled(true);
-					btnDetalles.setEnabled(true);
+					selected = Hospital.getInstance().buscarEnfermedadesByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+					updateDetalles();
 					//mode = cbxQuesoType.getSelectedItem().toString();
 					System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
 
@@ -89,6 +111,79 @@ public class ListarEnfermedad extends JDialog {
 		tableModel.setColumnIdentifiers(columnNames);
 		loadSportMans();
 		scrollPane.setViewportView(table);
+		
+		panelBuscar = new JPanel();
+		panelBuscar.setBounds(586, 27, 279, 107);
+		contentPanel.add(panelBuscar);
+		panelBuscar.setLayout(null);
+		
+		lblBuscar = new JLabel("Buscar por:");
+		lblBuscar.setBounds(12, 13, 84, 16);
+		panelBuscar.add(lblBuscar);
+		
+		lblBuscarCodigo = new JLabel("C\u00F3digo");
+		lblBuscarCodigo.setBounds(12, 55, 56, 16);
+		panelBuscar.add(lblBuscarCodigo);
+		
+		txtBuscarCodigo = new JTextField();
+		txtBuscarCodigo.setBounds(64, 52, 203, 22);
+		panelBuscar.add(txtBuscarCodigo);
+		txtBuscarCodigo.setColumns(10);
+		
+		panelDetalles = new JPanel();
+		panelDetalles.setBounds(586, 163, 279, 338);
+		contentPanel.add(panelDetalles);
+		panelDetalles.setLayout(null);
+		
+		lblDetalles = new JLabel("Detalles");
+		lblDetalles.setBounds(20, 13, 56, 16);
+		panelDetalles.add(lblDetalles);
+		
+		lblCodigo = new JLabel("C\u00F3digo");
+		lblCodigo.setBounds(20, 41, 56, 16);
+		panelDetalles.add(lblCodigo);
+		
+		lblNombre = new JLabel("Nombre");
+		lblNombre.setBounds(20, 72, 56, 16);
+		panelDetalles.add(lblNombre);
+		
+		lblCura = new JLabel("Tiene Cura");
+		lblCura.setBounds(20, 101, 87, 16);
+		panelDetalles.add(lblCura);
+		
+		lblSntomas_1 = new JLabel("S\u00EDntomas");
+		lblSntomas_1.setBounds(20, 152, 56, 16);
+		panelDetalles.add(lblSntomas_1);
+		
+		txtDetallesCodigo = new JTextField();
+		txtDetallesCodigo.setEditable(false);
+		txtDetallesCodigo.setColumns(10);
+		txtDetallesCodigo.setBounds(82, 39, 185, 22);
+		panelDetalles.add(txtDetallesCodigo);
+		
+		txtDetallesNombre = new JTextField();
+		txtDetallesNombre.setEditable(false);
+		txtDetallesNombre.setColumns(10);
+		txtDetallesNombre.setBounds(82, 67, 185, 22);
+		panelDetalles.add(txtDetallesNombre);
+		
+		PanelAlergia = new JPanel();
+		PanelAlergia.setBounds(20, 200, 247, 125);
+		panelDetalles.add(PanelAlergia);
+		PanelAlergia.setLayout(null);
+
+		scrollPaneAlergia = new JScrollPane();
+		scrollPaneAlergia.setBounds(0, 0, 247, 125);
+		PanelAlergia.add(scrollPaneAlergia);
+		
+		JList listAlergia = new JList();
+		listAlergia.setModel(modelAlergia);
+		scrollPaneAlergia.setRowHeaderView(listAlergia);
+				
+		chckbxDetallesCura = new JCheckBox("");
+		chckbxDetallesCura.setEnabled(false);
+		chckbxDetallesCura.setBounds(92, 97, 113, 25);
+		panelDetalles.add(chckbxDetallesCura);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -115,15 +210,6 @@ public class ListarEnfermedad extends JDialog {
 					loadSportMans();
 				}
 			});
-			
-			btnDetalles = new JButton("Detalles");
-			btnDetalles.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-				}
-			});
-			btnDetalles.setEnabled(false);
-			buttonPane.add(btnDetalles);
 			btnModificar.setEnabled(false);
 			buttonPane.add(btnModificar);
 			{
@@ -233,17 +319,26 @@ public class ListarEnfermedad extends JDialog {
 		table.setModel(tableModel);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
 		TableColumnModel columnModel = table.getColumnModel();
-		/*
+		
 		columnModel.getColumn(0).setPreferredWidth(60);
 		columnModel.getColumn(1).setPreferredWidth(180);
 		columnModel.getColumn(2).setPreferredWidth(150);
 		columnModel.getColumn(3).setPreferredWidth(130);
-		columnModel.getColumn(4).setPreferredWidth(81);
 		/*if(tableModel.getRowCount()==0){
 			btnEliminar.setEnabled(false);
 			btnModificar.setEnabled(false);
 		}*/
+	}
+	private void reloadAlergiaCuadro()
+	{
+		modelAlergia.removeAllElements();
+		for (String auxString : selected.getSintomas())
+		{
+			System.out.println(auxString);
+			modelAlergia.addElement(auxString);
+		}
 	}
 	
 	private String[] setColumns()
@@ -252,5 +347,17 @@ public class ListarEnfermedad extends JDialog {
 			String[] columnNames = {"Código", "Nombre", "Tiene Cura ","Síntoma/s"};
 			return columnNames;
 		
+	}
+	
+	private void updateDetalles()
+	{
+		if (selected != null)
+		{
+			txtDetallesCodigo.setText(selected.getCodigo());
+			txtDetallesNombre.setText(selected.getNombre());
+			chckbxDetallesCura.setSelected(selected.isCuraEncontrada());
+			reloadAlergiaCuadro();
+			
+		}
 	}
 }

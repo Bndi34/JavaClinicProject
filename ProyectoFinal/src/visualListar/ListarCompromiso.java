@@ -25,8 +25,14 @@ import logico.*;
 import visualRegistros.*;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JTextField;
+import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
+import com.toedter.calendar.JCalendar;
 
 public class ListarCompromiso extends JDialog {
 
@@ -36,10 +42,43 @@ public class ListarCompromiso extends JDialog {
 	private  DefaultTableModel tableModel;
 	private  JButton btnEliminar;
 	private  JButton btnModificar;
-	private JButton btnDetalles;
 	private int code;
 	private String[] columnNames;
 	String mode = "<Todos>";
+	private JLabel lblBuscar;
+	private JPanel panel_1;
+	private JLabel lblBuscarCodigo;
+	private JTextField txtBuscarCodigo;
+	private JLabel lblBuscarDoctor;
+	private JScrollPane scrollPane_1;
+	private JLabel lblBuscarPaciente;
+	private JScrollPane scrollPane_2;
+	private JLabel lblBuscarFecha;
+	private JPanel panelBuscarCalendar;
+	private JCalendar calendar;
+	private JPanel panelDetalles;
+	private JLabel lblDetalles;
+	private JLabel lblDetallesCodigo;
+	private JTextField txtDetallesCodigo;
+	private JLabel lblDetallesFecha;
+	private JLabel lblDetallesPaciente;
+	private JLabel lblDetallesDoctor;
+	private JLabel lblDetallesEstado;
+	private JLabel lblBuscarEstado;
+	private JComboBox comboBox;
+	private JTextField txtDetallesEstado;
+	private JTextField txtDetallesFecha;
+	private JTextField txtDetallesPaciente;
+	private JTextField txtDetallesDoctor;
+	
+	private Cita selectedCita = null;
+	private Consulta selectedConsulta = null;
+	private JLabel lblDetallesFechaOriginal;
+	private JTextField txtDetallesFechaOriginal;
+	
+	private JPanel PanelAlergia;
+	private JScrollPane scrollPaneAlergia;
+	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
 
 
 
@@ -54,21 +93,22 @@ public class ListarCompromiso extends JDialog {
 		columnNames = setColumns(type);
 		
 		setTitle("Listado de " + type + "s");
-		setBounds(100, 100, 650, 376);
+		setBounds(100, 100, 1168, 890);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Listado de " + type + "s:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 624, 293);
+		panel.setBounds(10, 11, 624, 796);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 26, 604, 256);
+		scrollPane.setBounds(10, 26, 604, 757);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -77,9 +117,13 @@ public class ListarCompromiso extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				
 				if(table.getSelectedRow()>=0){
-					btnEliminar.setEnabled(true);
+					
+						btnEliminar.setEnabled(true);
+					
 					btnModificar.setEnabled(true);
-					btnDetalles.setEnabled(true);
+					
+					updateSelected(type);
+					updateDetalles();
 					//mode = cbxQuesoType.getSelectedItem().toString();
 				}
 			}
@@ -88,6 +132,147 @@ public class ListarCompromiso extends JDialog {
 		tableModel.setColumnIdentifiers(columnNames);
 		loadSportMans(type);
 		scrollPane.setViewportView(table);
+		
+		lblBuscar = new JLabel("Buscar por:");
+		lblBuscar.setBounds(646, 31, 87, 16);
+		contentPanel.add(lblBuscar);
+		
+		panel_1 = new JPanel();
+		panel_1.setBounds(646, 60, 504, 436);
+		contentPanel.add(panel_1);
+		panel_1.setLayout(null);
+		
+		lblBuscarCodigo = new JLabel("C\u00F3digo");
+		lblBuscarCodigo.setBounds(12, 13, 56, 16);
+		panel_1.add(lblBuscarCodigo);
+		
+		txtBuscarCodigo = new JTextField();
+		txtBuscarCodigo.setBounds(80, 10, 152, 22);
+		panel_1.add(txtBuscarCodigo);
+		txtBuscarCodigo.setColumns(10);
+		
+		lblBuscarDoctor = new JLabel("Doctor");
+		lblBuscarDoctor.setBounds(12, 330, 56, 16);
+		panel_1.add(lblBuscarDoctor);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(80, 333, 390, 77);
+		panel_1.add(scrollPane_1);
+		
+		lblBuscarPaciente = new JLabel("Paciente");
+		lblBuscarPaciente.setBounds(12, 230, 56, 16);
+		panel_1.add(lblBuscarPaciente);
+		
+		scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(80, 229, 390, 88);
+		panel_1.add(scrollPane_2);
+		
+		lblBuscarFecha = new JLabel("Fecha");
+		lblBuscarFecha.setBounds(12, 43, 56, 16);
+		panel_1.add(lblBuscarFecha);
+		
+		panelBuscarCalendar = new JPanel();
+		panelBuscarCalendar.setLayout(null);
+		panelBuscarCalendar.setBackground(Color.WHITE);
+		panelBuscarCalendar.setBounds(80, 42, 390, 174);
+		panel_1.add(panelBuscarCalendar);
+		
+		calendar = new JCalendar();
+		calendar.setBounds(10, 11, 368, 150);
+		panelBuscarCalendar.add(calendar);
+		
+		lblBuscarEstado = new JLabel("Estado");
+		lblBuscarEstado.setBounds(255, 13, 56, 16);
+		panel_1.add(lblBuscarEstado);
+		
+		comboBox = new JComboBox();
+		comboBox.setBounds(323, 10, 147, 22);
+		panel_1.add(comboBox);
+		
+		panelDetalles = new JPanel();
+		panelDetalles.setBounds(646, 538, 504, 269);
+		contentPanel.add(panelDetalles);
+		panelDetalles.setLayout(null);
+		
+		lblDetallesCodigo = new JLabel("C\u00F3digo");
+		lblDetallesCodigo.setBounds(12, 13, 56, 16);
+		panelDetalles.add(lblDetallesCodigo);
+		
+		txtDetallesCodigo = new JTextField();
+		txtDetallesCodigo.setEditable(false);
+		txtDetallesCodigo.setBounds(107, 10, 218, 22);
+		panelDetalles.add(txtDetallesCodigo);
+		txtDetallesCodigo.setColumns(10);
+		
+		lblDetallesFecha = new JLabel("Fecha");
+		lblDetallesFecha.setBounds(12, 88, 56, 16);
+		panelDetalles.add(lblDetallesFecha);
+		
+		lblDetallesPaciente = new JLabel("Paciente");
+		lblDetallesPaciente.setBounds(12, 123, 56, 16);
+		panelDetalles.add(lblDetallesPaciente);
+		
+		lblDetallesDoctor = new JLabel("Doctor");
+		lblDetallesDoctor.setBounds(12, 158, 56, 16);
+		panelDetalles.add(lblDetallesDoctor);
+		
+		lblDetallesEstado = new JLabel("Estado");
+		lblDetallesEstado.setBounds(12, 42, 56, 16);
+		panelDetalles.add(lblDetallesEstado);
+		
+		txtDetallesEstado = new JTextField();
+		txtDetallesEstado.setEditable(false);
+		txtDetallesEstado.setBounds(107, 42, 218, 22);
+		panelDetalles.add(txtDetallesEstado);
+		txtDetallesEstado.setColumns(10);
+		
+		txtDetallesFecha = new JTextField();
+		txtDetallesFecha.setEditable(false);
+		txtDetallesFecha.setColumns(10);
+		txtDetallesFecha.setBounds(107, 88, 218, 22);
+		panelDetalles.add(txtDetallesFecha);
+		
+		txtDetallesPaciente = new JTextField();
+		txtDetallesPaciente.setEditable(false);
+		txtDetallesPaciente.setColumns(10);
+		txtDetallesPaciente.setBounds(107, 123, 218, 22);
+		panelDetalles.add(txtDetallesPaciente);
+		
+		txtDetallesDoctor = new JTextField();
+		txtDetallesDoctor.setEditable(false);
+		txtDetallesDoctor.setColumns(10);
+		txtDetallesDoctor.setBounds(107, 158, 218, 22);
+		panelDetalles.add(txtDetallesDoctor);
+		
+		lblDetallesFechaOriginal = new JLabel("Fecha Original");
+		lblDetallesFechaOriginal.setBounds(12, 209, 83, 16);
+		panelDetalles.add(lblDetallesFechaOriginal);
+		
+		txtDetallesFechaOriginal = new JTextField();
+		txtDetallesFechaOriginal.setEditable(false);
+		txtDetallesFechaOriginal.setColumns(10);
+		txtDetallesFechaOriginal.setBounds(107, 209, 218, 22);
+		panelDetalles.add(txtDetallesFechaOriginal);
+		
+		PanelAlergia = new JPanel();
+		PanelAlergia.setBounds(107, 193, 207, 64);
+		panelDetalles.add(PanelAlergia);
+		PanelAlergia.setLayout(null);
+		PanelAlergia.setVisible(false);
+		
+		scrollPaneAlergia = new JScrollPane();
+		scrollPaneAlergia.setBounds(0, 0, 207, 64);
+		PanelAlergia.add(scrollPaneAlergia);
+		
+		JList listAlergia = new JList();
+		listAlergia.setModel(modelAlergia);
+		scrollPaneAlergia.setViewportView(listAlergia);
+		
+		
+		
+		lblDetalles = new JLabel("Detalles:");
+		lblDetalles.setBounds(646, 509, 56, 16);
+		contentPanel.add(lblDetalles);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -99,7 +284,7 @@ public class ListarCompromiso extends JDialog {
 					
 
 					if (type.equalsIgnoreCase("cita")) {	
-
+						
 						RegistrarCita modAdmin = new RegistrarCita(Hospital.getInstance().getMisCitas().get(table.getSelectedRow()));
 						modAdmin.setModal(true);
 						modAdmin.setLocationRelativeTo(null);
@@ -117,10 +302,6 @@ public class ListarCompromiso extends JDialog {
 					
 				}
 			});
-			
-			btnDetalles = new JButton("Detalles");
-			btnDetalles.setEnabled(false);
-			buttonPane.add(btnDetalles);
 			btnModificar.setEnabled(false);
 			buttonPane.add(btnModificar);
 			{
@@ -135,7 +316,9 @@ public class ListarCompromiso extends JDialog {
 					    	switch (type)
 					    	{
 					    	case "cita":
+					    		
 					    		Cita auxCita = Hospital.getInstance().buscarCitasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
+					    		System.out.println(auxCita);
 					    		
 					    		Hospital.getInstance().getMisCitas().remove(auxCita);
 					    		
@@ -144,11 +327,21 @@ public class ListarCompromiso extends JDialog {
 					    	case "consulta":
 					    		
 					    		Consulta auxConsulta = Hospital.getInstance().buscarConsultasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
-					    		
+					    		System.out.println(auxConsulta);
 					    		Hospital.getInstance().getMisConsultas().remove(auxConsulta);
 					    		
 					    		break;
 					    	}
+					    	
+					    	try {
+								Hospital.save();
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 					    	
 							loadSportMans(type);
 						
@@ -236,13 +429,16 @@ public class ListarCompromiso extends JDialog {
 		table.setModel(tableModel);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
 		TableColumnModel columnModel = table.getColumnModel();
-		/*
+		
 		columnModel.getColumn(0).setPreferredWidth(60);
 		columnModel.getColumn(1).setPreferredWidth(180);
-		columnModel.getColumn(2).setPreferredWidth(150);
-		columnModel.getColumn(3).setPreferredWidth(130);
-		columnModel.getColumn(4).setPreferredWidth(81);
+		columnModel.getColumn(2).setPreferredWidth(75);
+		columnModel.getColumn(3).setPreferredWidth(85);
+		columnModel.getColumn(4).setPreferredWidth(100);
+		columnModel.getColumn(5).setPreferredWidth(100);
+		
 		/*if(tableModel.getRowCount()==0){
 			btnEliminar.setEnabled(false);
 			btnModificar.setEnabled(false);
@@ -289,5 +485,95 @@ public class ListarCompromiso extends JDialog {
 		
 		}
 		
+	}
+	
+	private void updateSelected(String type)
+	{
+		if (type.equalsIgnoreCase("cita")) {	
+			
+			selectedCita = Hospital.getInstance().getMisCitas().get(table.getSelectedRow());
+			return;
+			
+		}
+
+		if (type.equalsIgnoreCase("consulta")) {	
+			selectedConsulta = Hospital.getInstance().getMisConsultas().get(table.getSelectedRow());
+			return;
+		}
+	}
+	
+	private void updateDetalles()
+	{
+		
+		if (selectedCita != null)
+		{
+			lblDetallesCodigo.setVisible(true);
+			lblDetallesEstado.setVisible(true);
+			lblDetallesFecha.setVisible(true);
+			lblDetallesFechaOriginal.setVisible(true);
+			lblDetallesPaciente.setVisible(true);
+			lblDetallesPaciente.setVisible(true);
+			PanelAlergia.setVisible(false);
+			
+			
+			
+			txtDetallesCodigo.setText(selectedCita.getCodigo());
+			txtDetallesEstado.setText(selectedCita.getEstado());
+			txtDetallesFecha.setText(selectedCita.getFechaReal().toString());
+			txtDetallesFechaOriginal.setText(selectedCita.getFechaReal().toString());
+			txtDetallesPaciente.setText(selectedCita.getPaciente().getNombre());
+			txtDetallesDoctor.setText(selectedCita.getDoctor().getNombre());
+			
+			
+		}
+		else if (selectedConsulta != null)
+		{
+			PanelAlergia.setVisible(true);
+			lblDetallesCodigo.setVisible(true);
+			lblDetallesEstado.setVisible(true);
+			lblDetallesFecha.setVisible(true);
+			lblDetallesPaciente.setVisible(true);
+			lblDetallesPaciente.setVisible(true);
+			lblDetallesFechaOriginal.setVisible(true);
+			txtDetallesFechaOriginal.setVisible(false);
+			
+			reloadAlergiaCuadro();
+			
+			txtDetallesCodigo.setText(selectedConsulta.getCodigo());
+			txtDetallesEstado.setText(selectedConsulta.getEstado());
+			txtDetallesFecha.setText(selectedConsulta.getFecha().toString());
+			//txtDetallesFechaOriginal.setText(selectedConsulta.getFechaReal().toString());
+			txtDetallesPaciente.setText(selectedConsulta.getPaciente().getNombre());
+			txtDetallesDoctor.setText(selectedConsulta.getDoctor().getNombre());
+			lblDetallesFechaOriginal.setText("Síntomas");
+		}
+		else
+		{
+			
+			txtDetallesEstado.setText("Seleccione un Elemento");
+			txtDetallesFecha.setText("Para ver Detalles.");
+			
+			lblDetallesCodigo.setVisible(false);
+			lblDetallesEstado.setVisible(false);
+			lblDetallesFecha.setVisible(false);
+			lblDetallesFechaOriginal.setVisible(false);
+			lblDetallesPaciente.setVisible(false);
+			lblDetallesPaciente.setVisible(false);
+			PanelAlergia.setVisible(false);
+			
+			
+			
+			
+		}
+	}
+	
+	private void reloadAlergiaCuadro()
+	{
+		modelAlergia.removeAllElements();
+		for (String auxString : selectedConsulta.getSintomas())
+		{
+			System.out.println(auxString);
+			modelAlergia.addElement(auxString);
+		}
 	}
 }

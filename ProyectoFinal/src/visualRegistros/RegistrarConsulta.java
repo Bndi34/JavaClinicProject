@@ -76,11 +76,12 @@ public class RegistrarConsulta extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		sintomas = new ArrayList<String>();
 		setTitle("Registrar Consulta");
-		setBounds(100, 100, 550, 300);
+		setBounds(100, 100, 674, 540);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		{
 			JLabel lblCode = new JLabel("C\u00F3digo");
 			lblCode.setBounds(12, 13, 56, 16);
@@ -125,7 +126,7 @@ public class RegistrarConsulta extends JDialog {
 		}
 		{
 			JLabel lblSintomas = new JLabel("Sintomas:");
-			lblSintomas.setBounds(275, 13, 79, 16);
+			lblSintomas.setBounds(12, 236, 79, 16);
 			contentPanel.add(lblSintomas);
 		}
 		{
@@ -159,12 +160,12 @@ public class RegistrarConsulta extends JDialog {
 				}
 			});
 			
-			cbxSintoma.setBounds(344, 10, 152, 22);
+			cbxSintoma.setBounds(12, 265, 238, 22);
 			contentPanel.add(cbxSintoma);
 			
 		}
 		{
-			JButton btnBorrarSintoma = new JButton("Borrar Sintoma Elegido");
+			JButton btnBorrarSintoma = new JButton("Borrar Sintoma");
 			btnBorrarSintoma.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
@@ -174,7 +175,7 @@ public class RegistrarConsulta extends JDialog {
 					}
 				}
 			});
-			btnBorrarSintoma.setBounds(320, 42, 176, 25);
+			btnBorrarSintoma.setBounds(98, 232, 152, 25);
 			contentPanel.add(btnBorrarSintoma);
 		}
 		{
@@ -184,19 +185,19 @@ public class RegistrarConsulta extends JDialog {
 		}
 		
 		JLabel lblEnfermedad = new JLabel("Enfermedad");
-		lblEnfermedad.setBounds(275, 85, 79, 16);
+		lblEnfermedad.setBounds(262, 20, 79, 16);
 		contentPanel.add(lblEnfermedad);
 		
 		cbxEnfermedad = new JComboBox();
-		cbxEnfermedad.setBounds(354, 78, 142, 22);
+		cbxEnfermedad.setBounds(341, 13, 206, 22);
 		contentPanel.add(cbxEnfermedad);
 		
 		JLabel lblVacunas = new JLabel("Vacunas");
-		lblVacunas.setBounds(275, 122, 56, 16);
+		lblVacunas.setBounds(262, 234, 56, 16);
 		contentPanel.add(lblVacunas);
 		
 		cbxVacunas = new JComboBox();
-		cbxVacunas.setBounds(344, 118, 152, 22);
+		cbxVacunas.setBounds(331, 230, 216, 22);
 		contentPanel.add(cbxVacunas);
 		
 		txtDoctor = new JTextField();
@@ -231,7 +232,7 @@ public class RegistrarConsulta extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						Consulta aux = new Consulta(txtCode.getText(),consulta.getEstado(),fecha, consulta.getPaciente(),consulta.getDoctor(), sintomas, vacunasColocadas);
+						Consulta aux = new Consulta(txtCode.getText(),consulta.getEstado(),consulta.getFecha(), consulta.getPaciente(),consulta.getDoctor(), sintomas, vacunasColocadas);
 						Hospital.getInstance().modificarConsulta(aux);
 					   
 						int index = -1;
@@ -345,4 +346,6 @@ public class RegistrarConsulta extends JDialog {
 			cbxSintoma.addItem(aux);
 		}
 	}
+	
+	
 }

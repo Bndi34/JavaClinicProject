@@ -110,6 +110,7 @@ public class RegistrarUsuario extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Informaci\u00F3n General", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -299,12 +300,17 @@ public class RegistrarUsuario extends JDialog {
 		listAler.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				try {
-					selectedInCuadro = listAler.getSelectedIndex();
-					selectedAlergia = listAler.getSelectedValue().toString();
-					if(selectedInCuadro>=0){
-						btnAlergia.setText("Borrar");
-						txtAlergia.setText(listAler.getSelectedValue().toString());
+					if (!txtAlergia.isEditable())
+					{
+						selectedInCuadro = listAler.getSelectedIndex();
+						selectedAlergia = listAler.getSelectedValue().toString();
+						if(selectedInCuadro>=0)
+						{
+							btnAlergia.setText("Borrar");
+							txtAlergia.setText(listAler.getSelectedValue().toString());
+						}
 					}
+					
 				} catch (NullPointerException e2) {
 					// TODO: handle exception
 				}

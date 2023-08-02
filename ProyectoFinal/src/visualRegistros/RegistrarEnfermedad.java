@@ -184,13 +184,17 @@ public class RegistrarEnfermedad extends JDialog {
 							
 							try 
 							{
-								int selected = listSeleccionada.getSelectedIndex();
-								selectedSintoma = listSeleccionada.getSelectedValue().toString();
-								if(selected>=0)
+								if (!txtAlergia.isEditable())
 								{
-									btnAgregarSintoma.setText("Borrar");
-									txtAlergia.setText(listSeleccionada.getSelectedValue().toString());
+									int selected = listSeleccionada.getSelectedIndex();
+									selectedSintoma = listSeleccionada.getSelectedValue().toString();
+									if(selected>=0)
+									{
+										btnAgregarSintoma.setText("Borrar");
+										txtAlergia.setText(listSeleccionada.getSelectedValue().toString());
+									}
 								}
+								
 								
 							} catch (Exception e2) {
 								// TODO: handle exception

@@ -89,6 +89,7 @@ public class RegistrarCita extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		{
 			JLabel lblCode = new JLabel("C\u00F3digo");
 			lblCode.setBounds(12, 13, 56, 16);
@@ -290,7 +291,7 @@ public class RegistrarCita extends JDialog {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Registro satisfactorio\nSe ha generado una Consulta para esta Cita", "Información", JOptionPane.INFORMATION_MESSAGE);
 						    clean();
 						    
 						    if (cita != null)

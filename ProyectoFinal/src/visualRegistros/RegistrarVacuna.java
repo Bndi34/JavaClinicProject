@@ -49,6 +49,7 @@ public class RegistrarVacuna extends JDialog {
 	private ArrayList<String>EnfermedadesElegidas = new ArrayList<>();
 	private ArrayList<String>EnfermedadeSinElegir = new ArrayList<>();
 	
+	//Bloque de variables para el recuadro
 	private JComboBox cbxAlergia = new JComboBox();
 	private JButton btnAlergia = new JButton("A\u00F1adir");
 	private DefaultListModel<String> modelAlergia;
@@ -180,9 +181,9 @@ public class RegistrarVacuna extends JDialog {
 		}
 		
 		
-		
+		//Pedazo completo de codigo para el cuadro de añadir y eliminar
+		//Recuerda copiar las funciones y las variables
 		{
-			
 			cbxAlergia.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
@@ -232,6 +233,100 @@ public class RegistrarVacuna extends JDialog {
 			contentPanel.add(cbxAlergia);
 			reloadAlergia();
 			
+			{
+				btnAlergia.setBounds(230, 200, 106, 23);
+				btnAlergia.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						selectedAlergia = cbxAlergia.getSelectedItem().toString();
+						
+						if ( btnAlergia.getText().equalsIgnoreCase("Borrar")) {
+							try {
+								if (!txtAlergia.getText().isEmpty())
+								{
+									AlergiasSinElegir.add(txtAlergia.getText());
+									AlergiasElegidas.remove(txtAlergia.getText());
+									txtAlergia.setText("");
+									
+									reloadAlergia();
+									System.out.println("Reload cuadro Borrar");
+									reloadAlergiaCuadro();
+								}
+								
+								
+							} catch (IndexOutOfBoundsException e2) {
+								btnAlergia.setText("Añadir");
+							}
+							
+						}
+						else if ( txtAlergia.isEditable() ) {
+							
+							System.out.println("Alergia TXT: "+txtAlergia.getText());
+							AlergiasElegidas.add(txtAlergia.getText());
+							
+							reloadAlergia();
+							reloadAlergiaCuadro();
+							txtAlergia.setVisible(false);
+							cbxAlergia.setVisible(true);
+							btnAlergia.setText("Borrar");
+						}
+						
+						
+						
+						
+						
+					}
+				});
+				
+				
+				}
+
+			
+			{
+				JPanel panel_alergia = new JPanel();
+				panel_alergia.setBounds(22, 233, 314, 146);
+				contentPanel.add(panel_alergia);
+				panel_alergia.setLayout(new BorderLayout(0, 0));
+				{
+					JScrollPane scrollPane_1 = new JScrollPane();
+					panel_alergia.add(scrollPane_1);
+					{
+						listAler.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent e) {
+								try {
+									if (!txtAlergia.isEditable())
+									{
+										selected = listAler.getSelectedIndex();
+										selectedAlergia = listAler.getSelectedValue().toString();
+										if(selected>=0)
+										{
+											btnAlergia.setText("Borrar");
+											txtAlergia.setText(listAler.getSelectedValue().toString());
+										}
+									}
+									
+								} catch (NullPointerException e2) {
+									// TODO: handle exception
+								}
+								
+							}
+						});
+						scrollPane_1.setViewportView(listAler);
+						System.out.println("Reload cuadro 1");
+						reloadAlergiaCuadro();
+						listAler.setModel(modelAlergia);
+					}
+				}
+				
+					txtAlergia = new JTextField();
+					txtAlergia.setEnabled(false);
+					txtAlergia.setText("VA-1");
+					txtAlergia.setEditable(false);
+					txtAlergia.setVisible(false);
+					txtAlergia.setColumns(10);
+					txtAlergia.setBounds(22, 202, 196, 22);
+					contentPanel.add(txtAlergia);
+				}
+			
 		}
 		btnEnfermedad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -270,50 +365,8 @@ public class RegistrarVacuna extends JDialog {
 		btnEnfermedad.setBounds(230, 76, 106, 23);
 		contentPanel.add(btnEnfermedad);
 		
-		btnAlergia.setBounds(230, 200, 106, 23);
-		contentPanel.add(btnAlergia);
 		
-		btnAlergia.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selectedAlergia = cbxAlergia.getSelectedItem().toString();
-				
-				if ( btnAlergia.getText().equalsIgnoreCase("Borrar")) {
-					try {
-						if (!txtAlergia.getText().isEmpty())
-						{
-							AlergiasSinElegir.add(txtAlergia.getText());
-							AlergiasElegidas.remove(txtAlergia.getText());
-							txtAlergia.setText("");
-							
-							reloadAlergia();
-							System.out.println("Reload cuadro Borrar");
-							reloadAlergiaCuadro();
-						}
-						
-						
-					} catch (IndexOutOfBoundsException e2) {
-						btnAlergia.setText("Añadir");
-					}
-					
-				}
-				else if ( txtAlergia.isEditable() ) {
-					
-					System.out.println("Alergia TXT: "+txtAlergia.getText());
-					AlergiasElegidas.add(txtAlergia.getText());
-					
-					reloadAlergia();
-					reloadAlergiaCuadro();
-					txtAlergia.setVisible(false);
-					cbxAlergia.setVisible(true);
-					btnAlergia.setText("Borrar");
-				}
-				
-				
-				
-				
-				
-			}
-		});
+		contentPanel.add(btnAlergia);
 		
 		
 		JPanel panel_enfermedad = new JPanel();
@@ -345,45 +398,7 @@ public class RegistrarVacuna extends JDialog {
 			}
 		}
 		
-		JPanel panel_alergia = new JPanel();
-		panel_alergia.setBounds(22, 233, 314, 146);
-		contentPanel.add(panel_alergia);
-		panel_alergia.setLayout(new BorderLayout(0, 0));
 		{
-			JScrollPane scrollPane_1 = new JScrollPane();
-			panel_alergia.add(scrollPane_1);
-			{
-				listAler.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent e) {
-						try {
-							selected = listAler.getSelectedIndex();
-							selectedAlergia = listAler.getSelectedValue().toString();
-							if(selected>=0){
-								btnAlergia.setText("Borrar");
-								txtAlergia.setText(listAler.getSelectedValue().toString());
-							}
-						} catch (NullPointerException e2) {
-							// TODO: handle exception
-						}
-						
-					}
-				});
-				scrollPane_1.setViewportView(listAler);
-				System.out.println("Reload cuadro 1");
-				reloadAlergiaCuadro();
-				listAler.setModel(modelAlergia);
-			}
-		}
-		{
-			txtAlergia = new JTextField();
-			txtAlergia.setEnabled(false);
-			txtAlergia.setText("VA-1");
-			txtAlergia.setEditable(false);
-			txtAlergia.setVisible(false);
-			txtAlergia.setColumns(10);
-			txtAlergia.setBounds(22, 202, 196, 22);
-			contentPanel.add(txtAlergia);
-			
 			
 			txtEnfermedad = new JTextField();
 			txtEnfermedad.setEnabled(false);
@@ -474,7 +489,8 @@ public class RegistrarVacuna extends JDialog {
 	}
 	
 
-	
+	//Funciones de recargar el cuadro
+	//Recuerda hacer una funcion para cargar los arrayList
 	private void reloadAlergia()
 	{
 		cbxAlergia.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));

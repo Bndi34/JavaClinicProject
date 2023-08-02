@@ -56,9 +56,11 @@ public class ListarCuenta extends JDialog {
 	private JLabel lblAlergias;
 	private JPanel panelDetalles;
 	private JLabel lblDirAreaSupervisor;
+	
 	private JPanel PanelAlergia;
 	private JScrollPane scrollPaneAlergia;
 	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
+	
 	private JLabel lblBuscar;
 	private JPanel panelBuscar;
 	private JLabel lblBuscarPorCodigo;
@@ -77,21 +79,22 @@ public class ListarCuenta extends JDialog {
 		 String[] columnNames = setColumns(type);
 		
 		setTitle("Listado de " + type + "s");
-		setBounds(100, 100, 1001, 629);
+		setBounds(100, 100, 1003, 629);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Listado de " + type + "s:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 953, 535);
+		panel.setBounds(10, 11, 963, 535);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 26, 583, 496);
+		scrollPane.setBounds(10, 26, 585, 496);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -102,6 +105,8 @@ public class ListarCuenta extends JDialog {
 				if(table.getSelectedRow()>=0){
 					selected = Hospital.getInstance().buscarUsuarioByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
 					updateDetalles();
+					btnEliminar.setEnabled(true);
+					btnModificar.setEnabled(true);
 					System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
 
 				}
@@ -113,7 +118,7 @@ public class ListarCuenta extends JDialog {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblTipoDePublicacin = new JLabel("Tipo de Cuenta:");
-		lblTipoDePublicacin.setBounds(605, 29, 116, 14);
+		lblTipoDePublicacin.setBounds(607, 42, 116, 14);
 		panel.add(lblTipoDePublicacin);
 		
 		cbxQuesoType = new JComboBox();
@@ -146,7 +151,7 @@ public class ListarCuenta extends JDialog {
 		});
 		
 		cbxQuesoType.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "Administradores", "Pacientes", "Doctores", "Secretarias"}));
-		cbxQuesoType.setBounds(722, 26, 157, 20);
+		cbxQuesoType.setBounds(724, 39, 157, 20);
 		panel.add(cbxQuesoType);
 		
 		
@@ -161,7 +166,7 @@ public class ListarCuenta extends JDialog {
 		
 		
 		
-		panelDetalles.setBounds(602, 294, 335, 228);
+		panelDetalles.setBounds(607, 294, 335, 228);
 		panel.add(panelDetalles);
 		panelDetalles.setLayout(null);
 		
@@ -222,15 +227,15 @@ public class ListarCuenta extends JDialog {
 		updateDetalles();
 		
 		JLabel lblDetalles = new JLabel("Detalles:");
-		lblDetalles.setBounds(602, 267, 335, 16);
+		lblDetalles.setBounds(607, 267, 335, 16);
 		panel.add(lblDetalles);
 		
 		lblBuscar = new JLabel("Buscar por:");
-		lblBuscar.setBounds(605, 0, 116, 16);
+		lblBuscar.setBounds(607, 13, 116, 16);
 		panel.add(lblBuscar);
 		
 		panelBuscar = new JPanel();
-		panelBuscar.setBounds(615, 56, 325, 182);
+		panelBuscar.setBounds(607, 72, 325, 182);
 		panel.add(panelBuscar);
 		panelBuscar.setLayout(null);
 		
@@ -297,6 +302,16 @@ public class ListarCuenta extends JDialog {
 								}
 								
 						    }
+						    
+						    try {
+								Hospital.save();
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						
 					}
 				});
@@ -437,6 +452,7 @@ public class ListarCuenta extends JDialog {
 		columnModel.getColumn(1).setPreferredWidth(130);
 		columnModel.getColumn(2).setPreferredWidth(130);
 		columnModel.getColumn(3).setPreferredWidth(130);
+		columnModel.getColumn(4).setPreferredWidth(130);
 		
 		
 		
@@ -501,9 +517,6 @@ public class ListarCuenta extends JDialog {
 			txtDirAreaSupervisor.setVisible(false);
 			lblAlergias.setVisible(false);
 			PanelAlergia.setVisible(false);
-			
-			
-			
 			
 		}
 	}
