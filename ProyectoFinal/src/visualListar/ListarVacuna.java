@@ -218,7 +218,8 @@ public class ListarVacuna extends JDialog {
 									Hospital.getInstance().getMisVacunas().remove(aux);
 
 									loadSportMans();
-								
+									btnEliminar.setEnabled(false);
+									btnModificar.setEnabled(false);
 								
 						    }
 						

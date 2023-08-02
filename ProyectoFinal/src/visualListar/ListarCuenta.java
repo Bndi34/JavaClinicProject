@@ -312,6 +312,8 @@ public class ListarCuenta extends JDialog {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
+						    btnEliminar.setEnabled(false);
+							btnModificar.setEnabled(false);
 						
 					}
 				});

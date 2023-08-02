@@ -245,8 +245,8 @@ public class RegistrarCita extends JDialog {
 							
 							estado = cbxEstado.getSelectedItem().toString();
 							Cita aux = new Cita( txtCode.getText(),estado,fecha, hora,((Doctor)doc), ((Paciente)pac) );
-							
 							Consulta auxConsulta;
+							pac.getMiRegistro().setEsPaciente(true);
 							
 							if (cita != null)
 							{
@@ -281,6 +281,8 @@ public class RegistrarCita extends JDialog {
 								index = Hospital.getInstance().buscarIndexByConsulta(auxConsulta.getCodigo());
 								auxConsulta.getPaciente().getMiRegistro().getMisConsultas().set(index, auxConsulta);
 							}
+							
+							
 							
 							try {
 								Hospital.save();

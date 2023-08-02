@@ -181,7 +181,7 @@ public class RegistrarVacuna extends JDialog {
 		}
 		
 		
-		//Pedazo completo de codigo para el cuadro de añadir y eliminar
+		//Declaracion y funcionalidad de cada elemento para el cuadro de añadir y eliminar
 		//Recuerda copiar las funciones y las variables
 		{
 			cbxAlergia.addActionListener(new ActionListener() {

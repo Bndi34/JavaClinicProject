@@ -111,8 +111,8 @@ public class Dashboard extends JFrame {
 	
     private static DataOutputStream dataOutputStream = null;
     private static DataInputStream dataInputStream = null;
-	private Color MyGreen = new Color(51, 153, 102);
-	private Color MyBlue = 	new Color(72, 61, 139);
+	private Color MyGreen = new Color(255, 228, 196);
+	private Color MyBlue = 	new Color(205, 133, 63);
 	private Paciente paciente;
 	private Dimension dim = null;
 	private Usuario cuentaUsuario;
@@ -194,9 +194,10 @@ public class Dashboard extends JFrame {
 		}
 
 		JLabel Dashboard = new JLabel("DASHBOARD");
-		Dashboard.setForeground(new Color(255, 255, 255));
+		Dashboard.setBackground(new Color(255, 255, 255));
+		Dashboard.setForeground(new Color(0, 0, 0));
 		Dashboard.setFont(new Font("Impact", Font.PLAIN, 33));
-		Dashboard.setBounds(22, 13, 217, 54);
+		Dashboard.setBounds(12, 6, 217, 54);
 		contentPanel.add(Dashboard);
 
 		radioCalendar = new JRadioButton("Calendario");
@@ -209,8 +210,8 @@ public class Dashboard extends JFrame {
 				}
 			}
 		});
-		radioCalendar.setBackground(new Color(255,255,255,0));
-		radioCalendar.setBounds(300, 28, 100, 23);
+		radioCalendar.setBackground(new Color(245, 245, 220));
+		radioCalendar.setBounds(234, 25, 166, 35);
 		contentPanel.add(radioCalendar);
 
 		radioDashStads = new JRadioButton("Estad\u00EDsticas");
@@ -225,19 +226,19 @@ public class Dashboard extends JFrame {
 
 			}
 		});
-		radioDashStads.setBackground(new Color(255,255,255,0));
-		radioDashStads.setBounds(400, 28, 100, 23);
+		radioDashStads.setBackground(new Color(216, 191, 216));
+		radioDashStads.setBounds(420, 25, 189, 35);
 		contentPanel.add(radioDashStads);
 
 		dashboardStads = new JPanel();
-		dashboardStads.setBounds(0, 0, 1264, 640);
-		dashboardStads.setBackground(MyGreen);
+		dashboardStads.setBounds(0, 60, 1264, 580);
+		dashboardStads.setBackground(new Color(216, 191, 216));
 		contentPanel.add(dashboardStads);
 		dashboardStads.setLayout(null);
 		
 		dashboardCalender = new JPanel();
-		dashboardCalender.setBackground(MyBlue);
-		dashboardCalender.setBounds(0, 0, 1264, 640);
+		dashboardCalender.setBackground(new Color(245, 245, 220));
+		dashboardCalender.setBounds(0, 60, 1264, 580);
 		contentPanel.add(dashboardCalender);
 		dashboardCalender.setLayout(null);
 		dashboardCalender.setVisible(false);
@@ -263,28 +264,29 @@ public class Dashboard extends JFrame {
 		EnfermedadesComunes.add(chartpanel);
 
 		JLabel lblCalendario = new JLabel("Calendario");
-		lblCalendario.setForeground(new Color(255, 255, 255));
-		lblCalendario.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblCalendario.setBounds(300, 138, 112, 16);
+		lblCalendario.setForeground(new Color(205, 133, 63));
+		lblCalendario.setFont(new Font("Poor Richard", Font.BOLD, 43));
+		lblCalendario.setBounds(124, 23, 288, 43);
 		dashboardCalender.add(lblCalendario);
 
-		JLabel lblDetallesDelDia = new JLabel("Horario del D\u00EDa");
-		lblDetallesDelDia.setForeground(new Color(255, 255, 255));
-		lblDetallesDelDia.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblDetallesDelDia.setBounds(792, 129, 124, 16);
-		dashboardCalender.add(lblDetallesDelDia);
-
 		JLabel lblHistorialMedico = new JLabel("Historial Medico");
-		lblHistorialMedico.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblHistorialMedico.setForeground(new Color(255, 255, 255));
-		lblHistorialMedico.setBounds(983, 129, 133, 16);
+		
+		lblHistorialMedico.setFont(new Font("Poor Richard", Font.BOLD, 26));
+		lblHistorialMedico.setForeground(new Color(205, 133, 63));
+		lblHistorialMedico.setBounds(983, 36, 203, 43);
 		dashboardCalender.add(lblHistorialMedico);
+		
+		JLabel label = new JLabel("Horario del D\u00EDa");
+		label.setForeground(new Color(205, 133, 63));
+		label.setFont(new Font("Poor Richard", Font.BOLD, 26));
+		label.setBounds(752, 36, 198, 43);
+		dashboardCalender.add(label);
 
 
 		JPanel panel_calendar = new JPanel();
-		panel_calendar.setBackground(new Color(255, 255, 255));
+		panel_calendar.setBackground(new Color(255, 228, 196));
 		//panel_calendar.setBackground(MyBlue);
-		panel_calendar.setBounds(22, 159, 707, 420);
+		panel_calendar.setBounds(22, 80, 707, 420);
 		dashboardCalender.add(panel_calendar);
 		panel_calendar.setLayout(null);
 
@@ -299,10 +301,11 @@ public class Dashboard extends JFrame {
 		panel_calendar.add(calendar);
 
 		JPanel panel_calenderSecundario = new JPanel();
-		panel_calenderSecundario.setBackground(new Color(72, 61, 139));
-		panel_calenderSecundario.setBounds(741, 158, 445, 420);
+		panel_calenderSecundario.setForeground(new Color(255, 228, 196));
+		panel_calenderSecundario.setBackground(new Color(245, 245, 220));
+		panel_calenderSecundario.setBounds(741, 80, 445, 420);
 
-		LineBorder border = new LineBorder(MyGreen,13);
+		LineBorder border = new LineBorder(new Color(255, 228, 196),13);
 		panel_calenderSecundario.setBorder(border);
 		dashboardCalender.add(panel_calenderSecundario);
 		panel_calenderSecundario.setLayout(null);

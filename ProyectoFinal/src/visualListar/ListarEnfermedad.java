@@ -218,7 +218,7 @@ public class ListarEnfermedad extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						
 	
-					  int delete = JOptionPane.showConfirmDialog(null, "Realmente desea Eliminar esta cuenta?", null, JOptionPane.YES_NO_OPTION);
+					  int delete = JOptionPane.showConfirmDialog(null, "Realmente desea eliminar esta Enfermedad?", null, JOptionPane.YES_NO_OPTION);
 						    if (delete == JOptionPane.YES_OPTION)
 						    {						    	
 								Enfermedad aux = Hospital.getInstance().buscarEnfermedadesByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
@@ -227,7 +227,8 @@ public class ListarEnfermedad extends JDialog {
 
 									loadSportMans();
 								
-								
+									btnEliminar.setEnabled(false);
+									btnModificar.setEnabled(false);
 						    }
 						
 					}

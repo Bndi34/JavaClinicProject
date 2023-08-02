@@ -319,7 +319,7 @@ public class ListarCompromiso extends JDialog {
 					    		
 					    		Cita auxCita = Hospital.getInstance().buscarCitasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
 					    		System.out.println(auxCita);
-					    		
+					    		auxCita.getPaciente().getMiRegistro().getMisCitas().remove(auxCita);
 					    		Hospital.getInstance().getMisCitas().remove(auxCita);
 					    		
 					    		break;
@@ -328,6 +328,7 @@ public class ListarCompromiso extends JDialog {
 					    		
 					    		Consulta auxConsulta = Hospital.getInstance().buscarConsultasByCode(table.getValueAt(table.getSelectedRow(), 0).toString());
 					    		System.out.println(auxConsulta);
+					    		auxConsulta.getPaciente().getMiRegistro().getMisConsultas().remove(auxConsulta);
 					    		Hospital.getInstance().getMisConsultas().remove(auxConsulta);
 					    		
 					    		break;
@@ -345,8 +346,8 @@ public class ListarCompromiso extends JDialog {
 					    	
 							loadSportMans(type);
 						
-							
-							
+							btnEliminar.setEnabled(false);
+							btnModificar.setEnabled(false);
 							
 					    }
 
