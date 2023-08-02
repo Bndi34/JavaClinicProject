@@ -7,35 +7,39 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Servidor {
-    private static DataOutputStream dataOutputStream = null;
-    private static DataInputStream dataInputStream = null;
-
-    public static void main(String[] args) {
-    	try(ServerSocket serverSocket = new ServerSocket(9001)){
-	            System.out.println("listening to port: 9001");
-	            Socket clientSocket = serverSocket.accept();
-	            System.out.println(clientSocket + " connected.");
-	            dataInputStream = new DataInputStream(clientSocket.getInputStream());
-	            dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+	private static DataOutputStream outStream = null;
+	private static DataInputStream inputStream = null;
 	
-	            receiveFile("main_backup.dat");
-	            dataInputStream.close();
-	            dataOutputStream.close();
-	            clientSocket.close();
+	public static void main(String[] args) {
+		try(ServerSocket serverSocket = new ServerSocket(9001)){
+			System.out.println("Esperando en el puerto: 9001");
+				Socket clientSocket = serverSocket.accept();
+				System.out.println(clientSocket + " Conectado.");
+				inputStream = new DataInputStream(clientSocket.getInputStream());
+				outStream = new DataOutputStream(clientSocket.getOutputStream());
+				
+				llegadaDeArchivo("main_backup.dat");
+				inputStream.close();
+				outStream.close();
+				clientSocket.close();
+	            
+				System.out.println("Puerto cerrado");
 	        } catch (Exception e){
-	            e.printStackTrace();
-	 }
-    }
+	        	e.printStackTrace();
+	    }
+	}
 
-    private static void receiveFile(String fileName) throws Exception{
-        int bytes = 0;
-        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+	private static void llegadaDeArchivo(String fileName) throws Exception{
+		int bytes = 0;
+		FileOutputStream fileOutputStream = new FileOutputStream(fileName);
         
-        long size = dataInputStream.readLong();     // read file size
+		long size = inputStream.readLong();
+        
         byte[] buffer = new byte[4*1024];
-        while (size > 0 && (bytes = dataInputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
-            fileOutputStream.write(buffer,0,bytes);
-            size -= bytes;      // read upto file size
+        
+        while (size > 0 && (bytes = inputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+        	fileOutputStream.write(buffer,0,bytes);
+        	size -= bytes;
         }
         fileOutputStream.close();
     }

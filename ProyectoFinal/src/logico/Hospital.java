@@ -100,38 +100,6 @@ public class Hospital implements Serializable{
 		}
 		return count;
 	}
-	
-	
-	/*public int cantidadDeConsultasPorEnfermedad (String codigoEnfermedad){
-	int porcentaje = 0;
-	
-	//for ()
-	for (Usuario aux : misCuentas) {
-		if (aux instanceof Paciente) {
-			for ( Consulta temp : ((Paciente) aux).getMiRegistro().getMisConsultas()){
-				if ()
-			}
-				
-		}
-	}
-	
-	
-	return porcentaje;
-}*/
-
-/*public static ArrayList<Cita> buscarHorasDisponiblesCitas(Date day, Doctor doc) {
-	ArrayList<Cita>citaDia;
-	citaDia = null;
-	
-	for (Cita aux : misCitas) {
-		if (aux.getFechaDeConsulta().getDay() == day.getDay()) {
-			if (aux.getDoctor().getCodigo().equalsIgnoreCase(doc.getCodigo()) ) {
-				citaDia.add(aux);
-			}
-		}
-	}
-	return citaDia;
-}*/
 
 	public int ContarPacientesConAlergia(String temp) {
 		int count = 0;

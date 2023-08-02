@@ -110,9 +110,8 @@ public class Dashboard extends JFrame {
 	private Date fechaActual;
 	//private ChartPanel ChartPanel;
 	
-    private static DataOutputStream dataOutputStream = null;
-    private static DataInputStream dataInputStream = null;
-	//private Color MyGreen = new Color(255, 228, 196);
+    private static DataOutputStream outStream = null;
+    private static DataInputStream inputSteam = null;
 	private Color MyBlue = 	new Color(205, 133, 63);
 	private Color myCalendarColorLight = new Color(255, 228, 196);
 	private Color myCalendarBGColor = new Color(245, 245, 220);
@@ -128,21 +127,6 @@ public class Dashboard extends JFrame {
 	private JScrollPane scrollPaneAlergia;
 	private DefaultListModel<String> modelAlergia = new DefaultListModel<String>();
 	
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)  {
-		try {
-			Dashboard dialog = new Dashboard(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Create the dialog.
 	 */
@@ -205,6 +189,12 @@ public class Dashboard extends JFrame {
 		radioDashStads.setBounds(420, 25, 189, 35);
 		contentPanel.add(radioDashStads);
 		
+		dashboardStads = new JPanel();
+		dashboardStads.setBounds(0, 60, 1264, 580);
+		dashboardStads.setBackground(new Color(216, 191, 216));
+		contentPanel.add(dashboardStads);
+		dashboardStads.setLayout(null);
+		
 		dashboardCalender = new JPanel();
 		dashboardCalender.setBackground(myCalendarBGColor);
 		dashboardCalender.setBounds(0, 60, 1413, 580);
@@ -212,17 +202,8 @@ public class Dashboard extends JFrame {
 		dashboardCalender.setLayout(null);
 		dashboardCalender.setVisible(false);
 		
-		dashboardStads = new JPanel();
-		dashboardStads.setBounds(0, 60, 1264, 580);
-		dashboardStads.setBackground(new Color(216, 191, 216));
-		contentPanel.add(dashboardStads);
-		dashboardStads.setLayout(null);
-		
-		
-		
-		
 		panelAlergiasComunes = new JPanel();
-		panelAlergiasComunes.setBounds(23, 81, 289, 252);
+		panelAlergiasComunes.setBounds(23, 81, 416, 417);
 		panelAlergiasComunes.setLayout(null);
 		dashboardStads.add(panelAlergiasComunes);
 
@@ -232,19 +213,17 @@ public class Dashboard extends JFrame {
 			dataset.setValue(aux, Hospital.getInstance().ContarPacientesConAlergia(aux) );
 			System.out.print("Alergia:"+aux);
 		}
-		JFreeChart chart = ChartFactory.createPieChart("Alergias más comunes", dataset);
+		JFreeChart chart = ChartFactory.createPieChart("Alergias m\u00E1s comunes", dataset);
 		ChartPanel chartpanel = new ChartPanel(chart);
 		chartpanel.setBackground(myCalendarColorLight);
 		chartpanel.setPreferredSize(new Dimension(430,400));
-		chartpanel.setBounds(0,0,289,252);
+		chartpanel.setBounds(0,0,416,417);
 		
-		
-		//chart.addChangeListener(listener);	
 		panelAlergiasComunes.add(chartpanel);
 		
 		
 		JPanel panelVacunasMasUtilizadas = new JPanel();
-		panelVacunasMasUtilizadas.setBounds(355, 81, 511, 252);
+		panelVacunasMasUtilizadas.setBounds(491, 81, 724, 417);
 		dashboardStads.add(panelVacunasMasUtilizadas);
 		
 		DefaultCategoryDataset dcd = new DefaultCategoryDataset();
@@ -254,40 +233,14 @@ public class Dashboard extends JFrame {
 			dcd.setValue( Hospital.getInstance().contarVacunaEnRegistro(aux.getCodigo()), aux.getCodigo(),"");
 		}
 		
-		JFreeChart jchart = ChartFactory.createBarChart("Vacunas más utilizadas", "Código de la vacuna", "Total de veces", dcd);
+		JFreeChart jchart = ChartFactory.createBarChart("Vacunas m\u00E1s utilizadas", "C\u00F3digo de la vacuna", "Total de veces", dcd);
 		CategoryPlot plot = jchart.getCategoryPlot();
 		plot.setRangeGridlinePaint(Color.black);
 		panelVacunasMasUtilizadas.setLayout(null);
 		
 		ChartPanel chartpnl = new ChartPanel(jchart);
-		chartpnl.setBounds(0, 0, 511, 252);
+		chartpnl.setBounds(0, 0, 724, 417);
 		panelVacunasMasUtilizadas.add(chartpnl);
-		
-		JPanel panelConsultasPorMes = new JPanel();
-		panelConsultasPorMes.setBounds(900, 81, 354, 252);
-		dashboardStads.add(panelConsultasPorMes);
-		
-		
-		DefaultCategoryDataset Dats = new DefaultCategoryDataset();
-		
-		Dats.addValue(1, "Frecuencia", "Menos de 46");
-		Dats.addValue(1, "Frecuencia", "46-55");
-		Dats.addValue(3, "Frecuencia", "56-65");
-		Dats.addValue(7, "Frecuencia", "66-75");
-		Dats.addValue(11, "Frecuencia", "76-85");
-        Dats.addValue(21, "Frecuencia", "86-95");
-        Dats.addValue(28, "Frecuencia", "96-105");
-        Dats.addValue(16, "Frecuencia", "106-115");
-        Dats.addValue(22, "Frecuencia", "116-125");
-        Dats.addValue(7, "Frecuencia", "126-135");
-        Dats.addValue(1, "Frecuencia", "136-145");
-        Dats.addValue(2, "Frecuencia", "146 o Mas");
-		
-        JFreeChart Graf = ChartFactory.createLineChart("", "", "", Dats);
-        panelConsultasPorMes.setLayout(null);
-        ChartPanel chartpl = new ChartPanel(Graf);
-        chartpl.setBounds(0, 0, 354, 252);
-        panelConsultasPorMes.add(chartpl);
         
 		JLabel lblCalendario = new JLabel("Calendario");
 		lblCalendario.setForeground(myCalendarColorDark);

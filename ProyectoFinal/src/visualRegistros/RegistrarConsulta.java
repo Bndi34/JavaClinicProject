@@ -271,8 +271,6 @@ public class RegistrarConsulta extends JDialog {
 								txtEnfermedad.setText("");
 								
 								cbxEnfermedad.setVisible(false);
-								//cbxAlergia.setEditable(true);
-								//cbxAlergia.setSelectedItem("");
 								
 							}
 							else if (!selectedEnfermedad.equalsIgnoreCase("<Seleccione>"))
@@ -544,9 +542,6 @@ public class RegistrarConsulta extends JDialog {
 			}
 		}
 		loadConsulta();
-		
-		//loadEnfermedades();
-		//loadEnfermedadesSinElegir();
 		
 		reloadSintomas();
 		reloadSintomasCuadro();

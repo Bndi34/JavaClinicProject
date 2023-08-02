@@ -90,16 +90,6 @@ public class RegistrarUsuario extends JDialog {
 	private JButton btnAlergia = new JButton("A\u00F1adir");
 	private int selectedInCuadro = -1;
 	
-	public static void main(String[] args) {
-		try {
-			RegistrarUsuario dialog = new RegistrarUsuario("",null, true);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public RegistrarUsuario(String title, final Usuario entrada, boolean adminCheck) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		SupervisorCedula = new ArrayList<String>();
@@ -113,7 +103,9 @@ public class RegistrarUsuario extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		setLocationRelativeTo(null);
+		//setLocationRelativeTo(null);
+		
+		
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Informaci\u00F3n General", TitledBorder.LEADING, TitledBorder.TOP, null, null));

@@ -57,7 +57,6 @@ public class Login extends JDialog {
 	 * Create the dialog.
 	 */
 	public Login() {
-		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		setModal(true);
@@ -125,7 +124,6 @@ public class Login extends JDialog {
 			lblBienvenida.setText("Buenas Noches");
 		}
 		
-		//lblBienvenida = new JLabel("Buen D\u00EDa");
 		lblBienvenida.setFont(new Font("Impact", Font.ITALIC, 36));
 		lblBienvenida.setBounds(105, 13, 285, 57);
 		contentPanel.add(lblBienvenida);
@@ -138,18 +136,6 @@ public class Login extends JDialog {
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			
-			JButton adminLogin = new JButton("adminLogin");
-			adminLogin.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Admin temp = new Admin("Temp-0", "admin", "admin", "admin", "admin");
-					Dashboard adminDashboard = new Dashboard(temp);
-					adminDashboard.setVisible(true);
-					dispose();
-					
-				}
-			});
-			buttonPane.add(adminLogin);
 			{
 				JButton btnIniciar = new JButton("Iniciar Sesi\u00F3n");
 				btnIniciar.addActionListener(new ActionListener() {
@@ -160,18 +146,6 @@ public class Login extends JDialog {
 						password = txtPassword.getText();
 						
 						try {
-							/*
-							Admin adm = (Admin) Hospital.getInstance().buscarUsuarioByCode("USR-0");  //buscarAdminByUser(user);
-							
-							if (adm != null)
-								if (adm.getContrasenia().equalsIgnoreCase(password))
-								{
-								SecretariaMenu secrMenu = new SecretariaMenu(user, null);
-								secrMenu.setVisible(true);
-								dispose();
-								}
-							*/
-							
 							usu = Hospital.getInstance().buscarUsuarioByCedula(user);
 							
 							if (usu.getContrasenia().equalsIgnoreCase(password))
@@ -182,14 +156,9 @@ public class Login extends JDialog {
 									dispose();
 
 							}
-							/*else {
-
-									System.out.println(((Secretaria) usu).getDependiente());
-									SecretariaMenu secrMenu = new SecretariaMenu(usu.getCodigo(), ((Secretaria) usu).getDependiente());
-									secrMenu.setVisible(true);
-									dispose();
-
-							}		*/					
+							else {
+								JOptionPane.showMessageDialog(null, "Contrase\u00F1a equivocada", "Error", JOptionPane.INFORMATION_MESSAGE);
+							}			
 									
 							}
 							
