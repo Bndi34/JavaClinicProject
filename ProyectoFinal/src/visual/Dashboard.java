@@ -41,6 +41,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import logico.Admin;
 import logico.Cita;
@@ -51,6 +52,7 @@ import logico.Hospital;
 import logico.Paciente;
 import logico.Secretaria;
 import logico.Usuario;
+import logico.Vacuna;
 import visualListar.ListarCompromiso;
 import visualListar.ListarCuenta;
 import visualListar.ListarEnfermedad;
@@ -76,8 +78,10 @@ import org.jfree.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.AbstractDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -94,7 +98,7 @@ public class Dashboard extends JFrame {
 	JPanel btnDetallesDia = new JPanel();
 	JPanel dashboardCalender;
 	JPanel dashboardStads;
-	static JPanel EnfermedadesComunes;
+	static JPanel panelAlergiasComunes;
 	JPanel btnDetallesHistorialMedico = new JPanel();
 	JComboBox cboxHistorialMedico;
 	private DefaultListModel<String> modalHistorialMedico;
@@ -133,45 +137,12 @@ public class Dashboard extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	public static void test() {
-		/*JPanel panel = new JPanel();
-		panel.setBounds(26, 122, 400, 400);
-		getContentPane().add(panel);
-		
-		DefaultPieDataset dataset = new  DefaultPieDataset();
-		for (Enfermedad aux : Hospital.getInstance().getEnfermedadesReg()) {
-			dataset.setValue(aux.getNombre(), 2 );
-		}
-		
-		JFreeChart chart = ChartFactory.createPieChart("Enfermedades mï¿½s comunes tratadas por vacunas", dataset);
-		
-		ChartPanel chartpanel = new ChartPanel(chart);
-		chartpanel.setBounds(0,0,400,270);
-		panel.setLayout(null);
-		chartpanel.setPreferredSize(new Dimension(430,400));
-		
-		panel.add(chartpanel);*/
-	}
 
-	public void start(Stage primayStage) throws Exception{
-		
-		ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList(
- 			new PieChart.Data("1", 40),
-			new PieChart.Data("2", 40),
-			new PieChart.Data("3", 40)
-			
-		); 
-		PieChart pChart = new PieChart(pieData);
-		Group root = new Group(pChart);
-		Scene scene = new Scene(root,600,400);
-		primayStage.setTitle(" xd ");
-		primayStage.setScene(scene);
-		primayStage.show();
-	}
 	/**
 	 * Create the dialog.
 	 */
 	public Dashboard(final Usuario Cuenta) {
+		setResizable(false);
 		
 		cuentaUsuario = Cuenta;
 		
@@ -182,7 +153,6 @@ public class Dashboard extends JFrame {
 		setTitle("Centro M\u00E9dico");
 		
 		setBounds(100, 100, 1270, 690);
-		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -244,25 +214,74 @@ public class Dashboard extends JFrame {
 		dashboardCalender.setVisible(false);
 		
 		
-		EnfermedadesComunes = new JPanel();
-		EnfermedadesComunes.setBounds(24, 158, 428, 252);
-		EnfermedadesComunes.setLayout(null);
-		dashboardStads.add(EnfermedadesComunes);
+		panelAlergiasComunes = new JPanel();
+		panelAlergiasComunes.setBounds(23, 81, 289, 252);
+		panelAlergiasComunes.setLayout(null);
+		dashboardStads.add(panelAlergiasComunes);
 
 		DefaultPieDataset dataset = new  DefaultPieDataset();
 		
 		for (String aux : Hospital.getInstance().getAlergiasRegistradas()){ //Hospital.getInstance().getMisCuentas()) {
-			dataset.setValue(aux, 2 );
+			dataset.setValue(aux, Hospital.getInstance().ContarPacientesConAlergia(aux) );
 			System.out.print("Alergia:"+aux);
 		}
-		JFreeChart chart = ChartFactory.createPieChart("Alergia mÃ¡s comunes", dataset);
+		JFreeChart chart = ChartFactory.createPieChart("Alergias más comunes", dataset);
 		ChartPanel chartpanel = new ChartPanel(chart);
+		chartpanel.setBackground(MyGreen);
 		chartpanel.setPreferredSize(new Dimension(430,400));
-		chartpanel.setBounds(0,0,428,252);
+		chartpanel.setBounds(0,0,289,252);
+		
 		
 		//chart.addChangeListener(listener);	
-		EnfermedadesComunes.add(chartpanel);
-
+		panelAlergiasComunes.add(chartpanel);
+		
+		
+		JPanel panelVacunasMasUtilizadas = new JPanel();
+		panelVacunasMasUtilizadas.setBounds(355, 81, 511, 252);
+		dashboardStads.add(panelVacunasMasUtilizadas);
+		
+		DefaultCategoryDataset dcd = new DefaultCategoryDataset();
+		
+		//Set keys = HashMap.KeySet();
+		for (Vacuna aux : Hospital.getInstance().getMisVacunas() ) {
+			dcd.setValue( Hospital.getInstance().contarVacunaEnRegistro(aux.getCodigo()), aux.getCodigo(),"");
+		}
+		
+		JFreeChart jchart = ChartFactory.createBarChart("Vacunas más utilizadas", "Código de la vacuna", "Total de veces", dcd);
+		CategoryPlot plot = jchart.getCategoryPlot();
+		plot.setRangeGridlinePaint(Color.black);
+		panelVacunasMasUtilizadas.setLayout(null);
+		
+		ChartPanel chartpnl = new ChartPanel(jchart);
+		chartpnl.setBounds(0, 0, 511, 252);
+		panelVacunasMasUtilizadas.add(chartpnl);
+		
+		JPanel panelConsultasPorMes = new JPanel();
+		panelConsultasPorMes.setBounds(900, 81, 354, 252);
+		dashboardStads.add(panelConsultasPorMes);
+		
+		
+		DefaultCategoryDataset Dats = new DefaultCategoryDataset();
+		
+		Dats.addValue(1, "Frecuencia", "Menos de 46");
+		Dats.addValue(1, "Frecuencia", "46-55");
+		Dats.addValue(3, "Frecuencia", "56-65");
+		Dats.addValue(7, "Frecuencia", "66-75");
+		Dats.addValue(11, "Frecuencia", "76-85");
+        Dats.addValue(21, "Frecuencia", "86-95");
+        Dats.addValue(28, "Frecuencia", "96-105");
+        Dats.addValue(16, "Frecuencia", "106-115");
+        Dats.addValue(22, "Frecuencia", "116-125");
+        Dats.addValue(7, "Frecuencia", "126-135");
+        Dats.addValue(1, "Frecuencia", "136-145");
+        Dats.addValue(2, "Frecuencia", "146 o Mas");
+		
+        JFreeChart Graf = ChartFactory.createLineChart("", "", "", Dats);
+        panelConsultasPorMes.setLayout(null);
+        ChartPanel chartpl = new ChartPanel(Graf);
+        chartpl.setBounds(0, 0, 354, 252);
+        panelConsultasPorMes.add(chartpl);
+        
 		JLabel lblCalendario = new JLabel("Calendario");
 		lblCalendario.setForeground(new Color(205, 133, 63));
 		lblCalendario.setFont(new Font("Poor Richard", Font.BOLD, 43));

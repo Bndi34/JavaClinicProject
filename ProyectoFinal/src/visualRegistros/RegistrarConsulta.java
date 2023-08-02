@@ -239,6 +239,10 @@ public class RegistrarConsulta extends JDialog {
 						index = Hospital.getInstance().buscarIndexByConsulta(aux.getCodigo());
 						aux.getPaciente().getMiRegistro().getMisConsultas().set(index, aux);
 						
+						for (Vacuna vac : vacunasColocadas ) {
+							paciente.getMiRegistro().getTotalDeVacunasColocadas().add(vac);
+						}
+						
 						JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información", JOptionPane.INFORMATION_MESSAGE);
 						
 						try {

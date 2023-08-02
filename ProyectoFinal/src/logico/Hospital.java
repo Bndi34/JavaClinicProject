@@ -133,6 +133,35 @@ public class Hospital implements Serializable{
 	return citaDia;
 }*/
 
+	public int ContarPacientesConAlergia(String temp) {
+		int count = 0;
+		for (Usuario aux : misCuentas ) {
+			if (aux instanceof Paciente) {
+				for ( int i = 0;((Paciente) aux).getMiRegistro().getMisAlergias().size() != i; i++) {
+					if ( ((Paciente) aux).getMiRegistro().getMisAlergias().get(i).equalsIgnoreCase(temp) ) {
+						count++;
+					}
+				}
+			}
+		}
+		
+		return count;
+	}
+	
+	public int contarVacunaEnRegistro(String temp) {
+		int count = 0;
+		for (Usuario aux : misCuentas ) {
+			if (aux instanceof Paciente) {
+				for ( int i = 0;((Paciente) aux).getMiRegistro().getTotalDeVacunasColocadas().size() != i; i++) {
+					if ( ((Paciente) aux).getMiRegistro().getTotalDeVacunasColocadas().get(i).getCodigo().equalsIgnoreCase(temp) ) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+	
 	
 	public ArrayList<Usuario> getMisCuentas() {
 		return misCuentas;
